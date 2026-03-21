@@ -1261,7 +1261,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(()=>{}); }
+if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/Tech-Survey/sw.js', {scope: '/Tech-Survey/'}).catch(()=>{}); }
 </script>
 </body>
 </html>
