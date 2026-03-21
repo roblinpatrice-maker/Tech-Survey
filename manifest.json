@@ -2,7 +2,7 @@
   "name": "Recce Survey List",
   "short_name": "Recce Survey",
   "description": "Site Survey Recce List by Patrice Roblin",
-  "start_url": "/",
+  "start_url": "/Tech-Survey/",
   "display": "standalone",
   "background_color": "#0a1628",
   "theme_color": "#0a1628",
