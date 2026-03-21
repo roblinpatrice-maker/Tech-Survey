@@ -147,16 +147,16 @@ input[type=date]::-webkit-calendar-picker-indicator, input[type=time]::-webkit-c
 /* PHOTOS */
 .photo-list { display: flex; flex-direction: column; gap: 8px; }
 .photo-item { background: rgba(10,22,40,0.5); border: 1px solid rgba(200,168,75,0.18); border-radius: 3px; overflow: hidden; }
-.photo-header { display: flex; align-items: center; gap: 10px; padding: 8px 12px; }
-.photo-thumb-small { width: 42px; height: 42px; object-fit: cover; border-radius: 2px; border: 1px solid rgba(200,168,75,0.25); flex-shrink: 0; display: none; cursor: pointer; }
+.photo-header { display: flex; align-items: flex-start; gap: 8px; padding: 8px 12px; flex-wrap: wrap; }
+.photo-thumb-small { width: 38px; height: 38px; object-fit: cover; border-radius: 2px; border: 1px solid rgba(200,168,75,0.25); flex-shrink: 0; display: none; cursor: pointer; margin-top: 2px; }
 .photo-thumb-small.visible { display: block; }
-.photo-label { font-size: 0.85rem; color: var(--grey-light); flex: 1; line-height: 1.3; }
-.photo-actions { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
-.photo-status { font-size: 0.7rem; padding: 2px 8px; border-radius: 2px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; background: rgba(138,155,181,0.1); border: 1px solid rgba(138,155,181,0.25); color: var(--grey); }
+.photo-label { font-size: 0.82rem; color: var(--grey-light); flex: 1; line-height: 1.3; min-width: 120px; }
+.photo-actions { display: flex; gap: 5px; align-items: center; flex-shrink: 0; flex-wrap: wrap; }
+.photo-status { font-size: 0.65rem; padding: 2px 6px; border-radius: 2px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; background: rgba(138,155,181,0.1); border: 1px solid rgba(138,155,181,0.25); color: var(--grey); white-space: nowrap; }
 .photo-status.done { background: rgba(39,174,96,0.15); border-color: rgba(39,174,96,0.4); color: #2ecc71; }
-.photo-btn { display: flex; align-items: center; gap: 4px; padding: 5px 10px; border-radius: 2px; border: 1px solid rgba(200,168,75,0.35); background: rgba(200,168,75,0.07); color: var(--gold); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.07em; cursor: pointer; transition: all 0.13s; text-transform: uppercase; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+.photo-btn { display: flex; align-items: center; gap: 3px; padding: 5px 8px; border-radius: 2px; border: 1px solid rgba(200,168,75,0.35); background: rgba(200,168,75,0.07); color: var(--gold); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.04em; cursor: pointer; transition: all 0.13s; text-transform: uppercase; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; white-space: nowrap; }
 .photo-btn:hover { background: rgba(200,168,75,0.16); border-color: var(--gold); }
-.photo-btn svg { width: 12px; height: 12px; flex-shrink: 0; }
+.photo-btn svg { width: 11px; height: 11px; flex-shrink: 0; }
 .hidden-file { display: none; }
 
 /* SITE PHOTOS GRID */
@@ -260,7 +260,7 @@ footer { text-align: center; padding: 22px 20px; color: var(--grey); font-size: 
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>Load Survey
       </button>
       <button class="loader-btn load" onclick="document.getElementById('importInput').click()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Import from File
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Import Survey
       </button>
       <input type="file" id="importInput" accept=".zip,.json,.recce" style="display:none" onchange="importFile(this)">
     </div>
@@ -1251,6 +1251,8 @@ function generateReport() {
     if (reportWin) {
       reportWin.document.write(html);
       reportWin.document.close();
+      reportWin.onload = function() { reportWin.print(); };
+      setTimeout(function() { reportWin.print(); }, 800);
     } else {
       var iframe = document.getElementById('reportFrame');
       if (!iframe) {
@@ -1263,12 +1265,10 @@ function generateReport() {
       iframe.contentDocument.open();
       iframe.contentDocument.write(html);
       iframe.contentDocument.close();
-      // Add close button
-      var closeBtn = iframe.contentDocument.createElement('button');
-      closeBtn.textContent = '✕ Close';
-      closeBtn.style.cssText = 'position:fixed;top:10px;right:10px;background:#c0392b;color:white;border:none;padding:8px 16px;border-radius:4px;font-size:14px;cursor:pointer;z-index:99999;';
-      closeBtn.onclick = function() { iframe.style.display = 'none'; };
-      iframe.contentDocument.body.appendChild(closeBtn);
+      setTimeout(function() {
+        iframe.contentWindow.print();
+        setTimeout(function() { iframe.style.display = 'none'; }, 1000);
+      }, 800);
     }
   });
 }
