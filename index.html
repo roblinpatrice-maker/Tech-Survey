@@ -616,7 +616,6 @@ footer { text-align: center; padding: 22px 20px; color: var(--grey); font-size: 
         </div>
         <button id="btnSave" class="btn-save" style="padding:9px 22px;font-size:0.9rem;white-space:nowrap;flex-shrink:0;" onclick="saveSurvey()">Save Survey</button>
       </div>
-      <div id="savedList" style="margin-top:14px;"></div>
     </div>
   </div>
 
@@ -1053,8 +1052,8 @@ async function renderSaved(highlightKey) {
   all.sort((a,b)=>b.key.localeCompare(a.key));
   window._savedKeys=all.map(s=>s.key);
   const noMsg='<div style="color:var(--grey);font-size:0.85rem;padding:8px 0;">No saved surveys yet.</div>';
-  const el=document.getElementById('savedList'),loader=document.getElementById('loaderList');
-  if(!all.length){if(el)el.innerHTML=noMsg;if(loader)loader.innerHTML=noMsg;return;}
+  const loader=document.getElementById('loaderList');
+  if(!all.length){if(loader)loader.innerHTML=noMsg;return;}
   const rows=all.map((s,i)=>`
     <div class="saved-row${s.key===highlightKey?' active':''}">
       <div class="saved-info"><span class="saved-name">${s.name}</span><span class="saved-meta">${s.date} &nbsp;${s.time}</span></div>
@@ -1063,7 +1062,7 @@ async function renderSaved(highlightKey) {
         <button class="saved-btn del" onclick="deleteSurveyByIndex(${i})">Delete</button>
       </div>
     </div>`).join('');
-  if(el)el.innerHTML=rows;if(loader)loader.innerHTML=rows;
+  if(loader)loader.innerHTML=rows;
 }
 function loadSurveyByIndex(i){const k=window._savedKeys&&window._savedKeys[i];if(k)loadSurveyByKey(k);}
 function deleteSurveyByIndex(i){const k=window._savedKeys&&window._savedKeys[i];if(k)deleteSurveyByKey(k);}
@@ -1259,10 +1258,9 @@ async function generateReport() {
 
   </div></body></html>`;
 
-  const blob=new Blob([html],{type:'text/html'});
-  const url=URL.createObjectURL(blob);
-  window.open(url,'_blank');
-  setTimeout(()=>URL.revokeObjectURL(url),30000);
+  const reportWin=window.open('','_blank');
+  if(reportWin){reportWin.document.write(html);reportWin.document.close();}
+  else{const blob=new Blob([html],{type:'text/html'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.target='_blank';document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(()=>URL.revokeObjectURL(url),30000);}
 }
 
 // ── IMPORT ────────────────────────────────────────────────────────────────────
