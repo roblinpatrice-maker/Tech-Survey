@@ -61,9 +61,15 @@ main{max-width:820px;margin:0 auto;padding:40px 20px 60px;}
 .progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:3px;transition:width 0.4s;width:0%;}
 .progress-pct{font-size:1rem;font-weight:600;color:var(--gold);min-width:36px;text-align:right;}
 /* ALERTS */
-#alertsBanner{margin-bottom:20px;display:none;flex-direction:column;gap:6px;}
+#alertsBanner{margin-bottom:20px;display:none;flex-direction:column;gap:0;}
 #alertsBanner.visible{display:flex;}
-.alert-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:rgba(192,57,43,0.12);border:1px solid rgba(192,57,43,0.4);border-radius:3px;font-size:0.85rem;color:#f08080;line-height:1.4;}
+.alerts-header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;background:rgba(192,57,43,0.18);border:1px solid rgba(192,57,43,0.5);border-radius:3px;cursor:pointer;user-select:none;}
+.alerts-header-text{font-size:0.88rem;color:#f08080;font-weight:600;}
+.alerts-chevron{color:#f08080;font-size:0.8rem;transition:transform 0.2s;}
+.alerts-body{display:none;flex-direction:column;gap:0;border:1px solid rgba(192,57,43,0.4);border-top:none;border-radius:0 0 3px 3px;overflow:hidden;}
+.alerts-body.open{display:flex;}
+.alert-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:rgba(192,57,43,0.08);border-bottom:1px solid rgba(192,57,43,0.15);font-size:0.84rem;color:#f08080;line-height:1.4;}
+.alert-item:last-child{border-bottom:none;}
 /* SECTIONS */
 .section{background:var(--card-bg);border:1px solid rgba(200,168,75,0.2);border-radius:4px;margin-bottom:24px;overflow:hidden;backdrop-filter:blur(4px);}
 .section-header{background:linear-gradient(90deg,var(--navy-light),var(--navy-mid));border-bottom:1px solid rgba(200,168,75,0.25);padding:14px 24px;display:flex;align-items:center;gap:14px;}
@@ -144,22 +150,22 @@ input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-ca
 /* PHOTOS */
 .photo-list{display:flex;flex-direction:column;gap:8px;}
 .photo-item{background:rgba(10,22,40,0.5);border:1px solid rgba(200,168,75,0.18);border-radius:3px;overflow:hidden;}
-.photo-header{display:flex;align-items:flex-start;gap:8px;padding:8px 12px;flex-wrap:wrap;}
+.photo-header{display:flex;align-items:flex-start;gap:8px;padding:8px 12px;flex-wrap:wrap;width:100%;}
 .photo-thumb-small{width:38px;height:38px;object-fit:cover;border-radius:2px;border:1px solid rgba(200,168,75,0.25);flex-shrink:0;display:none;cursor:pointer;margin-top:2px;}
 .photo-thumb-small.visible{display:block;}
 .photo-label{font-size:0.82rem;color:var(--grey-light);flex:1;line-height:1.3;min-width:120px;}
-.photo-actions{display:flex;gap:5px;align-items:center;flex-shrink:0;flex-wrap:wrap;}
+.photo-actions{display:flex;gap:5px;align-items:center;flex-shrink:0;flex-wrap:wrap;max-width:100%;}
 .photo-status{font-size:0.65rem;padding:2px 6px;border-radius:2px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;background:rgba(138,155,181,0.1);border:1px solid rgba(138,155,181,0.25);color:var(--grey);white-space:nowrap;}
 .photo-status.done{background:rgba(39,174,96,0.15);border-color:rgba(39,174,96,0.4);color:#2ecc71;}
-.photo-btn{display:flex;align-items:center;gap:3px;padding:5px 8px;border-radius:2px;border:1px solid rgba(200,168,75,0.35);background:rgba(200,168,75,0.07);color:var(--gold);font-size:0.7rem;font-weight:600;letter-spacing:0.04em;cursor:pointer;transition:all 0.13s;text-transform:uppercase;font-family:inherit;white-space:nowrap;}
+.photo-btn{display:flex;align-items:center;gap:3px;padding:5px 8px;border-radius:2px;border:1px solid rgba(200,168,75,0.35);background:rgba(200,168,75,0.07);color:var(--gold);font-size:0.7rem;font-weight:600;letter-spacing:0.04em;cursor:pointer;transition:all 0.13s;text-transform:uppercase;font-family:inherit;white-space:nowrap;flex-shrink:0;}
 .photo-btn:hover{background:rgba(200,168,75,0.16);border-color:var(--gold);}
 .photo-btn svg{width:11px;height:11px;flex-shrink:0;}
 .hidden-file{display:none;}
 /* SITE PHOTOS */
-.site-photos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;}
+.site-photos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:6px;}
 .site-photo-cell{background:rgba(10,22,40,0.5);border:1px solid rgba(200,168,75,0.15);border-radius:3px;overflow:hidden;cursor:pointer;transition:border-color 0.15s;}
 .site-photo-cell:hover{border-color:rgba(200,168,75,0.4);}
-.site-photo-cell img{width:100%;height:100px;object-fit:cover;display:block;}
+.site-photo-cell img{width:100%;height:80px;object-fit:cover;display:block;}
 .site-photo-cell-label{font-size:0.7rem;color:var(--grey);padding:5px 7px;line-height:1.3;}
 .site-photo-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;gap:8px;color:var(--grey);font-size:0.82rem;opacity:0.5;text-align:center;}
 /* LIGHTBOX */
@@ -168,6 +174,11 @@ input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-ca
 .lightbox img{max-width:100%;max-height:75vh;border-radius:4px;object-fit:contain;}
 .lightbox-label{font-size:0.85rem;color:var(--grey-light);text-align:center;}
 .lightbox-close{position:absolute;top:16px;right:20px;font-size:2rem;color:var(--white);cursor:pointer;line-height:1;background:none;border:none;}
+.lightbox-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.15);border:none;color:var(--white);font-size:1.8rem;width:44px;height:44px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s;}
+.lightbox-nav:hover{background:rgba(255,255,255,0.3);}
+.lightbox-nav.prev{left:12px;}
+.lightbox-nav.next{right:12px;}
+.lightbox-counter{font-size:0.75rem;color:var(--grey);margin-top:4px;}
 /* BUTTONS */
 .action-wrap{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:36px;margin-bottom:40px;}
 .btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--navy);font-size:1rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;border:none;padding:14px 32px;border-radius:3px;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 18px rgba(200,168,75,0.28);font-family:inherit;}
@@ -205,8 +216,11 @@ footer{text-align:center;padding:22px 20px;color:var(--grey);font-size:0.75rem;l
 <body>
 <div class="lightbox" id="lightbox">
   <button class="lightbox-close" onclick="closeLightbox()">&#10005;</button>
+  <button class="lightbox-nav prev" id="lbPrev" onclick="lightboxNav(-1)">&#8249;</button>
   <img id="lightboxImg" src="" alt="">
+  <button class="lightbox-nav next" id="lbNext" onclick="lightboxNav(1)">&#8250;</button>
   <div class="lightbox-label" id="lightboxLabel"></div>
+  <div class="lightbox-counter" id="lightboxCounter"></div>
 </div>
 <header>
   <div class="logo-wrap">
@@ -258,6 +272,10 @@ footer{text-align:center;padding:22px 20px;color:var(--grey);font-size:0.75rem;l
   <div class="section" id="sec0">
     <div class="section-header"><div class="section-num">0</div><div class="section-title">Job Details</div></div>
     <div class="section-body">
+      <div id="jobDetailsWarning" style="display:flex;align-items:center;gap:10px;background:rgba(200,168,75,0.1);border:1px solid rgba(200,168,75,0.4);border-radius:3px;padding:10px 14px;margin-bottom:16px;font-size:0.83rem;color:var(--gold-light);">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12" y2="17"/></svg>
+        Please fill in Venue Name, Street Address and TX Date before starting your survey.
+      </div>
       <div class="field-grid">
         <div class="field"><label>Production / Show Name</label><input type="text" id="f_prodName" placeholder="Show or project name"></div>
         <div class="field"><label>TX / Transmission Date</label><input type="date" id="f_txDate"></div>
@@ -278,7 +296,7 @@ footer{text-align:center;padding:22px 20px;color:var(--grey);font-size:0.75rem;l
   <div class="section collapsed" id="sec1">
     <div class="section-header collapsible" onclick="toggleSection('sec1')"><div class="section-num">1</div><div class="section-title">Location &amp; Map</div><span class="collapse-icon">&#9660;</span></div>
     <div class="section-body">
-      <div class="map-row"><input type="text" id="mapSearch" placeholder="Enter venue address and tap Show Map…"><button class="map-btn" onclick="loadMap()">Show Map</button></div>
+      <div class="map-row"><input type="text" id="mapSearch" placeholder="Address auto-fills from Job Details…" readonly></div>
       <div class="map-container">
         <div class="map-placeholder" id="mapPlaceholder"><svg width="44" height="44" viewBox="0 0 48 48" fill="none"><path d="M24 4C16.27 4 10 10.27 10 18c0 11.25 14 26 14 26s14-14.75 14-26c0-7.73-6.27-14-14-14z" stroke="#c8a84b" stroke-width="2" fill="none"/><circle cx="24" cy="18" r="4" stroke="#c8a84b" stroke-width="2" fill="none"/></svg><span>Enter the address above and tap <strong>Show Map</strong></span></div>
         <iframe id="mapFrame" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
@@ -289,8 +307,7 @@ footer{text-align:center;padding:22px 20px;color:var(--grey);font-size:0.75rem;l
         <a id="linkW3W" href="#" target="_blank" class="map-link-btn">&#35; What3Words</a>
       </div>
       <div class="field-grid" style="margin-top:14px;">
-        <div class="field"><label>GPS Coordinates</label><input type="text" id="f_gps" placeholder="-27.4705, 153.0260"></div>
-        <div class="field"><label>What3Words (optional)</label><input type="text" id="f_w3w" placeholder="///filled.count.soap"></div>
+        <div class="field"><label>GPS Coordinates</label><input type="text" id="f_gps" placeholder="Auto-fills from address" readonly></div>
         <div class="field full"><label>Access / Directions Notes</label><textarea id="f_accessNotes" placeholder="Gate codes, parking, entry instructions…"></textarea></div>
       </div>
       <!-- WEATHER WIDGET -->
@@ -489,8 +506,8 @@ footer{text-align:center;padding:22px 20px;color:var(--grey);font-size:0.75rem;l
     </div>
   </div>
   <div class="action-wrap">
-    <button class="btn-gold" onclick="exportSurvey()">Export Survey</button>
-    <button class="btn-outline" onclick="generateReport()">Generate Report</button>
+    <button class="btn-gold" onclick="exportSurvey()">Export / Share</button>
+    <button class="btn-outline" onclick="generateReport()">Print / PDF Report</button>
   </div>
 </main>
 <footer>
@@ -503,24 +520,56 @@ footer{text-align:center;padding:22px 20px;color:var(--grey);font-size:0.75rem;l
 </footer>
 <script>
 var isSafari=/^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-// ACCORDION - one section open at a time
+
+// ACCORDION - one section open at a time, scroll to top of opened section
 function toggleSection(id){
   var t=document.getElementById(id);if(!t)return;
   var wasOpen=!t.classList.contains('collapsed');
   document.querySelectorAll('.section').forEach(function(s){if(s.querySelector('.section-header.collapsible'))s.classList.add('collapsed');});
-  if(!wasOpen)t.classList.remove('collapsed');
+  if(!wasOpen){
+    t.classList.remove('collapsed');
+    setTimeout(function(){t.scrollIntoView({behavior:'smooth',block:'start'});},50);
+  }
 }
+
+// LIGHTBOX with swipe/nav
+var _lbIds=[];var _lbIdx=0;
 function openLightbox(id){
+  _lbIds=getAllPhotoIds().filter(function(pid){return window._photos[pid]&&window._photos[pid].blob;});
+  _lbIdx=_lbIds.indexOf(id);
+  if(_lbIdx<0){_lbIds=[id];_lbIdx=0;}
+  showLightboxFrame(_lbIdx);
+  document.getElementById('lightbox').classList.add('open');
+}
+function showLightboxFrame(idx){
+  var id=_lbIds[idx];
   var p=window._photos[id];if(!p||!p.blob)return;
   var url=URL.createObjectURL(p.blob);
   var img=document.getElementById('lightboxImg');
   img.onload=function(){URL.revokeObjectURL(url);};img.src=url;
   var item=photoItems.filter(function(x){return x.id===id;})[0];
   document.getElementById('lightboxLabel').textContent=item?item.label:(id==='sketch'?'Sketch / Floor Plan':id);
-  document.getElementById('lightbox').classList.add('open');
+  document.getElementById('lightboxCounter').textContent=(_lbIds.length>1)?(idx+1)+' / '+_lbIds.length:'';
+  document.getElementById('lbPrev').style.display=_lbIds.length>1?'flex':'none';
+  document.getElementById('lbNext').style.display=_lbIds.length>1?'flex':'none';
+}
+function lightboxNav(dir){
+  _lbIdx=(_lbIdx+dir+_lbIds.length)%_lbIds.length;
+  showLightboxFrame(_lbIdx);
 }
 function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
 
+// ALERTS - tap to expand
+var _alertsOpen=false;
+function toggleAlerts(){
+  _alertsOpen=!_alertsOpen;
+  var body=document.getElementById('alertsBody');
+  var chev=document.getElementById('alertsChevron');
+  if(body)body.classList.toggle('open',_alertsOpen);
+  if(chev)chev.textContent=_alertsOpen?'▲':'▼';
+}
+
+// DATA
 var ynSections={
   yn_venue:[
     {id:'v1',q:'Is the entry access and route for the audience clear and suitable?'},
@@ -668,7 +717,7 @@ function buildHazards(){
 }
 function buildPhotos(){
   document.getElementById('photoList').innerHTML=photoItems.map(function(p){
-    return '<div class="photo-item"><div class="photo-header"><img class="photo-thumb-small" id="th_'+p.id+'" src="" alt="'+p.label+'" onclick="openLightbox(\''+p.id+'\')"><span class="photo-label">'+p.label+'</span><div class="photo-actions"><span class="photo-status" id="st_'+p.id+'">Pending</span><button class="photo-btn" onclick="openCamera(\''+p.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>Camera</button><button class="photo-btn" onclick="openGallery(\''+p.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Upload</button></div></div><input type="file" class="hidden-file" id="cam_'+p.id+'" accept="image/*" capture="environment" onchange="handlePhoto(this,\''+p.id+'\')"><input type="file" class="hidden-file" id="gal_'+p.id+'" accept="image/*" onchange="handlePhoto(this,\''+p.id+'\')"></div>';
+    return '<div class="photo-item"><div class="photo-header"><img class="photo-thumb-small" id="th_'+p.id+'" src="" alt="'+p.label+'" onclick="openLightbox(''+p.id+'')"><span class="photo-label">'+p.label+'</span><div class="photo-actions"><span class="photo-status" id="st_'+p.id+'">Pending</span><button class="photo-btn" onclick="openCamera(''+p.id+'')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>Camera</button><button class="photo-btn" onclick="openGallery(''+p.id+'')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Upload</button></div></div><input type="file" class="hidden-file" id="cam_'+p.id+'" accept="image/*" capture="environment" onchange="handlePhoto(this,''+p.id+'')"><input type="file" class="hidden-file" id="gal_'+p.id+'" accept="image/*" onchange="handlePhoto(this,''+p.id+'')"></div>';
   }).join('');
 }
 function openCamera(id){document.getElementById('cam_'+id).click();}
@@ -704,9 +753,60 @@ function updateSitePhotosGrid(){
     var url=URL.createObjectURL(window._photos[id].blob);
     var item=photoItems.filter(function(p){return p.id===id;})[0];
     var label=item?item.label:(id==='sketch'?'Sketch / Floor Plan':id);
-    return '<div class="site-photo-cell" onclick="openLightbox(\''+id+'\')"><img src="'+url+'" alt="'+label+'" onload="URL.revokeObjectURL(this.src)"><div class="site-photo-cell-label">'+label+'</div></div>';
+    return '<div class="site-photo-cell" onclick="openLightbox(''+id+'')"><img src="'+url+'" alt="'+label+'" onload="URL.revokeObjectURL(this.src)"><div class="site-photo-cell-label">'+label+'</div></div>';
   }).join('');
 }
+
+// NOMINATIM GEOCODE - one call does map + GPS + weather
+window._wxRainChance=0;
+var _wxCache={};
+var _geocodeCache={};
+var _autosaveTimer=null;
+var _autosaveKey=null;
+
+function geocodeAddress(address,callback){
+  if(!address)return;
+  if(_geocodeCache[address]){callback(_geocodeCache[address]);return;}
+  fetch('https://nominatim.openstreetmap.org/search?format=json&q='+encodeURIComponent(address)+'&limit=1&countrycodes=au',{headers:{'Accept-Language':'en'}})
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(!data||!data.length)return;
+      var result={lat:parseFloat(data[0].lat),lon:parseFloat(data[0].lon),display:data[0].display_name};
+      _geocodeCache[address]=result;
+      callback(result);
+    }).catch(function(){});
+}
+
+function autoGeocodeFromJobDetails(){
+  var addr=document.getElementById('f_address').value.trim();
+  var suburb=document.getElementById('f_suburb').value.trim();
+  var state=document.getElementById('f_state').value.trim();
+  if(!addr&&!suburb)return;
+  var query=[addr,suburb,state].filter(Boolean).join(', ');
+  geocodeAddress(query,function(result){
+    // Fill map search
+    document.getElementById('mapSearch').value=query;
+    // Fill GPS
+    document.getElementById('f_gps').value=result.lat.toFixed(6)+', '+result.lon.toFixed(6);
+    // Load map
+    loadMapFromCoords(result.lat,result.lon,query);
+    // Fetch weather if TX date available
+    var txDate=document.getElementById('f_txDate').value;
+    if(txDate)fetchWeatherFromCoords(result.lat,result.lon,txDate);
+  });
+}
+
+function loadMapFromCoords(lat,lon,q){
+  var enc=encodeURIComponent(q||lat+','+lon);
+  document.getElementById('mapFrame').src='https://maps.google.com/maps?q='+enc+'&output=embed&z=16';
+  document.getElementById('mapFrame').style.display='block';
+  document.getElementById('mapPlaceholder').style.display='none';
+  document.getElementById('mapLinks').style.display='flex';
+  document.getElementById('linkApple').href='https://maps.apple.com/?q='+enc;
+  document.getElementById('linkGoogle').href='https://www.google.com/maps/search/?api=1&query='+enc;
+  document.getElementById('linkW3W').href='https://what3words.com/search?query='+enc;
+}
+
 function loadMap(){
   var q=document.getElementById('mapSearch').value.trim();if(!q)return;
   var enc=encodeURIComponent(q);
@@ -719,9 +819,37 @@ function loadMap(){
   document.getElementById('linkW3W').href='https://what3words.com/search?query='+enc;
 }
 
-// WEATHER
-window._wxRainChance=0;
-var _wxCache={};
+// WEATHER via Open-Meteo (coords from Nominatim)
+function fetchWeatherFromCoords(lat,lon,txDate){
+  var ck=lat+'|'+lon+'|'+txDate;
+  var widget=document.getElementById('weatherWidget');
+  if(_wxCache[ck]){renderWeather(_wxCache[ck],txDate);return;}
+  widget.textContent='Loading weather…';
+  var tz='Australia/Brisbane';
+  // Guess timezone from longitude
+  if(lon<130)tz='Australia/Perth';
+  else if(lon<138)tz='Australia/Darwin';
+  else if(lon<141)tz='Australia/Adelaide';
+  else if(lon>150.5&&lat<-33)tz='Australia/Sydney';
+  else if(lon>144&&lat<-37)tz='Australia/Melbourne';
+  var url='https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+'&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weathercode,windspeed_10m_max,sunrise,sunset&timezone='+encodeURIComponent(tz)+'&forecast_days=16';
+  fetch(url).then(function(r){return r.json();})
+    .then(function(wx){_wxCache[ck]=wx;renderWeather(wx,txDate);})
+    .catch(function(){widget.textContent='Could not load weather. Check connection and try again.';});
+}
+
+function fetchWeather(){
+  var addr=document.getElementById('f_address').value.trim();
+  var suburb=document.getElementById('f_suburb').value.trim();
+  var state=document.getElementById('f_state').value.trim();
+  var txDate=document.getElementById('f_txDate').value;
+  if((!addr&&!suburb)||!txDate)return;
+  var query=[addr,suburb,state].filter(Boolean).join(', ');
+  geocodeAddress(query,function(result){
+    fetchWeatherFromCoords(result.lat,result.lon,txDate);
+  });
+}
+
 function wxIcon(c){if(c===0)return'☀️';if(c<=2)return'⛅';if(c===3)return'☁️';if(c<=49)return'🌫️';if(c<=59)return'🌦️';if(c<=69)return'🌧️';if(c<=79)return'❄️';if(c<=84)return'🌧️';return'⛈️';}
 function moonPhase(date){
   var known=new Date(2000,0,6),diff=(date-known)/86400000,cycle=29.53,p=((diff%cycle)+cycle)%cycle;
@@ -731,26 +859,6 @@ function moonPhase(date){
   if(p<25.84)return{icon:'🌗',name:'Last Quarter'};return{icon:'🌘',name:'Waning Crescent'};
 }
 function fmtTime(iso){if(!iso)return'—';var d=new Date(iso);return d.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit',hour12:true});}
-function fetchWeather(){
-  var address=document.getElementById('mapSearch').value.trim();
-  if(!address)address=[document.getElementById('f_address').value,document.getElementById('f_suburb').value,document.getElementById('f_state').value].filter(Boolean).join(', ');
-  var txDate=document.getElementById('f_txDate').value;
-  var widget=document.getElementById('weatherWidget');
-  if(!address||!txDate)return;
-  var ck=address+'||'+txDate;
-  if(_wxCache[ck]){renderWeather(_wxCache[ck],txDate);return;}
-  widget.textContent='Loading weather…';
-  fetch('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(address)+'&count=1&language=en&format=json')
-    .then(function(r){return r.json();})
-    .then(function(geo){
-      if(!geo.results||!geo.results.length)throw new Error('not found');
-      var lat=geo.results[0].latitude,lon=geo.results[0].longitude,tz=geo.results[0].timezone||'Australia/Brisbane';
-      var url='https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+'&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weathercode,windspeed_10m_max,sunrise,sunset&timezone='+encodeURIComponent(tz)+'&forecast_days=16';
-      return fetch(url).then(function(r2){return r2.json();});
-    })
-    .then(function(wx){_wxCache[ck]=wx;renderWeather(wx,txDate);})
-    .catch(function(){widget.textContent='Could not load weather — check address and try again.';});
-}
 function renderWeather(wx,txDate){
   var widget=document.getElementById('weatherWidget');
   var dates=wx.daily.time,txIdx=dates.indexOf(txDate);
@@ -758,7 +866,7 @@ function renderWeather(wx,txDate){
   var html='';
   if(txIdx>=0){
     var start=Math.max(0,txIdx-3),end=Math.min(dates.length-1,txIdx+3);
-    html+='<div class="wx-meta">7-day forecast centred on TX date <strong>'+txDate+'</strong></div><div class="wx-row">';
+    html+='<div class="wx-meta">Forecast centred on TX date <strong>'+txDate+'</strong></div><div class="wx-row">';
     for(var i=start;i<=end;i++){
       var d=new Date(dates[i]+'T12:00:00');
       var dl=d.toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'});
@@ -785,7 +893,7 @@ function renderWeather(wx,txDate){
   updateAlerts();
 }
 
-// ALERTS
+// ALERTS - collapsible
 function getYN(id){var b=document.querySelector('.yn-btn.yes[data-id="'+id+'"],.yn-btn.no[data-id="'+id+'"]');return b?(b.classList.contains('yes')?'yes':'no'):null;}
 function updateAlerts(){
   var alerts=[],wSVG='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12" y2="17"/></svg>';
@@ -803,8 +911,10 @@ function updateAlerts(){
   var dt=(document.getElementById('f_dockHours')||{}).value||'';
   if(at&&dt&&at<dt)alerts.push('Venue Access Time ('+at+') is earlier than Loading Dock Opens ('+dt+') — bump-in / dock clash');
   var banner=document.getElementById('alertsBanner');
-  if(!alerts.length){banner.innerHTML='';banner.classList.remove('visible');return;}
-  banner.innerHTML=alerts.map(function(a){return '<div class="alert-item">'+wSVG+'<span>⚠️ '+a+'</span></div>';}).join('');
+  if(!alerts.length){banner.innerHTML='';banner.classList.remove('visible');_alertsOpen=false;return;}
+  var headerHtml='<div class="alerts-header" onclick="toggleAlerts()"><span class="alerts-header-text">⚠️ '+alerts.length+' Alert'+(alerts.length>1?'s':'')+' — tap to '+(  _alertsOpen?'collapse':'expand')+'</span><span class="alerts-chevron" id="alertsChevron">'+(_alertsOpen?'▲':'▼')+'</span></div>';
+  var bodyHtml='<div class="alerts-body'+(_alertsOpen?' open':'')+'" id="alertsBody">'+alerts.map(function(a){return'<div class="alert-item">'+wSVG+'<span>'+a+'</span></div>';}).join('')+'</div>';
+  banner.innerHTML=headerHtml+bodyHtml;
   banner.classList.add('visible');
 }
 
@@ -819,7 +929,44 @@ function updateProgress(){
   document.getElementById('progressPct').textContent=pct+'%';
 }
 
-var allFieldIds=['f_prodName','f_txDate','f_recceDate','f_officer','f_venueName','f_address','f_suburb','f_state','f_contact','f_phone','f_techContact','f_techPhone','f_gps','f_w3w','f_accessNotes','f_occupancy','f_venueAccess','f_ceilingH','f_venueType','f_roomLength','f_roomWidth','f_signal','f_noiseCurfew','f_noiseCurfewContact','f_limiterDb','f_limiterContact','f_houseLx','f_dmxPatch','f_housePA','f_audioPatch','f_houseScreens','f_videoConns','f_3phaseAmps','f_fuseLocation','f_gpos','f_stairs','f_liftDims','f_liftKg','f_corridorW','f_truckDist','f_truckClear','f_dockHours','f_dockContact','f_firstAidKit','f_aed','f_hospital','f_muster','f_riskDoc','f_whsContact','n_venue','n_internet','n_sound','n_light','n_housesystem','n_power','n_accessstorage','n_truck','n_hazards','n_firstaid','n_risk','mapSearch','saveName'];
+// JOB DETAILS WARNING
+function checkJobDetailsWarning(){
+  var venue=document.getElementById('f_venueName').value.trim();
+  var addr=document.getElementById('f_address').value.trim();
+  var txDate=document.getElementById('f_txDate').value;
+  var warning=document.getElementById('jobDetailsWarning');
+  if(warning)warning.style.display=(venue&&addr&&txDate)?'none':'flex';
+}
+
+// AUTOSAVE
+function triggerAutosave(){
+  clearTimeout(_autosaveTimer);
+  _autosaveTimer=setTimeout(function(){
+    var venue=document.getElementById('f_venueName').value.trim();
+    var txDate=document.getElementById('f_txDate').value;
+    if(!venue&&!txDate)return; // nothing worth saving
+    var label='Autosave — '+(venue||'Untitled')+(txDate?' '+txDate:'');
+    var now=new Date();
+    var key='__autosave__';
+    var record={key:key,name:label,date:now.toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'}),time:now.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'}),state:collectState()};
+    dbPut('surveys',record).then(function(){
+      var saves=getAllPhotoIds().map(function(pid){
+        if(window._photos[pid]&&window._photos[pid].blob){var item=photoItems.filter(function(p){return p.id===pid;})[0];return dbPut('photos',{id:key+'__'+pid,surveyKey:key,photoId:pid,blob:window._photos[pid].blob,label:item?item.label:pid});}
+        return Promise.resolve();
+      });return Promise.all(saves);
+    }).then(function(){
+      // Show subtle autosave indicator
+      var btn=document.getElementById('btnSave');
+      if(btn&&btn.textContent==='Save Survey'){
+        var orig=btn.textContent;
+        btn.textContent='Autosaved ✓';
+        setTimeout(function(){if(btn.textContent==='Autosaved ✓')btn.textContent=orig;},2000);
+      }
+    }).catch(function(){});
+  },30000); // 30 seconds
+}
+
+var allFieldIds=['f_prodName','f_txDate','f_recceDate','f_officer','f_venueName','f_address','f_suburb','f_state','f_contact','f_phone','f_techContact','f_techPhone','f_gps','f_accessNotes','f_occupancy','f_venueAccess','f_ceilingH','f_venueType','f_roomLength','f_roomWidth','f_signal','f_noiseCurfew','f_noiseCurfewContact','f_limiterDb','f_limiterContact','f_houseLx','f_dmxPatch','f_housePA','f_audioPatch','f_houseScreens','f_videoConns','f_3phaseAmps','f_fuseLocation','f_gpos','f_stairs','f_liftDims','f_liftKg','f_corridorW','f_truckDist','f_truckClear','f_dockHours','f_dockContact','f_firstAidKit','f_aed','f_hospital','f_muster','f_riskDoc','f_whsContact','n_venue','n_internet','n_sound','n_light','n_housesystem','n_power','n_accessstorage','n_truck','n_hazards','n_firstaid','n_risk','mapSearch','saveName'];
 
 function collectState(){
   var fields={};
@@ -838,8 +985,8 @@ function restoreState(state){
     if(state.yn&&state.yn[btn.dataset.id]===btn.dataset.val)btn.classList.add(btn.dataset.val==='yes'?'yes':'no');
   });
   (state.haz||[]).forEach(function(i){var cb=document.getElementById('haz_'+i);if(cb)cb.checked=true;});
-  if(state.fields&&state.fields.mapSearch){document.getElementById('mapSearch').value=state.fields.mapSearch;loadMap();}
-  updateProgress();updateAlerts();
+  if(state.fields&&state.fields.mapSearch){document.getElementById('mapSearch').value=state.fields.mapSearch;}
+  updateProgress();updateAlerts();checkJobDetailsWarning();
 }
 
 // INDEXEDDB
@@ -851,9 +998,13 @@ function dbGetAll(store){return openDB().then(function(d){return new Promise(fun
 function dbDelete(store,key){return openDB().then(function(d){return new Promise(function(res,rej){var tx=d.transaction(store,'readwrite');tx.objectStore(store).delete(key).onsuccess=res;tx.onerror=function(){rej(tx.error);};});});}
 
 function saveSurvey(){
-  var name=document.getElementById('saveName').value.trim()||document.getElementById('f_prodName').value.trim()||'Untitled';
+  var venue=document.getElementById('f_venueName').value.trim();
+  var txDate=document.getElementById('f_txDate').value;
+  var autoName=(venue||'Survey')+(txDate?' — TX '+txDate:'');
+  document.getElementById('saveName').value=autoName;
+  var name=autoName;
   var now=new Date();
-  var key=name+' — '+now.toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'})+' '+now.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'});
+  var key=name+' '+now.toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'})+' '+now.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'});
   var record={key:key,name:name,date:now.toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'}),time:now.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'}),state:collectState()};
   dbPut('surveys',record).then(function(){
     var saves=getAllPhotoIds().map(function(pid){
@@ -865,6 +1016,7 @@ function saveSurvey(){
     var btn=document.getElementById('btnSave');btn.textContent='Save Survey  ✓';btn.style.background='linear-gradient(135deg,#27ae60,#2ecc71)';
   }).catch(function(e){alert('Could not save: '+e.message);});
 }
+
 function loadSurveyByKey(key){
   dbGet('surveys',key).then(function(record){
     if(!record)return;
@@ -885,11 +1037,13 @@ function deleteSurveyByKey(key){
 }
 function renderSaved(highlightKey){
   dbGetAll('surveys').then(function(all){
+    // Filter out autosave from the visible list
+    all=all.filter(function(s){return s.key!=='__autosave__';});
     all.sort(function(a,b){return b.key.localeCompare(a.key);});
     window._savedKeys=all.map(function(s){return s.key;});
     var loader=document.getElementById('loaderList');
     if(!all.length){if(loader)loader.innerHTML='<div style="color:var(--grey);font-size:0.85rem;padding:8px 0;">No saved surveys yet.</div>';return;}
-    var rows=all.map(function(s,i){return '<div class="saved-row'+(s.key===highlightKey?' active':'')+'"><div class="saved-info"><span class="saved-name">'+s.name+'</span><span class="saved-meta">'+s.date+' &nbsp;'+s.time+'</span></div><div class="saved-actions"><button class="saved-btn load" onclick="loadSurveyByIndex('+i+')">Load</button><button class="saved-btn del" onclick="deleteSurveyByIndex('+i+')">Delete</button></div></div>';}).join('');
+    var rows=all.map(function(s,i){return'<div class="saved-row'+(s.key===highlightKey?' active':'')+'"><div class="saved-info"><span class="saved-name">'+s.name+'</span><span class="saved-meta">'+s.date+' &nbsp;'+s.time+'</span></div><div class="saved-actions"><button class="saved-btn load" onclick="loadSurveyByIndex('+i+')">Load</button><button class="saved-btn del" onclick="deleteSurveyByIndex('+i+')">Delete</button></div></div>';}).join('');
     if(loader)loader.innerHTML=rows;
   });
 }
@@ -910,10 +1064,10 @@ function clearAll(){
   document.getElementById('f_recceDate').valueAsDate=new Date();
   document.getElementById('weatherWidget').innerHTML='Enter address and TX date to load weather forecast.';
   var btn=document.getElementById('btnSave');if(btn){btn.textContent='Save Survey';btn.style.background='';}
-  updateSitePhotosGrid();updateAlerts();
+  updateSitePhotosGrid();updateAlerts();checkJobDetailsWarning();
 }
 function newSurvey(){
-  if(document.getElementById('f_prodName').value.trim()){if(!confirm('Start a new survey? Unsaved changes will be lost.'))return;}
+  if(document.getElementById('f_prodName').value.trim()||document.getElementById('f_venueName').value.trim()){if(!confirm('Start a new survey? Unsaved changes will be lost.'))return;}
   clearAll();window._activeKey=null;renderSaved(null);updateProgress();window.scrollTo({top:0,behavior:'smooth'});
 }
 function toggleLoader(){
@@ -924,11 +1078,11 @@ function toggleLoader(){
 }
 
 function exportSurvey(){
-  var name=document.getElementById('saveName').value.trim()||document.getElementById('f_prodName').value.trim()||'Recce Survey';
+  var venue=document.getElementById('f_venueName').value.trim()||'Recce Survey';
   var dated=document.getElementById('f_recceDate').value||new Date().toISOString().slice(0,10);
-  var fname=name.replace(/[^a-zA-Z0-9 _-]/g,'').trim()+' - '+dated;
+  var fname=venue.replace(/[^a-zA-Z0-9 _-]/g,'').trim()+' - '+dated;
   var zip=new JSZip();
-  zip.file('survey.json',JSON.stringify({_v:3,name:name,date:dated,exported:new Date().toISOString(),state:collectState()},null,2));
+  zip.file('survey.json',JSON.stringify({_v:3,name:venue,date:dated,exported:new Date().toISOString(),state:collectState()},null,2));
   var folder=zip.folder('photos');
   getAllPhotoIds().forEach(function(pid){if(window._photos[pid]&&window._photos[pid].blob)folder.file((photoLabels[pid]||pid)+'.jpg',window._photos[pid].blob);});
   zip.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:6}}).then(function(zipBlob){
@@ -957,12 +1111,8 @@ function generateReport(){
       var a=takenIds[i],b=takenIds[i+1];
       photoRows.push('<tr><td style="width:50%;padding:8px;vertical-align:top;"><img src="'+dataUrls[a]+'" style="width:100%;border-radius:4px;display:block;"><p style="margin-top:5px;font-size:11px;font-weight:600;color:#555;">'+labelFor(a)+'</p></td>'+(b?'<td style="width:50%;padding:8px;vertical-align:top;"><img src="'+dataUrls[b]+'" style="width:100%;border-radius:4px;display:block;"><p style="margin-top:5px;font-size:11px;font-weight:600;color:#555;">'+labelFor(b)+'</p></td>':'<td></td>')+'</tr>');
     }
-    function ynTable(section){
-      if(!ynSections[section])return'';
-      return'<table class="yn-table">'+ynSections[section].map(function(q){return'<tr><td>'+q.q+'</td><td class="'+ynClass(q.id)+'">'+ynLabel(q.id)+'</td></tr>';}).join('')+'</table>';
-    }
+    function ynTable(section){if(!ynSections[section])return'';return'<table class="yn-table">'+ynSections[section].map(function(q){return'<tr><td>'+q.q+'</td><td class="'+ynClass(q.id)+'">'+ynLabel(q.id)+'</td></tr>';}).join('')+'</table>';}
     function fr(lbl,val){return'<div class="field-row"><span class="field-key">'+lbl+'</span><span class="field-val">'+(val||'—')+'</span></div>';}
-    // Alerts for report
     var rAlerts=[];
     if(yn['nl1']==='yes')rAlerts.push('Noise limiter fitted'+(fv('f_limiterDb','')?(' — '+fv('f_limiterDb')):''));
     if(fv('f_noiseCurfew',''))rAlerts.push('Noise curfew — '+fv('f_noiseCurfew'));
@@ -983,7 +1133,7 @@ function generateReport(){
     html+='<div class="meta"><span><strong>Production:</strong> '+fv('f_prodName')+'</span><span><strong>Venue:</strong> '+fv('f_venueName')+'</span><span><strong>TX Date:</strong> '+fv('f_txDate')+'</span><span><strong>Recce Date:</strong> '+fv('f_recceDate')+'</span><span><strong>Officer:</strong> '+fv('f_officer')+'</span></div>';
     html+='<button class="print-btn" onclick="window.print()">Print / Save as PDF</button>';
     html+='<div class="page">'+alertsHtml;
-    html+='<h2>Job Details</h2>'+fr('Production',fv('f_prodName'))+fr('TX Date',fv('f_txDate'))+fr('Recce Date',fv('f_recceDate'))+fr('Officer',fv('f_officer'))+fr('Venue',fv('f_venueName'))+fr('Address',fv('f_address'))+fr('Suburb',fv('f_suburb'))+fr('State',fv('f_state'))+fr('Booking Contact',fv('f_contact'))+fr('Booking Phone',fv('f_phone'))+fr('Tech Contact (On Day)',fv('f_techContact'))+fr('Tech Phone',fv('f_techPhone'));
+    html+='<h2>Job Details</h2>'+fr('Production',fv('f_prodName'))+fr('TX Date',fv('f_txDate'))+fr('Recce Date',fv('f_recceDate'))+fr('Officer',fv('f_officer'))+fr('Venue',fv('f_venueName'))+fr('Address',fv('f_address'))+fr('Suburb',fv('f_suburb'))+fr('State',fv('f_state'))+fr('GPS',fv('f_gps'))+fr('Booking Contact',fv('f_contact'))+fr('Booking Phone',fv('f_phone'))+fr('Tech Contact (On Day)',fv('f_techContact'))+fr('Tech Phone',fv('f_techPhone'));
     html+='<h2>Venue &amp; Space</h2>'+fr('Ceiling Height',fv('f_ceilingH'))+fr('Room Length',fv('f_roomLength'))+fr('Room Width',fv('f_roomWidth'))+fr('Occupancy',fv('f_occupancy'))+fr('Venue Access Time',fv('f_venueAccess'))+fr('Venue Type',fv('f_venueType'))+ynTable('yn_venue')+(fv('n_venue','')?fr('Notes',fv('n_venue')):'');
     html+='<h2>Transmission &amp; Connectivity</h2>'+fr('4G / 5G Signal',fv('f_signal'))+(fv('n_internet','')?fr('Notes',fv('n_internet')):'');
     html+='<h2>Sound</h2>'+ynTable('yn_sound')+'<div style="margin-top:6px;font-size:10px;font-weight:700;color:#0a1628;text-transform:uppercase;letter-spacing:0.08em;">Noise Limiter</div>'+ynTable('yn_noiselimiter')+fr('Curfew Time',fv('f_noiseCurfew'))+fr('Curfew Contact',fv('f_noiseCurfewContact'))+fr('Limiter dB',fv('f_limiterDb'))+fr('Limiter Contact',fv('f_limiterContact'))+(fv('n_sound','')?fr('Notes',fv('n_sound')):'');
@@ -997,15 +1147,9 @@ function generateReport(){
     html+='<h2>Risk Assessment &amp; Duty of Care</h2>'+ynTable('yn_risk')+fr('RA Doc Ref',fv('f_riskDoc'))+fr('WHS Contact',fv('f_whsContact'))+(fv('n_risk','')?fr('Notes',fv('n_risk')):'');
     if(takenIds.length)html+='<h2>Site Photos</h2><table>'+photoRows.join('')+'</table>';
     html+='</div></body></html>';
-    // Open report window
     var rw=window.open('','_blank');
     if(rw){rw.document.open();rw.document.write(html);rw.document.close();setTimeout(function(){try{rw.print();}catch(e){}},800);}
-    else {
-      var iframe=document.getElementById('reportFrame');
-      if(!iframe){iframe=document.createElement('iframe');iframe.id='reportFrame';iframe.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;border:none;z-index:99999;background:white;';document.body.appendChild(iframe);}
-      iframe.style.display='block';iframe.contentDocument.open();iframe.contentDocument.write(html);iframe.contentDocument.close();
-      setTimeout(function(){try{iframe.contentWindow.print();}catch(e){}setTimeout(function(){iframe.style.display='none';},1500);},800);
-    }
+    else{var iframe=document.getElementById('reportFrame');if(!iframe){iframe=document.createElement('iframe');iframe.id='reportFrame';iframe.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;border:none;z-index:99999;background:white;';document.body.appendChild(iframe);}iframe.style.display='block';iframe.contentDocument.open();iframe.contentDocument.write(html);iframe.contentDocument.close();setTimeout(function(){try{iframe.contentWindow.print();}catch(e){}setTimeout(function(){iframe.style.display='none';},1500);},800);}
   });
 }
 
@@ -1032,30 +1176,55 @@ function importJson(file){
   reader.readAsText(file);
 }
 
+// SWIPE on lightbox
+var _lbTouchStartX=0;
 document.addEventListener('DOMContentLoaded',function(){
   Object.keys(ynSections).forEach(function(id){buildYN(id,ynSections[id]);});
   buildHazards();buildPhotos();
   document.getElementById('f_recceDate').valueAsDate=new Date();
-  updateProgress();updateAlerts();renderSaved(null);updateSitePhotosGrid();
+  updateProgress();updateAlerts();checkJobDetailsWarning();renderSaved(null);updateSitePhotosGrid();
+
+  // Swipe on lightbox
+  var lb=document.getElementById('lightbox');
+  lb.addEventListener('touchstart',function(e){_lbTouchStartX=e.touches[0].clientX;},{passive:true});
+  lb.addEventListener('touchend',function(e){
+    var dx=e.changedTouches[0].clientX-_lbTouchStartX;
+    if(Math.abs(dx)>50)lightboxNav(dx<0?1:-1);
+  },{passive:true});
+
   document.addEventListener('input',function(e){
     if(e.target.tagName==='TEXTAREA'){e.target.style.height='auto';e.target.style.height=e.target.scrollHeight+'px';}
     if(['f_venueAccess','f_dockHours','f_noiseCurfew','f_limiterDb'].indexOf(e.target.id)>-1)updateAlerts();
-    if(e.target.id==='f_txDate'||e.target.id==='mapSearch'){
-      var addr=document.getElementById('mapSearch').value.trim()||[document.getElementById('f_address').value,document.getElementById('f_suburb').value,document.getElementById('f_state').value].filter(Boolean).join(', ');
-      if(addr&&document.getElementById('f_txDate').value)fetchWeather();
-    }
+    if(['f_venueName','f_address','f_txDate'].indexOf(e.target.id)>-1)checkJobDetailsWarning();
+    triggerAutosave();
   });
-  document.getElementById('mapSearch').addEventListener('keydown',function(e){if(e.key==='Enter')loadMap();});
-  document.getElementById('f_address').addEventListener('blur',function(){
-    var v=[this.value,document.getElementById('f_suburb').value,document.getElementById('f_state').value].filter(Boolean).join(', ');
-    if(v)document.getElementById('mapSearch').value=v;
-    if(v&&document.getElementById('f_txDate').value)fetchWeather();
+
+  // Address fields - geocode on blur
+  ['f_address','f_suburb','f_state'].forEach(function(fid){
+    document.getElementById(fid).addEventListener('blur',function(){
+      autoGeocodeFromJobDetails();
+      checkJobDetailsWarning();
+    });
   });
+
+  // TX date change - refetch weather
   document.getElementById('f_txDate').addEventListener('change',function(){
-    var addr=document.getElementById('mapSearch').value.trim()||[document.getElementById('f_address').value,document.getElementById('f_suburb').value,document.getElementById('f_state').value].filter(Boolean).join(', ');
-    if(addr&&this.value)fetchWeather();
+    checkJobDetailsWarning();
+    autoGeocodeFromJobDetails();
+    triggerAutosave();
   });
-  document.getElementById('f_prodName').addEventListener('input',function(){var sn=document.getElementById('saveName');if(!sn.value)sn.value=this.value;});
+
+  document.getElementById('f_prodName').addEventListener('input',function(){
+    var sn=document.getElementById('saveName');if(!sn.value)sn.value=this.value;
+    triggerAutosave();
+  });
+
+  // Keyboard close lightbox
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape')closeLightbox();
+    if(e.key==='ArrowRight')lightboxNav(1);
+    if(e.key==='ArrowLeft')lightboxNav(-1);
+  });
 });
 if('serviceWorker' in navigator){navigator.serviceWorker.register('/Tech-Survey/sw.js',{scope:'/Tech-Survey/'}).catch(function(){});}
 </script>
