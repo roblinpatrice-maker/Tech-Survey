@@ -12,214 +12,202 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
 :root {
-  --navy: #0a1628; --navy-mid: #122040; --navy-light: #1a2f55;
-  --gold: #c8a84b; --gold-light: #e8c96a;
-  --white: #f4f6fa; --grey: #8a9bb5; --grey-light: #d0d8e8;
-  --danger: #c0392b; --success: #27ae60;
-  --card-bg: rgba(18,32,64,0.85);
+  --navy:#0a1628;--navy-mid:#122040;--navy-light:#1a2f55;
+  --gold:#c8a84b;--gold-light:#e8c96a;
+  --white:#f4f6fa;--grey:#8a9bb5;--grey-light:#d0d8e8;
+  --danger:#c0392b;--success:#27ae60;--card-bg:rgba(18,32,64,0.85);
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  background: var(--navy); color: var(--white);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  font-weight: 400; min-height: 100vh;
-  background-image: radial-gradient(ellipse at 20% 50%, rgba(200,168,75,0.06) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(26,47,85,0.8) 0%, transparent 50%);
-}
-header {
-  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
-  border-bottom: 2px solid var(--gold);
-  padding: 28px 40px; display: flex; align-items: center; gap: 28px;
-  position: relative; overflow: hidden;
-}
-header::before { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
-.logo-wrap { flex-shrink: 0; }
-.logo-wrap svg { width: 72px; height: 72px; }
-.header-text h1 { font-size: 2rem; font-weight: 700; letter-spacing: 0.08em; color: var(--white); text-transform: uppercase; line-height: 1; }
-.header-text p { font-size: 0.85rem; color: var(--gold); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 6px; font-weight: 300; }
-.header-contact { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 10px; }
-.header-contact a { display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: var(--grey-light); text-decoration: none; transition: color 0.2s; }
-.header-contact a:hover { color: var(--gold); }
-.header-contact a svg { width: 13px; height: 13px; min-width: 13px; stroke: var(--gold); flex-shrink: 0; }
-main { max-width: 820px; margin: 0 auto; padding: 40px 20px 60px; }
-.form-intro { text-align: center; margin-bottom: 36px; }
-.form-intro h2 { font-size: 2.4rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--white); }
-.form-intro .gold-line { width: 60px; height: 2px; background: var(--gold); margin: 12px auto; }
-.form-intro p { color: var(--grey); font-size: 0.9rem; max-width: 500px; margin: 0 auto; line-height: 1.6; }
-
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--navy);color:var(--white);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-weight:400;min-height:100vh;background-image:radial-gradient(ellipse at 20% 50%,rgba(200,168,75,0.06) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(26,47,85,0.8) 0%,transparent 50%);}
+header{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);border-bottom:2px solid var(--gold);padding:28px 40px;display:flex;align-items:center;gap:28px;position:relative;overflow:hidden;}
+header::before{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.logo-wrap{flex-shrink:0;}.logo-wrap svg{width:72px;height:72px;}
+.header-text h1{font-size:2rem;font-weight:700;letter-spacing:0.08em;color:var(--white);text-transform:uppercase;line-height:1;}
+.header-text p{font-size:0.85rem;color:var(--gold);letter-spacing:0.15em;text-transform:uppercase;margin-top:6px;font-weight:300;}
+.header-contact{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px;}
+.header-contact a{display:flex;align-items:center;gap:5px;font-size:0.75rem;color:var(--grey-light);text-decoration:none;transition:color 0.2s;}
+.header-contact a:hover{color:var(--gold);}
+.header-contact a svg{width:13px;height:13px;min-width:13px;stroke:var(--gold);flex-shrink:0;}
+main{max-width:820px;margin:0 auto;padding:40px 20px 60px;}
+.form-intro{text-align:center;margin-bottom:36px;}
+.form-intro h2{font-size:2.4rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--white);}
+.form-intro .gold-line{width:60px;height:2px;background:var(--gold);margin:12px auto;}
+.form-intro p{color:var(--grey);font-size:0.9rem;max-width:500px;margin:0 auto;line-height:1.6;}
 /* LOADER */
-.loader-panel { background: rgba(18,32,64,0.9); border: 1px solid rgba(200,168,75,0.2); border-radius: 4px; padding: 16px 20px; margin-bottom: 20px; }
-.loader-btns { display: flex; gap: 10px; flex-wrap: wrap; }
-.loader-btn { display: flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 3px; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all 0.15s; border: 1px solid; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
-.loader-btn.new { background: linear-gradient(135deg, #c8a84b, #e8c96a); color: #0a1628; border-color: #c8a84b; }
-.loader-btn.new:hover { transform: translateY(-1px); }
-.loader-btn.load { background: transparent; color: #f4f6fa; border-color: rgba(255,255,255,0.25); }
-.loader-btn.load:hover, .loader-btn.load.active { background: rgba(255,255,255,0.08); border-color: #f4f6fa; }
-.loader-list { margin-top: 14px; }
-.saved-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 11px 14px; background: rgba(10,22,40,0.4); border: 1px solid rgba(200,168,75,0.12); border-radius: 3px; margin-bottom: 8px; }
-.saved-row.active { border-color: rgba(39,174,96,0.4); background: rgba(39,174,96,0.08); }
-.saved-row.active .saved-name { color: #2ecc71; }
-.saved-info { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
-.saved-name { font-size: 0.92rem; color: var(--white); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.saved-meta { font-size: 0.75rem; color: var(--grey); }
-.saved-actions { display: flex; gap: 7px; flex-shrink: 0; }
-.saved-btn { padding: 5px 13px; border-radius: 2px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; cursor: pointer; transition: all 0.13s; border: 1px solid; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
-.saved-btn.load { border-color: rgba(200,168,75,0.4); background: rgba(200,168,75,0.08); color: var(--gold); }
-.saved-btn.load:hover { background: rgba(200,168,75,0.18); }
-.saved-btn.del { border-color: rgba(192,57,43,0.35); background: rgba(192,57,43,0.06); color: #e74c3c; }
-.saved-btn.del:hover { background: rgba(192,57,43,0.16); }
-
+.loader-panel{background:rgba(18,32,64,0.9);border:1px solid rgba(200,168,75,0.2);border-radius:4px;padding:16px 20px;margin-bottom:20px;}
+.loader-btns{display:flex;gap:8px;flex-wrap:wrap;}
+.loader-btn{display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 16px;border-radius:3px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.15s;border:1px solid;font-family:inherit;flex:1 1 140px;min-width:0;text-align:center;}
+.loader-btn.new{background:linear-gradient(135deg,#c8a84b,#e8c96a);color:#0a1628;border-color:#c8a84b;}
+.loader-btn.new:hover{transform:translateY(-1px);}
+.loader-btn.load{background:transparent;color:#f4f6fa;border-color:rgba(255,255,255,0.25);}
+.loader-btn.load:hover,.loader-btn.load.active{background:rgba(255,255,255,0.08);border-color:#f4f6fa;}
+.loader-list{margin-top:14px;}
+.saved-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:11px 14px;background:rgba(10,22,40,0.4);border:1px solid rgba(200,168,75,0.12);border-radius:3px;margin-bottom:8px;}
+.saved-row.active{border-color:rgba(39,174,96,0.4);background:rgba(39,174,96,0.08);}
+.saved-row.active .saved-name{color:#2ecc71;}
+.saved-info{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;}
+.saved-name{font-size:0.92rem;color:var(--white);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.saved-meta{font-size:0.75rem;color:var(--grey);}
+.saved-actions{display:flex;gap:7px;flex-shrink:0;}
+.saved-btn{padding:5px 13px;border-radius:2px;font-size:0.8rem;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;cursor:pointer;transition:all 0.13s;border:1px solid;font-family:inherit;}
+.saved-btn.load{border-color:rgba(200,168,75,0.4);background:rgba(200,168,75,0.08);color:var(--gold);}
+.saved-btn.load:hover{background:rgba(200,168,75,0.18);}
+.saved-btn.del{border-color:rgba(192,57,43,0.35);background:rgba(192,57,43,0.06);color:#e74c3c;}
+.saved-btn.del:hover{background:rgba(192,57,43,0.16);}
 /* PROGRESS */
-.progress-wrap { background: rgba(18,32,64,0.9); border: 1px solid rgba(200,168,75,0.2); border-radius: 4px; padding: 14px 20px; margin-bottom: 28px; display: flex; align-items: center; gap: 16px; }
-.progress-label { font-size: 0.8rem; color: var(--gold); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
-.progress-track { flex: 1; height: 5px; background: rgba(200,168,75,0.12); border-radius: 3px; overflow: hidden; }
-.progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-light)); border-radius: 3px; transition: width 0.4s; width: 0%; }
-.progress-pct { font-size: 1rem; font-weight: 600; color: var(--gold); min-width: 36px; text-align: right; }
-
+.progress-wrap{background:rgba(18,32,64,0.9);border:1px solid rgba(200,168,75,0.2);border-radius:4px;padding:14px 20px;margin-bottom:12px;display:flex;align-items:center;gap:16px;}
+.progress-label{font-size:0.8rem;color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;white-space:nowrap;}
+.progress-track{flex:1;height:5px;background:rgba(200,168,75,0.12);border-radius:3px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:3px;transition:width 0.4s;width:0%;}
+.progress-pct{font-size:1rem;font-weight:600;color:var(--gold);min-width:36px;text-align:right;}
+/* ALERTS */
+#alertsBanner{margin-bottom:20px;display:none;flex-direction:column;gap:6px;}
+#alertsBanner.visible{display:flex;}
+.alert-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:rgba(192,57,43,0.12);border:1px solid rgba(192,57,43,0.4);border-radius:3px;font-size:0.85rem;color:#f08080;line-height:1.4;}
 /* SECTIONS */
-.section { background: var(--card-bg); border: 1px solid rgba(200,168,75,0.2); border-radius: 4px; margin-bottom: 24px; overflow: hidden; backdrop-filter: blur(4px); }
-.section-header { background: linear-gradient(90deg, var(--navy-light), var(--navy-mid)); border-bottom: 1px solid rgba(200,168,75,0.25); padding: 14px 24px; display: flex; align-items: center; gap: 14px; }
-.section-header.collapsible { cursor: pointer; user-select: none; }
-.section-header.collapsible:hover { background: linear-gradient(90deg, #1e3660, var(--navy-mid)); }
-.section-num { background: var(--gold); color: var(--navy); font-weight: 700; font-size: 0.85rem; width: 28px; height: 28px; border-radius: 2px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.section-title { font-size: 1.1rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--white); }
-.section-tag { margin-left: auto; font-size: 0.7rem; color: var(--grey); letter-spacing: 0.1em; text-transform: uppercase; }
-.collapse-icon { margin-left: auto; color: var(--gold); font-size: 1rem; transition: transform 0.25s; flex-shrink: 0; line-height: 1; }
-.section-tag + .collapse-icon { margin-left: 10px; }
-.section.collapsed .collapse-icon { transform: rotate(-90deg); }
-.section-body { padding: 24px; }
-.section.collapsed .section-body { display: none; }
-
+.section{background:var(--card-bg);border:1px solid rgba(200,168,75,0.2);border-radius:4px;margin-bottom:24px;overflow:hidden;backdrop-filter:blur(4px);}
+.section-header{background:linear-gradient(90deg,var(--navy-light),var(--navy-mid));border-bottom:1px solid rgba(200,168,75,0.25);padding:14px 24px;display:flex;align-items:center;gap:14px;}
+.section-header.collapsible{cursor:pointer;user-select:none;}
+.section-header.collapsible:hover{background:linear-gradient(90deg,#1e3660,var(--navy-mid));}
+.section-num{background:var(--gold);color:var(--navy);font-weight:700;font-size:0.85rem;width:28px;height:28px;border-radius:2px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.section-title{font-size:1.1rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--white);}
+.section-tag{margin-left:auto;font-size:0.7rem;color:var(--grey);letter-spacing:0.1em;text-transform:uppercase;}
+.collapse-icon{margin-left:auto;color:var(--gold);font-size:1rem;transition:transform 0.25s;flex-shrink:0;line-height:1;}
+.section-tag+.collapse-icon{margin-left:10px;}
+.section.collapsed .collapse-icon{transform:rotate(-90deg);}
+.section-body{padding:24px;}
+.section.collapsed .section-body{display:none;}
 /* FIELDS */
-.sub-label { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin: 20px 0 10px; padding-bottom: 6px; border-bottom: 1px solid rgba(200,168,75,0.15); display: flex; align-items: center; gap: 8px; }
-.sub-label:first-child { margin-top: 0; }
-.field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.field-grid.triple { grid-template-columns: 1fr 1fr 1fr; }
-.field { display: flex; flex-direction: column; gap: 5px; }
-.field.full { grid-column: 1 / -1; }
-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); }
-input[type=text], input[type=email], input[type=tel], input[type=date], input[type=time], input[type=number], textarea, select {
-  background: rgba(10,22,40,0.8); border: 1px solid rgba(200,168,75,0.3); border-radius: 3px; color: var(--white);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  font-size: 0.92rem; padding: 9px 13px; outline: none; transition: border-color 0.2s, box-shadow 0.2s; width: 100%;
-}
-input:focus, textarea:focus, select:focus { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(200,168,75,0.13); }
-textarea { resize: none; min-height: 70px; overflow: hidden; }
-select option { background: var(--navy-mid); color: var(--white); }
-input[type=date]::-webkit-calendar-picker-indicator, input[type=time]::-webkit-calendar-picker-indicator { filter: invert(0.7) sepia(1) saturate(2) hue-rotate(5deg); cursor: pointer; }
-.section-notes { margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(200,168,75,0.12); }
-.section-notes label { display: block; margin-bottom: 6px; }
-.section-notes textarea { min-height: 64px; font-size: 0.88rem; color: var(--grey-light); }
-
+.sub-label{font-size:0.78rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin:20px 0 10px;padding-bottom:6px;border-bottom:1px solid rgba(200,168,75,0.15);display:flex;align-items:center;gap:8px;}
+.sub-label:first-child{margin-top:0;}
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.field-grid.triple{grid-template-columns:1fr 1fr 1fr;}
+.field{display:flex;flex-direction:column;gap:5px;}
+.field.full{grid-column:1/-1;}
+label{font-size:0.72rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);}
+input[type=text],input[type=email],input[type=tel],input[type=date],input[type=time],input[type=number],textarea,select{background:rgba(10,22,40,0.8);border:1px solid rgba(200,168,75,0.3);border-radius:3px;color:var(--white);font-family:inherit;font-size:0.92rem;padding:9px 13px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;width:100%;}
+input:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(200,168,75,0.13);}
+textarea{resize:none;min-height:70px;overflow:hidden;}
+select option{background:var(--navy-mid);color:var(--white);}
+input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-calendar-picker-indicator{filter:invert(0.7) sepia(1) saturate(2) hue-rotate(5deg);cursor:pointer;}
+.section-notes{margin-top:18px;padding-top:16px;border-top:1px solid rgba(200,168,75,0.12);}
+.section-notes label{display:block;margin-bottom:6px;}
+.section-notes textarea{min-height:64px;font-size:0.88rem;color:var(--grey-light);}
 /* YES/NO */
-.yn-list { display: flex; flex-direction: column; }
-.yn-item { border-bottom: 1px solid rgba(200,168,75,0.08); }
-.yn-item:last-child { border-bottom: none; }
-.yn-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 10px 12px; background: rgba(10,22,40,0.35); transition: background 0.15s; }
-.yn-row:hover { background: rgba(10,22,40,0.6); }
-.yn-question { font-size: 0.88rem; color: var(--grey-light); flex: 1; line-height: 1.4; }
-.yn-btns { display: flex; gap: 6px; flex-shrink: 0; }
-.yn-btn { padding: 4px 13px; border-radius: 2px; border: 1px solid rgba(200,168,75,0.3); background: transparent; color: var(--grey); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; cursor: pointer; transition: all 0.13s; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
-.yn-btn:hover { border-color: var(--gold); color: var(--gold); }
-.yn-btn.yes { background: rgba(39,174,96,0.18); border-color: var(--success); color: #2ecc71; }
-.yn-btn.no { background: rgba(192,57,43,0.18); border-color: var(--danger); color: #e74c3c; }
-
+.yn-list{display:flex;flex-direction:column;}
+.yn-item{border-bottom:1px solid rgba(200,168,75,0.08);}
+.yn-item:last-child{border-bottom:none;}
+.yn-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 12px;background:rgba(10,22,40,0.35);transition:background 0.15s;}
+.yn-row:hover{background:rgba(10,22,40,0.6);}
+.yn-question{font-size:0.88rem;color:var(--grey-light);flex:1;line-height:1.4;}
+.yn-btns{display:flex;gap:6px;flex-shrink:0;}
+.yn-btn{padding:4px 13px;border-radius:2px;border:1px solid rgba(200,168,75,0.3);background:transparent;color:var(--grey);font-size:0.8rem;font-weight:600;letter-spacing:0.08em;cursor:pointer;transition:all 0.13s;font-family:inherit;}
+.yn-btn:hover{border-color:var(--gold);color:var(--gold);}
+.yn-btn.yes{background:rgba(39,174,96,0.18);border-color:var(--success);color:#2ecc71;}
+.yn-btn.no{background:rgba(192,57,43,0.18);border-color:var(--danger);color:#e74c3c;}
 /* HAZARDS */
-.hazard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-.hazard-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: rgba(10,22,40,0.4); border: 1px solid rgba(200,168,75,0.1); border-radius: 3px; cursor: pointer; transition: all 0.15s; }
-.hazard-item:hover { border-color: rgba(200,168,75,0.3); }
-.hazard-item input[type=checkbox] { width: 16px; height: 16px; accent-color: #e74c3c; flex-shrink: 0; cursor: pointer; }
-.hazard-item label { font-size: 0.85rem; color: var(--grey-light); text-transform: none; letter-spacing: 0; font-weight: 400; cursor: pointer; line-height: 1.3; }
-.hazard-item:has(input:checked) { border-color: rgba(192,57,43,0.5); background: rgba(192,57,43,0.08); }
-.hazard-item:has(input:checked) label { color: var(--white); }
-
+.hazard-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.hazard-item{display:flex;align-items:center;gap:10px;padding:9px 12px;background:rgba(10,22,40,0.4);border:1px solid rgba(200,168,75,0.1);border-radius:3px;cursor:pointer;transition:all 0.15s;}
+.hazard-item:hover{border-color:rgba(200,168,75,0.3);}
+.hazard-item input[type=checkbox]{width:16px;height:16px;accent-color:#e74c3c;flex-shrink:0;cursor:pointer;}
+.hazard-item label{font-size:0.85rem;color:var(--grey-light);text-transform:none;letter-spacing:0;font-weight:400;cursor:pointer;line-height:1.3;}
+.hazard-item:has(input:checked){border-color:rgba(192,57,43,0.5);background:rgba(192,57,43,0.08);}
+.hazard-item:has(input:checked) label{color:var(--white);}
 /* MAP */
-.map-row { display: flex; gap: 10px; margin-bottom: 10px; }
-.map-row input { flex: 1; }
-.map-btn { padding: 9px 18px; background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: var(--navy); border: none; border-radius: 3px; font-size: 0.9rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; white-space: nowrap; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
-.map-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(200,168,75,0.3); }
-.map-container { background: rgba(10,22,40,0.6); border: 1px solid rgba(200,168,75,0.2); border-radius: 3px; overflow: hidden; }
-.map-link-btn { display: inline-flex; align-items: center; gap: 5px; padding: 7px 14px; border-radius: 3px; border: 1px solid rgba(255,255,255,0.25); background: rgba(255,255,255,0.06); color: var(--white); font-size: 0.82rem; text-decoration: none; transition: all 0.15s; }
-.map-link-btn:hover { background: rgba(255,255,255,0.14); border-color: var(--white); }
-.map-placeholder { height: 260px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; color: var(--grey); font-size: 0.88rem; text-align: center; padding: 20px; }
-.map-placeholder svg { opacity: 0.35; }
-#mapFrame { width: 100%; height: 260px; border: none; display: none; }
-
+.map-row{display:flex;gap:10px;margin-bottom:10px;}
+.map-row input{flex:1;}
+.map-btn{padding:9px 18px;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--navy);border:none;border-radius:3px;font-size:0.9rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;white-space:nowrap;font-family:inherit;}
+.map-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(200,168,75,0.3);}
+.map-container{background:rgba(10,22,40,0.6);border:1px solid rgba(200,168,75,0.2);border-radius:3px;overflow:hidden;}
+.map-link-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:3px;border:1px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.06);color:var(--white);font-size:0.82rem;text-decoration:none;transition:all 0.15s;}
+.map-link-btn:hover{background:rgba(255,255,255,0.14);border-color:var(--white);}
+.map-placeholder{height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--grey);font-size:0.88rem;text-align:center;padding:20px;}
+.map-placeholder svg{opacity:0.35;}
+#mapFrame{width:100%;height:260px;border:none;display:none;}
+/* WEATHER */
+.weather-wrap{margin-top:18px;padding-top:16px;border-top:1px solid rgba(200,168,75,0.12);}
+#weatherWidget{background:rgba(10,22,40,0.5);border:1px solid rgba(200,168,75,0.18);border-radius:4px;padding:14px 16px;color:var(--grey);font-size:0.84rem;}
+.wx-meta{font-size:0.78rem;color:var(--grey);margin-bottom:10px;}
+.wx-meta strong{color:var(--gold);}
+.wx-row{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;}
+.wx-day{flex-shrink:0;min-width:74px;background:rgba(18,32,64,0.7);border:1px solid rgba(200,168,75,0.15);border-radius:3px;padding:8px 6px;text-align:center;}
+.wx-day.tx-day{border-color:var(--gold);background:rgba(200,168,75,0.1);}
+.wx-date{font-size:0.62rem;color:var(--grey);text-transform:uppercase;letter-spacing:0.04em;line-height:1.3;}
+.wx-icon{font-size:1.4rem;margin:4px 0;line-height:1;}
+.wx-temp{font-size:0.78rem;font-weight:600;color:var(--white);}
+.wx-rain{font-size:0.68rem;color:#6aade8;margin-top:2px;}
+.wx-wind{font-size:0.65rem;color:var(--grey);margin-top:1px;}
+.wx-always{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid rgba(200,168,75,0.1);}
+.wx-pill{display:flex;align-items:center;gap:5px;font-size:0.78rem;color:var(--grey-light);}
+.wx-pill .wx-lbl{color:var(--gold);font-weight:600;}
+.wx-note{font-size:0.8rem;color:var(--grey);text-align:center;padding:8px 0;}
 /* PHOTOS */
-.photo-list { display: flex; flex-direction: column; gap: 8px; }
-.photo-item { background: rgba(10,22,40,0.5); border: 1px solid rgba(200,168,75,0.18); border-radius: 3px; overflow: hidden; }
-.photo-header { display: flex; align-items: flex-start; gap: 8px; padding: 8px 12px; flex-wrap: wrap; }
-.photo-thumb-small { width: 38px; height: 38px; object-fit: cover; border-radius: 2px; border: 1px solid rgba(200,168,75,0.25); flex-shrink: 0; display: none; cursor: pointer; margin-top: 2px; }
-.photo-thumb-small.visible { display: block; }
-.photo-label { font-size: 0.82rem; color: var(--grey-light); flex: 1; line-height: 1.3; min-width: 120px; }
-.photo-actions { display: flex; gap: 5px; align-items: center; flex-shrink: 0; flex-wrap: wrap; }
-.photo-status { font-size: 0.65rem; padding: 2px 6px; border-radius: 2px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; background: rgba(138,155,181,0.1); border: 1px solid rgba(138,155,181,0.25); color: var(--grey); white-space: nowrap; }
-.photo-status.done { background: rgba(39,174,96,0.15); border-color: rgba(39,174,96,0.4); color: #2ecc71; }
-.photo-btn { display: flex; align-items: center; gap: 3px; padding: 5px 8px; border-radius: 2px; border: 1px solid rgba(200,168,75,0.35); background: rgba(200,168,75,0.07); color: var(--gold); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.04em; cursor: pointer; transition: all 0.13s; text-transform: uppercase; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; white-space: nowrap; }
-.photo-btn:hover { background: rgba(200,168,75,0.16); border-color: var(--gold); }
-.photo-btn svg { width: 11px; height: 11px; flex-shrink: 0; }
-.hidden-file { display: none; }
-
-/* SITE PHOTOS GRID */
-.site-photos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
-.site-photo-cell { background: rgba(10,22,40,0.5); border: 1px solid rgba(200,168,75,0.15); border-radius: 3px; overflow: hidden; cursor: pointer; transition: border-color 0.15s; }
-.site-photo-cell:hover { border-color: rgba(200,168,75,0.4); }
-.site-photo-cell img { width: 100%; height: 100px; object-fit: cover; display: block; }
-.site-photo-cell-label { font-size: 0.7rem; color: var(--grey); padding: 5px 7px; line-height: 1.3; }
-.site-photo-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; gap: 8px; color: var(--grey); font-size: 0.82rem; opacity: 0.5; text-align: center; }
-
+.photo-list{display:flex;flex-direction:column;gap:8px;}
+.photo-item{background:rgba(10,22,40,0.5);border:1px solid rgba(200,168,75,0.18);border-radius:3px;overflow:hidden;}
+.photo-header{display:flex;align-items:flex-start;gap:8px;padding:8px 12px;flex-wrap:wrap;}
+.photo-thumb-small{width:38px;height:38px;object-fit:cover;border-radius:2px;border:1px solid rgba(200,168,75,0.25);flex-shrink:0;display:none;cursor:pointer;margin-top:2px;}
+.photo-thumb-small.visible{display:block;}
+.photo-label{font-size:0.82rem;color:var(--grey-light);flex:1;line-height:1.3;min-width:120px;}
+.photo-actions{display:flex;gap:5px;align-items:center;flex-shrink:0;flex-wrap:wrap;}
+.photo-status{font-size:0.65rem;padding:2px 6px;border-radius:2px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;background:rgba(138,155,181,0.1);border:1px solid rgba(138,155,181,0.25);color:var(--grey);white-space:nowrap;}
+.photo-status.done{background:rgba(39,174,96,0.15);border-color:rgba(39,174,96,0.4);color:#2ecc71;}
+.photo-btn{display:flex;align-items:center;gap:3px;padding:5px 8px;border-radius:2px;border:1px solid rgba(200,168,75,0.35);background:rgba(200,168,75,0.07);color:var(--gold);font-size:0.7rem;font-weight:600;letter-spacing:0.04em;cursor:pointer;transition:all 0.13s;text-transform:uppercase;font-family:inherit;white-space:nowrap;}
+.photo-btn:hover{background:rgba(200,168,75,0.16);border-color:var(--gold);}
+.photo-btn svg{width:11px;height:11px;flex-shrink:0;}
+.hidden-file{display:none;}
+/* SITE PHOTOS */
+.site-photos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;}
+.site-photo-cell{background:rgba(10,22,40,0.5);border:1px solid rgba(200,168,75,0.15);border-radius:3px;overflow:hidden;cursor:pointer;transition:border-color 0.15s;}
+.site-photo-cell:hover{border-color:rgba(200,168,75,0.4);}
+.site-photo-cell img{width:100%;height:100px;object-fit:cover;display:block;}
+.site-photo-cell-label{font-size:0.7rem;color:var(--grey);padding:5px 7px;line-height:1.3;}
+.site-photo-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;gap:8px;color:var(--grey);font-size:0.82rem;opacity:0.5;text-align:center;}
 /* LIGHTBOX */
-.lightbox { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.92); z-index: 9999; align-items: center; justify-content: center; flex-direction: column; gap: 12px; padding: 20px; }
-.lightbox.open { display: flex; }
-.lightbox img { max-width: 100%; max-height: 75vh; border-radius: 4px; object-fit: contain; }
-.lightbox-label { font-size: 0.85rem; color: var(--grey-light); text-align: center; }
-.lightbox-close { position: absolute; top: 16px; right: 20px; font-size: 2rem; color: var(--white); cursor: pointer; line-height: 1; background: none; border: none; }
-
-/* ACTION BUTTONS */
-.action-wrap { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 36px; margin-bottom: 40px; }
-.btn-gold { background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: var(--navy); font-size: 1rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; border: none; padding: 14px 32px; border-radius: 3px; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 18px rgba(200,168,75,0.28); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
-.btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(200,168,75,0.42); }
-.btn-outline { background: transparent; color: var(--gold); font-size: 1rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; border: 1px solid rgba(200,168,75,0.4); padding: 13px 32px; border-radius: 3px; cursor: pointer; transition: all 0.2s; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
-.btn-outline:hover { background: rgba(200,168,75,0.1); border-color: var(--gold); }
-
-/* SAVE SECTION */
-.save-section { background: var(--card-bg); border: 1px solid rgba(200,168,75,0.2); border-radius: 4px; margin-bottom: 24px; overflow: hidden; backdrop-filter: blur(4px); }
-.save-section .section-header { background: linear-gradient(90deg, var(--navy-light), var(--navy-mid)); border-bottom: 1px solid rgba(200,168,75,0.25); padding: 14px 24px; display: flex; align-items: center; gap: 14px; }
-.save-section .section-body { padding: 24px; }
-
-footer { text-align: center; padding: 22px 20px; color: var(--grey); font-size: 0.75rem; letter-spacing: 0.05em; border-top: 1px solid rgba(200,168,75,0.1); }
-.footer-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; }
-.footer-inner a { display: inline-flex; align-items: center; gap: 4px; color: var(--grey); text-decoration: none; transition: color 0.2s; }
-.footer-inner a:hover { color: var(--gold); }
-.footer-inner a svg { width: 11px; height: 11px; stroke: var(--gold); flex-shrink: 0; }
-.footer-sep { opacity: 0.4; }
-
-@media(max-width:600px) {
-  .field-grid, .field-grid.triple { grid-template-columns: 1fr; }
-  header { padding: 18px 20px; gap: 14px; }
-  .header-text h1 { font-size: 1.4rem; }
-  .yn-row { flex-wrap: wrap; gap: 8px; }
-  .yn-btns { width: 100%; justify-content: flex-start; }
-  .loader-btns { flex-direction: column; }
-  .loader-btn { width: 100%; justify-content: center; }
-  .hazard-grid { grid-template-columns: 1fr; }
+.lightbox{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.92);z-index:9999;align-items:center;justify-content:center;flex-direction:column;gap:12px;padding:20px;}
+.lightbox.open{display:flex;}
+.lightbox img{max-width:100%;max-height:75vh;border-radius:4px;object-fit:contain;}
+.lightbox-label{font-size:0.85rem;color:var(--grey-light);text-align:center;}
+.lightbox-close{position:absolute;top:16px;right:20px;font-size:2rem;color:var(--white);cursor:pointer;line-height:1;background:none;border:none;}
+/* BUTTONS */
+.action-wrap{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:36px;margin-bottom:40px;}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--navy);font-size:1rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;border:none;padding:14px 32px;border-radius:3px;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 18px rgba(200,168,75,0.28);font-family:inherit;}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(200,168,75,0.42);}
+.btn-outline{background:transparent;color:var(--gold);font-size:1rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;border:1px solid rgba(200,168,75,0.4);padding:13px 32px;border-radius:3px;cursor:pointer;transition:all 0.2s;font-family:inherit;}
+.btn-outline:hover{background:rgba(200,168,75,0.1);border-color:var(--gold);}
+/* SAVE */
+.save-section{background:var(--card-bg);border:1px solid rgba(200,168,75,0.2);border-radius:4px;margin-bottom:24px;overflow:hidden;backdrop-filter:blur(4px);}
+.save-section .section-header{background:linear-gradient(90deg,var(--navy-light),var(--navy-mid));border-bottom:1px solid rgba(200,168,75,0.25);padding:14px 24px;display:flex;align-items:center;gap:14px;}
+.save-section .section-body{padding:24px;}
+footer{text-align:center;padding:22px 20px;color:var(--grey);font-size:0.75rem;letter-spacing:0.05em;border-top:1px solid rgba(200,168,75,0.1);}
+.footer-inner{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;}
+.footer-inner a{display:inline-flex;align-items:center;gap:4px;color:var(--grey);text-decoration:none;transition:color 0.2s;}
+.footer-inner a:hover{color:var(--gold);}
+.footer-inner a svg{width:11px;height:11px;stroke:var(--gold);flex-shrink:0;}
+.footer-sep{opacity:0.4;}
+@media(max-width:600px){
+  .field-grid,.field-grid.triple{grid-template-columns:1fr;}
+  header{padding:18px 20px;gap:14px;}
+  .header-text h1{font-size:1.4rem;}
+  .yn-row{flex-wrap:wrap;gap:8px;}
+  .yn-btns{width:100%;justify-content:flex-start;}
+  .loader-btns{flex-direction:column;}
+  .loader-btn{width:100%;min-width:0;flex:none;}
+  .hazard-grid{grid-template-columns:1fr;}
 }
-@media print {
-  body { background: white !important; color: #000; }
-  header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .action-wrap, .photo-btn, .map-btn, .lightbox, .loader-panel, .progress-wrap { display: none !important; }
-  .section.collapsed .section-body { display: block !important; }
+@media print{
+  body{background:white!important;color:#000;}
+  header{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .action-wrap,.photo-btn,.map-btn,.lightbox,.loader-panel,.progress-wrap,#alertsBanner{display:none!important;}
+  .section.collapsed .section-body{display:block!important;}
 }
 </style>
 </head>
 <body>
-
-<!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox">
   <button class="lightbox-close" onclick="closeLightbox()">&#10005;</button>
   <img id="lightboxImg" src="" alt="">
   <div class="lightbox-label" id="lightboxLabel"></div>
 </div>
-
 <header>
   <div class="logo-wrap">
     <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
@@ -242,44 +230,33 @@ footer { text-align: center; padding: 22px 20px; color: var(--grey); font-size: 
     </div>
   </div>
 </header>
-
 <main>
   <div class="form-intro">
     <h2>Tech Recce / Location Survey</h2>
     <div class="gold-line"></div>
     <p>Complete all sections on site.</p>
   </div>
-
   <!-- LOADER -->
   <div class="loader-panel" id="loaderPanel">
     <div class="loader-btns">
-      <button class="loader-btn new" onclick="newSurvey()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New Survey
-      </button>
-      <button class="loader-btn load" id="btnLoadSurvey" onclick="toggleLoader()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>Load Survey
-      </button>
-      <button class="loader-btn load" onclick="document.getElementById('importInput').click()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Import Survey
-      </button>
+      <button class="loader-btn new" onclick="newSurvey()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New Survey</button>
+      <button class="loader-btn load" id="btnLoadSurvey" onclick="toggleLoader()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>Load Survey</button>
+      <button class="loader-btn load" onclick="document.getElementById('importInput').click()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Import Survey</button>
       <input type="file" id="importInput" accept=".zip,.json,.recce" style="display:none" onchange="importFile(this)">
     </div>
     <div class="loader-list" id="loaderList" style="display:none;"></div>
   </div>
-
   <!-- PROGRESS -->
   <div class="progress-wrap">
     <span class="progress-label">Completion</span>
     <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
     <span class="progress-pct" id="progressPct">0%</span>
   </div>
-
-  <!-- SECTION 0: JOB DETAILS (always open) -->
+  <!-- ALERTS BANNER -->
+  <div id="alertsBanner"></div>
+  <!-- SEC 0: JOB DETAILS -->
   <div class="section" id="sec0">
-    <div class="section-header">
-      <div class="section-num">0</div>
-      <div class="section-title">Job Details</div>
-    </div>
+    <div class="section-header"><div class="section-num">0</div><div class="section-title">Job Details</div></div>
     <div class="section-body">
       <div class="field-grid">
         <div class="field"><label>Production / Show Name</label><input type="text" id="f_prodName" placeholder="Show or project name"></div>
@@ -289,9 +266,7 @@ footer { text-align: center; padding: 22px 20px; color: var(--grey); font-size: 
         <div class="field full"><label>Venue Name</label><input type="text" id="f_venueName" placeholder="Venue or location name"></div>
         <div class="field full"><label>Street Address</label><input type="text" id="f_address" placeholder="Full street address"></div>
         <div class="field"><label>Suburb / Town</label><input type="text" id="f_suburb" placeholder="Suburb"></div>
-        <div class="field"><label>State</label>
-          <select id="f_state"><option value="">— Select —</option><option>QLD</option><option>NSW</option><option>VIC</option><option>SA</option><option>WA</option><option>TAS</option><option>ACT</option><option>NT</option></select>
-        </div>
+        <div class="field"><label>State</label><select id="f_state"><option value="">— Select —</option><option>QLD</option><option>NSW</option><option>VIC</option><option>SA</option><option>WA</option><option>TAS</option><option>ACT</option><option>NT</option></select></div>
         <div class="field"><label>Venue Booking Contact</label><input type="text" id="f_contact" placeholder="Name"></div>
         <div class="field"><label>Booking Contact Phone</label><input type="tel" id="f_phone" placeholder="+61 4xx xxx xxx"></div>
         <div class="field"><label>Venue Tech Contact (On the Day)</label><input type="text" id="f_techContact" placeholder="Name"></div>
@@ -299,26 +274,16 @@ footer { text-align: center; padding: 22px 20px; color: var(--grey); font-size: 
       </div>
     </div>
   </div>
-
-  <!-- SECTION 1: LOCATION & MAP -->
+  <!-- SEC 1: LOCATION & MAP -->
   <div class="section collapsed" id="sec1">
-    <div class="section-header collapsible" onclick="toggleSection('sec1')">
-      <div class="section-num">1</div><div class="section-title">Location &amp; Map</div>
-      <span class="collapse-icon">&#9660;</span>
-    </div>
+    <div class="section-header collapsible" onclick="toggleSection('sec1')"><div class="section-num">1</div><div class="section-title">Location &amp; Map</div><span class="collapse-icon">&#9660;</span></div>
     <div class="section-body">
-      <div class="map-row">
-        <input type="text" id="mapSearch" placeholder="Enter venue address and tap Show Map…">
-        <button class="map-btn" onclick="loadMap()">Show Map</button>
-      </div>
+      <div class="map-row"><input type="text" id="mapSearch" placeholder="Enter venue address and tap Show Map…"><button class="map-btn" onclick="loadMap()">Show Map</button></div>
       <div class="map-container">
-        <div class="map-placeholder" id="mapPlaceholder">
-          <svg width="44" height="44" viewBox="0 0 48 48" fill="none"><path d="M24 4C16.27 4 10 10.27 10 18c0 11.25 14 26 14 26s14-14.75 14-26c0-7.73-6.27-14-14-14z" stroke="#c8a84b" stroke-width="2" fill="none"/><circle cx="24" cy="18" r="4" stroke="#c8a84b" stroke-width="2" fill="none"/></svg>
-          <span>Enter the address above and tap <strong>Show Map</strong></span>
-        </div>
+        <div class="map-placeholder" id="mapPlaceholder"><svg width="44" height="44" viewBox="0 0 48 48" fill="none"><path d="M24 4C16.27 4 10 10.27 10 18c0 11.25 14 26 14 26s14-14.75 14-26c0-7.73-6.27-14-14-14z" stroke="#c8a84b" stroke-width="2" fill="none"/><circle cx="24" cy="18" r="4" stroke="#c8a84b" stroke-width="2" fill="none"/></svg><span>Enter the address above and tap <strong>Show Map</strong></span></div>
         <iframe id="mapFrame" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
-      <div id="mapLinks" style="display:none; margin-top:10px; flex-wrap:wrap; gap:8px;">
+      <div id="mapLinks" style="display:none;margin-top:10px;flex-wrap:wrap;gap:8px;">
         <a id="linkApple" href="#" target="_blank" class="map-link-btn">&#127757; Apple Maps</a>
         <a id="linkGoogle" href="#" target="_blank" class="map-link-btn">&#127758; Google Maps</a>
         <a id="linkW3W" href="#" target="_blank" class="map-link-btn">&#35; What3Words</a>
@@ -328,56 +293,60 @@ footer { text-align: center; padding: 22px 20px; color: var(--grey); font-size: 
         <div class="field"><label>What3Words (optional)</label><input type="text" id="f_w3w" placeholder="///filled.count.soap"></div>
         <div class="field full"><label>Access / Directions Notes</label><textarea id="f_accessNotes" placeholder="Gate codes, parking, entry instructions…"></textarea></div>
       </div>
+      <!-- WEATHER WIDGET -->
+      <div class="weather-wrap">
+        <div class="sub-label"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>TX Day Weather</div>
+        <div id="weatherWidget">Enter address and TX date to load weather forecast.</div>
+      </div>
     </div>
   </div>
-
-  <!-- SECTION 2: VENUE -->
+  <!-- SEC 2: VENUE & SPACE (merged) -->
   <div class="section collapsed" id="sec2">
-    <div class="section-header collapsible" onclick="toggleSection('sec2')">
-      <div class="section-num">2</div><div class="section-title">Venue</div>
-      <span class="collapse-icon">&#9660;</span>
-    </div>
+    <div class="section-header collapsible" onclick="toggleSection('sec2')"><div class="section-num">2</div><div class="section-title">Venue &amp; Space</div><span class="collapse-icon">&#9660;</span></div>
     <div class="section-body">
-      <div class="field-grid" style="margin-bottom:14px;">
+      <div class="field-grid">
         <div class="field"><label>Maximum Audience Occupancy</label><input type="number" id="f_occupancy" placeholder="e.g. 250"></div>
-        <div class="field"><label>Bump-in / Loading Window</label><input type="text" id="f_bumpIn" placeholder="e.g. 08:00 – 14:00"></div>
+        <div class="field"><label>Venue Access Time (when crew can enter)</label><input type="time" id="f_venueAccess"></div>
+        <div class="field"><label>Venue Type</label><select id="f_venueType"><option value="">— Select —</option><option>Indoor</option><option>Outdoor</option><option>Outdoor Undercover</option><option>Mixed Indoor / Outdoor</option></select></div>
         <div class="field"><label>Ceiling / Roof Height (metres)</label><input type="text" id="f_ceilingH" placeholder="e.g. 4.5m"></div>
-        <div class="field"><label>Venue Type</label>
-          <select id="f_venueType"><option value="">— Select —</option><option>Indoor</option><option>Outdoor</option><option>Outdoor Undercover</option><option>Mixed Indoor / Outdoor</option></select>
+        <div class="field"><label>Room Length</label><input type="text" id="f_roomLength" placeholder="e.g. 24m"></div>
+        <div class="field"><label>Room Width</label><input type="text" id="f_roomWidth" placeholder="e.g. 15m"></div>
+      </div>
+      <div style="margin-top:14px;"><div class="yn-list" id="yn_venue"></div></div>
+      <div class="sub-label" style="margin-top:20px;">Sketch / Floor Plan</div>
+      <div class="photo-list">
+        <div class="photo-item">
+          <div class="photo-header">
+            <img class="photo-thumb-small" id="th_sketch" src="" alt="Sketch" onclick="openLightbox('sketch')">
+            <span class="photo-label">Hand sketch / floor plan — dimensions, ceiling height, items of interest</span>
+            <div class="photo-actions">
+              <span class="photo-status" id="st_sketch">Pending</span>
+              <button class="photo-btn" onclick="openCamera('sketch')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>Camera</button>
+              <button class="photo-btn" onclick="openGallery('sketch')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Upload</button>
+            </div>
+          </div>
+          <input type="file" class="hidden-file" id="cam_sketch" accept="image/*" capture="environment" onchange="handlePhoto(this,'sketch')">
+          <input type="file" class="hidden-file" id="gal_sketch" accept="image/*" onchange="handlePhoto(this,'sketch')">
         </div>
       </div>
-      <div class="yn-list" id="yn_venue"></div>
-      <div class="section-notes"><label>Venue Notes</label><textarea id="n_venue" placeholder="General observations, follow-up items…"></textarea></div>
+      <div class="section-notes"><label>Venue &amp; Space Notes</label><textarea id="n_venue" placeholder="General observations, follow-up items…"></textarea></div>
     </div>
   </div>
-
-  <!-- SECTION 3: INTERNET -->
+  <!-- SEC 3: TRANSMISSION & CONNECTIVITY (4G/5G only, no tag) -->
   <div class="section collapsed" id="sec3">
-    <div class="section-header collapsible" onclick="toggleSection('sec3')">
-      <div class="section-num">3</div><div class="section-title">Internet &amp; Connectivity</div>
-      <span class="section-tag">Critical for TX</span><span class="collapse-icon">&#9660;</span>
-    </div>
+    <div class="section-header collapsible" onclick="toggleSection('sec3')"><div class="section-num">3</div><div class="section-title">Transmission &amp; Connectivity</div><span class="collapse-icon">&#9660;</span></div>
     <div class="section-body">
-      <div class="yn-list" id="yn_internet"></div>
-      <div class="field-grid" style="margin-top:14px;">
-        <div class="field"><label>WiFi Network Name (SSID)</label><input type="text" id="f_ssid" placeholder="Network name"></div>
-        <div class="field"><label>WiFi Password</label><input type="text" id="f_wifiPw" placeholder="Password"></div>
-        <div class="field"><label>4G / 5G Signal Strength</label>
+      <div class="field-grid">
+        <div class="field full"><label>4G / 5G Signal Strength</label>
           <select id="f_signal"><option value="">— Test on site —</option><option>Excellent (5 bars)</option><option>Good (4 bars)</option><option>Fair (3 bars)</option><option>Poor (1–2 bars)</option><option>No signal</option></select>
         </div>
-        <div class="field"><label>Speed Test Result</label><input type="text" id="f_speed" placeholder="e.g. Down 45 / Up 12 Mbps"></div>
-        <div class="field"><label>ISP / Network Contact</label><input type="text" id="f_ispContact" placeholder="e.g. Venue IT — ext 204"></div>
       </div>
-      <div class="section-notes"><label>Internet Notes</label><textarea id="n_internet" placeholder="Wired connection, router location, bandwidth…"></textarea></div>
+      <div class="section-notes"><label>Connectivity Notes</label><textarea id="n_internet" placeholder="Additional notes on connectivity or signal testing…"></textarea></div>
     </div>
   </div>
-
-  <!-- SECTION 4: SOUND -->
+  <!-- SEC 4: SOUND (no tag) -->
   <div class="section collapsed" id="sec4">
-    <div class="section-header collapsible" onclick="toggleSection('sec4')">
-      <div class="section-num">4</div><div class="section-title">Sound</div>
-      <span class="section-tag">Critical for live TV</span><span class="collapse-icon">&#9660;</span>
-    </div>
+    <div class="section-header collapsible" onclick="toggleSection('sec4')"><div class="section-num">4</div><div class="section-title">Sound</div><span class="collapse-icon">&#9660;</span></div>
     <div class="section-body">
       <div class="yn-list" id="yn_sound"></div>
       <div class="sub-label">Noise Limiter</div>
@@ -391,59 +360,48 @@ footer { text-align: center; padding: 22px 20px; color: var(--grey); font-size: 
       <div class="section-notes"><label>Sound Notes</label><textarea id="n_sound" placeholder="Observations, follow-up items…"></textarea></div>
     </div>
   </div>
-
-  <!-- SECTION 5: LIGHT -->
+  <!-- SEC 5: LIGHT -->
   <div class="section collapsed" id="sec5">
-    <div class="section-header collapsible" onclick="toggleSection('sec5')">
-      <div class="section-num">5</div><div class="section-title">Light</div>
-      <span class="collapse-icon">&#9660;</span>
-    </div>
+    <div class="section-header collapsible" onclick="toggleSection('sec5')"><div class="section-num">5</div><div class="section-title">Light</div><span class="collapse-icon">&#9660;</span></div>
     <div class="section-body">
       <div class="yn-list" id="yn_light"></div>
       <div class="section-notes"><label>Lighting Notes</label><textarea id="n_light" placeholder="Observations, follow-up items…"></textarea></div>
     </div>
   </div>
-
-  <!-- SECTION 6: HOUSE SYSTEM -->
+  <!-- SEC 6: HOUSE LIGHTING, SOUND & VIDEO SYSTEM (renamed + video) -->
   <div class="section collapsed" id="sec6">
-    <div class="section-header collapsible" onclick="toggleSection('sec6')">
-      <div class="section-num">6</div><div class="section-title">House Lighting &amp; Sound System</div>
-      <span class="collapse-icon">&#9660;</span>
-    </div>
+    <div class="section-header collapsible" onclick="toggleSection('sec6')"><div class="section-num">6</div><div class="section-title">House Lighting, Sound &amp; Video System</div><span class="collapse-icon">&#9660;</span></div>
     <div class="section-body">
       <div class="yn-list" id="yn_housesystem"></div>
+      <div class="sub-label" style="margin-top:18px;">Video System</div>
+      <div class="yn-list" id="yn_housevideo"></div>
       <div class="field-grid" style="margin-top:14px;">
         <div class="field"><label>House Lighting System / Brand</label><input type="text" id="f_houseLx" placeholder="e.g. ETC Ion, generic dimmer rack"></div>
         <div class="field"><label>DMX Patch Points Available</label><input type="text" id="f_dmxPatch" placeholder="e.g. 2x DMX outlets stage left"></div>
         <div class="field"><label>House PA System / Brand</label><input type="text" id="f_housePA" placeholder="e.g. JBL line array, ceiling speakers"></div>
         <div class="field"><label>Audio Patch / Connection Points</label><input type="text" id="f_audioPatch" placeholder="e.g. XLR patch panel at FOH"></div>
+        <div class="field"><label>Existing Screens / Monitors</label><input type="text" id="f_houseScreens" placeholder="e.g. 2x 75″ LED panels front of stage"></div>
+        <div class="field"><label>Video Connections Available</label><input type="text" id="f_videoConns" placeholder="e.g. HDMI, SDI, VGA"></div>
       </div>
       <div class="section-notes"><label>House System Notes</label><textarea id="n_housesystem" placeholder="Control locations, patch details, compatibility…"></textarea></div>
     </div>
   </div>
-
-  <!-- SECTION 7: POWER -->
+  <!-- SEC 7: POWER (+ 3-phase amperage) -->
   <div class="section collapsed" id="sec7">
-    <div class="section-header collapsible" onclick="toggleSection('sec7')">
-      <div class="section-num">7</div><div class="section-title">Power</div>
-      <span class="collapse-icon">&#9660;</span>
-    </div>
+    <div class="section-header collapsible" onclick="toggleSection('sec7')"><div class="section-num">7</div><div class="section-title">Power</div><span class="collapse-icon">&#9660;</span></div>
     <div class="section-body">
       <div class="yn-list" id="yn_power"></div>
       <div class="field-grid" style="margin-top:14px;">
+        <div class="field"><label>3-Phase Amperage</label><select id="f_3phaseAmps"><option value="">— Select if 3-phase available —</option><option>32A</option><option>50A</option><option>63A</option><option>Unknown</option></select></div>
         <div class="field"><label>Fuse Box / Switchboard Location</label><input type="text" id="f_fuseLocation" placeholder="e.g. Back corridor, east wall"></div>
         <div class="field"><label>Number of GPOs in Room</label><input type="text" id="f_gpos" placeholder="e.g. 8 GPOs on 3 circuits"></div>
       </div>
       <div class="section-notes"><label>Power Notes</label><textarea id="n_power" placeholder="Circuit details, cable route notes, voltage readings…"></textarea></div>
     </div>
   </div>
-
-  <!-- SECTION 8: ACCESS & STORAGE -->
+  <!-- SEC 8: ACCESS & STORAGE -->
   <div class="section collapsed" id="sec8">
-    <div class="section-header collapsible" onclick="toggleSection('sec8')">
-      <div class="section-num">8</div><div class="section-title">Access &amp; Storage</div>
-      <span class="collapse-icon">&#9660;</span>
-    </div>
+    <div class="section-header collapsible" onclick="toggleSection('sec8')"><div class="section-num">8</div><div class="section-title">Access &amp; Storage</div><span class="collapse-icon">&#9660;</span></div>
     <div class="section-body">
       <div class="sub-label">Access</div>
       <div class="yn-list" id="yn_access"></div>
@@ -458,43 +416,31 @@ footer { text-align: center; padding: 22px 20px; color: var(--grey); font-size: 
       <div class="section-notes"><label>Access &amp; Storage Notes</label><textarea id="n_accessstorage" placeholder="Route description, obstacles, ramps needed, cable trays, security, storage details…"></textarea></div>
     </div>
   </div>
-
-  <!-- SECTION 9: TRUCK & LOADING -->
+  <!-- SEC 9: TRUCK & LOADING -->
   <div class="section collapsed" id="sec9">
-    <div class="section-header collapsible" onclick="toggleSection('sec9')">
-      <div class="section-num">9</div><div class="section-title">Truck &amp; Loading</div>
-      <span class="collapse-icon">&#9660;</span>
-    </div>
+    <div class="section-header collapsible" onclick="toggleSection('sec9')"><div class="section-num">9</div><div class="section-title">Truck &amp; Loading</div><span class="collapse-icon">&#9660;</span></div>
     <div class="section-body">
       <div class="yn-list" id="yn_truck"></div>
       <div class="field-grid" style="margin-top:14px;">
         <div class="field"><label>Distance from Truck Bay to Venue</label><input type="text" id="f_truckDist" placeholder="e.g. 40m level surface"></div>
         <div class="field"><label>Overhead Clearance Height</label><input type="text" id="f_truckClear" placeholder="Min. 3.8m required"></div>
-        <div class="field"><label>Loading Dock Hours</label><input type="text" id="f_dockHours" placeholder="e.g. Mon–Fri 06:00–22:00"></div>
+        <div class="field"><label>Loading Dock Opens</label><input type="time" id="f_dockHours"></div>
         <div class="field"><label>Loading Dock Contact</label><input type="text" id="f_dockContact" placeholder="e.g. Building manager"></div>
       </div>
       <div class="section-notes"><label>Truck &amp; Loading Notes</label><textarea id="n_truck" placeholder="Bollards, slopes, time restrictions, turning radius…"></textarea></div>
     </div>
   </div>
-
-  <!-- SECTION 10: HAZARDS -->
+  <!-- SEC 10: HAZARDS -->
   <div class="section collapsed" id="sec10">
-    <div class="section-header collapsible" onclick="toggleSection('sec10')">
-      <div class="section-num">10</div><div class="section-title">Hazards</div>
-      <span class="section-tag">Tick all that apply</span><span class="collapse-icon">&#9660;</span>
-    </div>
+    <div class="section-header collapsible" onclick="toggleSection('sec10')"><div class="section-num">10</div><div class="section-title">Hazards</div><span class="section-tag">Tick all that apply</span><span class="collapse-icon">&#9660;</span></div>
     <div class="section-body">
       <div class="hazard-grid" id="hazardGrid"></div>
       <div class="section-notes"><label>Hazard Notes</label><textarea id="n_hazards" placeholder="Specific hazards, required PPE, exclusion zones, WHS concerns…"></textarea></div>
     </div>
   </div>
-
-  <!-- SECTION 11: FIRST AID -->
+  <!-- SEC 11: FIRST AID -->
   <div class="section collapsed" id="sec11">
-    <div class="section-header collapsible" onclick="toggleSection('sec11')">
-      <div class="section-num">11</div><div class="section-title">First Aid &amp; Emergency</div>
-      <span class="collapse-icon">&#9660;</span>
-    </div>
+    <div class="section-header collapsible" onclick="toggleSection('sec11')"><div class="section-num">11</div><div class="section-title">First Aid &amp; Emergency</div><span class="collapse-icon">&#9660;</span></div>
     <div class="section-body">
       <div class="yn-list" id="yn_firstaid"></div>
       <div class="field-grid" style="margin-top:14px;">
@@ -506,13 +452,9 @@ footer { text-align: center; padding: 22px 20px; color: var(--grey); font-size: 
       <div class="section-notes"><label>First Aid &amp; Emergency Notes</label><textarea id="n_firstaid" placeholder="Venue first aid officer, emergency procedures, evacuation route…"></textarea></div>
     </div>
   </div>
-
-  <!-- SECTION 12: RISK & DUTY OF CARE -->
+  <!-- SEC 12: RISK -->
   <div class="section collapsed" id="sec12">
-    <div class="section-header collapsible" onclick="toggleSection('sec12')">
-      <div class="section-num">12</div><div class="section-title">Risk Assessment &amp; Duty of Care</div>
-      <span class="collapse-icon">&#9660;</span>
-    </div>
+    <div class="section-header collapsible" onclick="toggleSection('sec12')"><div class="section-num">12</div><div class="section-title">Risk Assessment &amp; Duty of Care</div><span class="collapse-icon">&#9660;</span></div>
     <div class="section-body">
       <div class="yn-list" id="yn_risk"></div>
       <div class="field-grid" style="margin-top:14px;">
@@ -522,218 +464,148 @@ footer { text-align: center; padding: 22px 20px; color: var(--grey); font-size: 
       </div>
     </div>
   </div>
-
-  <!-- SECTION 13: SKETCH -->
+  <!-- SEC 13: PHOTO DOCUMENTATION -->
   <div class="section collapsed" id="sec13">
-    <div class="section-header collapsible" onclick="toggleSection('sec13')">
-      <div class="section-num">13</div><div class="section-title">Sketch &amp; Floor Plan</div>
-      <span class="collapse-icon">&#9660;</span>
-    </div>
-    <div class="section-body">
-      <div class="yn-list" id="yn_sketch"></div>
-      <div class="field-grid triple" style="margin-top:14px;">
-        <div class="field"><label>Room Length</label><input type="text" id="f_roomLength" placeholder="e.g. 24m"></div>
-        <div class="field"><label>Room Width</label><input type="text" id="f_roomWidth" placeholder="e.g. 15m"></div>
-        <div class="field"><label>Ceiling Height</label><input type="text" id="f_ceilingH2" placeholder="e.g. 4.5m"></div>
-      </div>
-      <div style="margin-top:16px;">
-        <div class="sub-label">Photograph or Upload Sketch</div>
-        <div class="photo-list">
-          <div class="photo-item">
-            <div class="photo-header">
-              <img class="photo-thumb-small" id="th_sketch" src="" alt="Sketch" onclick="openLightbox('sketch')">
-              <span class="photo-label">Hand sketch / floor plan — dimensions, ceiling height, items of interest</span>
-              <div class="photo-actions">
-                <span class="photo-status" id="st_sketch">Pending</span>
-                <button class="photo-btn" onclick="openCamera('sketch')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>Camera</button>
-                <button class="photo-btn" onclick="openGallery('sketch')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Upload</button>
-              </div>
-            </div>
-            <input type="file" class="hidden-file" id="cam_sketch" accept="image/*" capture="environment" onchange="handlePhoto(this,'sketch')">
-            <input type="file" class="hidden-file" id="gal_sketch" accept="image/*" onchange="handlePhoto(this,'sketch')">
-          </div>
-        </div>
-      </div>
-      <div class="section-notes"><label>Sketch Notes</label><textarea id="n_sketch" placeholder="Key dimensions, north direction, scale reference…"></textarea></div>
-    </div>
+    <div class="section-header collapsible" onclick="toggleSection('sec13')"><div class="section-num">13</div><div class="section-title">Photo Documentation</div><span class="section-tag">Camera or upload for each</span><span class="collapse-icon">&#9660;</span></div>
+    <div class="section-body"><div class="photo-list" id="photoList"></div></div>
   </div>
-
-  <!-- SECTION 14: PHOTO DOCUMENTATION -->
+  <!-- SEC 14: SITE PHOTOS -->
   <div class="section collapsed" id="sec14">
-    <div class="section-header collapsible" onclick="toggleSection('sec14')">
-      <div class="section-num">14</div><div class="section-title">Photo Documentation</div>
-      <span class="section-tag">Camera or upload for each</span><span class="collapse-icon">&#9660;</span>
-    </div>
-    <div class="section-body">
-      <div class="photo-list" id="photoList"></div>
-    </div>
-  </div>
-
-  <!-- SECTION 15: SITE PHOTOS -->
-  <div class="section collapsed" id="sec15">
-    <div class="section-header collapsible" onclick="toggleSection('sec15')">
-      <div class="section-num">15</div><div class="section-title">Site Photos</div>
-      <span class="section-tag">Tap any photo to enlarge</span><span class="collapse-icon">&#9660;</span>
-    </div>
+    <div class="section-header collapsible" onclick="toggleSection('sec14')"><div class="section-num">14</div><div class="section-title">Site Photos</div><span class="section-tag">Tap any photo to enlarge</span><span class="collapse-icon">&#9660;</span></div>
     <div class="section-body">
       <div class="site-photos-grid" id="sitePhotosGrid">
         <div class="site-photo-empty"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#8a9bb5" stroke-width="1.5"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg><span>No photos taken yet</span></div>
       </div>
     </div>
   </div>
-
   <!-- SAVE -->
   <div class="save-section">
-    <div class="section-header">
-      <div class="section-num" style="font-size:1rem;">&#9733;</div>
-      <div class="section-title">Save</div>
-    </div>
+    <div class="section-header"><div class="section-num" style="font-size:1rem;">&#9733;</div><div class="section-title">Save</div></div>
     <div class="section-body">
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;">
-        <div class="field" style="flex:1;min-width:200px;">
-          <label>Survey Name</label>
-          <input type="text" id="saveName" placeholder="e.g. Crown Casino — Main Ballroom">
-        </div>
+        <div class="field" style="flex:1;min-width:200px;"><label>Survey Name</label><input type="text" id="saveName" placeholder="e.g. Crown Casino — Main Ballroom"></div>
         <button id="btnSave" class="btn-gold" style="padding:10px 24px;font-size:0.9rem;white-space:nowrap;flex-shrink:0;" onclick="saveSurvey()">Save Survey</button>
       </div>
     </div>
   </div>
-
   <div class="action-wrap">
     <button class="btn-gold" onclick="exportSurvey()">Export Survey</button>
     <button class="btn-outline" onclick="generateReport()">Generate Report</button>
   </div>
-
 </main>
-
 <footer>
   <div class="footer-inner">
-    <span>&copy; 2026 Patrice Roblin</span>
-    <span class="footer-sep">|</span>
-    <a href="tel:0402096781"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>0402 096 781</a>
-    <span class="footer-sep">|</span>
-    <a href="mailto:patrice@patriceroblin.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>patrice@patriceroblin.com</a>
-    <span class="footer-sep">|</span>
+    <span>&copy; 2026 Patrice Roblin</span><span class="footer-sep">|</span>
+    <a href="tel:0402096781"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>0402 096 781</a><span class="footer-sep">|</span>
+    <a href="mailto:patrice@patriceroblin.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>patrice@patriceroblin.com</a><span class="footer-sep">|</span>
     <a href="https://patriceroblin.com" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>patriceroblin.com</a>
   </div>
 </footer>
-
 <script>
-// ── DETECT SAFARI ─────────────────────────────────────────────────────────────
-var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-
-// ── COLLAPSIBLE ───────────────────────────────────────────────────────────────
-function toggleSection(id) {
-  var sec = document.getElementById(id);
-  if (sec) sec.classList.toggle('collapsed');
+var isSafari=/^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+// ACCORDION - one section open at a time
+function toggleSection(id){
+  var t=document.getElementById(id);if(!t)return;
+  var wasOpen=!t.classList.contains('collapsed');
+  document.querySelectorAll('.section').forEach(function(s){if(s.querySelector('.section-header.collapsible'))s.classList.add('collapsed');});
+  if(!wasOpen)t.classList.remove('collapsed');
 }
-
-// ── LIGHTBOX ──────────────────────────────────────────────────────────────────
-function openLightbox(id) {
-  var photo = window._photos[id];
-  if (!photo || !photo.blob) return;
-  var url = URL.createObjectURL(photo.blob);
-  var img = document.getElementById('lightboxImg');
-  var lbl = document.getElementById('lightboxLabel');
-  var lb  = document.getElementById('lightbox');
-  img.onload = function() { URL.revokeObjectURL(url); };
-  img.src = url;
-  var item = photoItems.filter(function(p) { return p.id === id; })[0];
-  lbl.textContent = item ? item.label : (id === 'sketch' ? 'Sketch / Floor Plan' : id);
-  lb.classList.add('open');
+function openLightbox(id){
+  var p=window._photos[id];if(!p||!p.blob)return;
+  var url=URL.createObjectURL(p.blob);
+  var img=document.getElementById('lightboxImg');
+  img.onload=function(){URL.revokeObjectURL(url);};img.src=url;
+  var item=photoItems.filter(function(x){return x.id===id;})[0];
+  document.getElementById('lightboxLabel').textContent=item?item.label:(id==='sketch'?'Sketch / Floor Plan':id);
+  document.getElementById('lightbox').classList.add('open');
 }
-function closeLightbox() {
-  document.getElementById('lightbox').classList.remove('open');
-}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
 
-// ── DATA ──────────────────────────────────────────────────────────────────────
-var ynSections = {
-  yn_venue: [
-    { id:'v1', q:'Is the entry access and route for the audience clear and suitable?' },
-    { id:'v2', q:'Is there a holding or waiting area for the audience?' }
+var ynSections={
+  yn_venue:[
+    {id:'v1',q:'Is the entry access and route for the audience clear and suitable?'},
+    {id:'v2',q:'Is there a holding or waiting area for the audience?'},
+    {id:'v3',q:'Is the venue open to the public during bump-in / setup?'}
   ],
-  yn_internet: [
-    { id:'in1', q:'Is venue WiFi available and reliable?' },
-    { id:'in2', q:'Is wired (ethernet) internet connection available?' },
-    { id:'in3', q:'Is 4G / 5G signal sufficient for backup connectivity?' },
-    { id:'in4', q:'Is the connection sufficient for live streaming or file transfer?' }
+  yn_sound:[
+    {id:'s1',q:'Is the roof tin/metal or acoustically treated? (Rain noise risk for live TV)'},
+    {id:'s2',q:'Is there a venue PA system that can be independently switched off during the shoot?'},
+    {id:'s3',q:'Is there an HVAC / air conditioning system that creates background noise?'},
+    {id:'s4',q:'Can the HVAC be independently switched off during recording?'},
+    {id:'s5',q:'Are there adjacent rooms, kitchens or bars that generate noise during the shoot?'},
+    {id:'s6',q:'Is the room affected by external noise — traffic, trains or aircraft?'}
   ],
-  yn_sound: [
-    { id:'s1', q:'Is the roof tin/metal or acoustically treated? (Rain noise risk for live TV)' },
-    { id:'s2', q:'Is there a venue PA system that can be independently switched off during the shoot?' },
-    { id:'s3', q:'Is there an HVAC / air conditioning system that creates background noise?' },
-    { id:'s4', q:'Can the HVAC be independently switched off during recording?' },
-    { id:'s5', q:'Are there adjacent rooms, kitchens or bars that generate noise during the shoot?' },
-    { id:'s6', q:'Is the room affected by external noise — traffic, trains or aircraft?' }
+  yn_noiselimiter:[
+    {id:'nl1',q:'Is a physical noise limiter device fitted at this venue?'},
+    {id:'nl2',q:'Is the limiter threshold negotiable with venue management?'},
+    {id:'nl3',q:'Does the limiter cut power to the PA if the threshold is exceeded?'}
   ],
-  yn_noiselimiter: [
-    { id:'nl1', q:'Is a physical noise limiter device fitted at this venue?' },
-    { id:'nl2', q:'Is the limiter threshold negotiable with venue management?' },
-    { id:'nl3', q:'Does the limiter cut power to the PA if the threshold is exceeded?' }
+  yn_light:[
+    {id:'l1',q:'Are there windows that allow sunlight or ambient light into the room?'},
+    {id:'l2',q:'Can sunlight or ambient light be fully blocked or controlled?'},
+    {id:'l3',q:'Can the room lighting be adjusted or dimmed?'},
+    {id:'l4',q:'Is the room lighting independent from other areas of the venue?'},
+    {id:'l5',q:'Can we hang lighting fixtures to the ceiling or beams?'},
+    {id:'l6',q:'Are there dedicated rigging points or a grid available for lighting?'},
+    {id:'l7',q:'Will elevation equipment be required to hang or focus fixtures?'},
+    {id:'l8',q:'Does the venue have an elevating platform available? (scissor lift, forklift with cage)'}
   ],
-  yn_light: [
-    { id:'l1', q:'Are there windows that allow sunlight or ambient light into the room?' },
-    { id:'l2', q:'Can sunlight or ambient light be fully blocked or controlled?' },
-    { id:'l3', q:'Can the room lighting be adjusted or dimmed?' },
-    { id:'l4', q:'Is the room lighting independent from other areas of the venue?' },
-    { id:'l5', q:'Can we hang lighting fixtures to the ceiling or beams?' },
-    { id:'l6', q:'Are there dedicated rigging points or a grid available for lighting?' },
-    { id:'l7', q:'Will elevation equipment be required to hang or focus fixtures?' },
-    { id:'l8', q:'Does the venue have an elevating platform available? (scissor lift, forklift with cage)' }
+  yn_housesystem:[
+    {id:'hs1',q:'Is there a house lighting system available for production use?'},
+    {id:'hs2',q:'Are DMX patch points available in the room?'},
+    {id:'hs3',q:'Is there a house PA / sound system available for production use?'},
+    {id:'hs4',q:'Are audio patch or tie-line points available?'},
+    {id:'hs5',q:'Can house systems be fully handed over to production during the shoot?'}
   ],
-  yn_housesystem: [
-    { id:'hs1', q:'Is there a house lighting system available for production use?' },
-    { id:'hs2', q:'Are DMX patch points available in the room?' },
-    { id:'hs3', q:'Is there a house PA / sound system available for production use?' },
-    { id:'hs4', q:'Are audio patch or tie-line points available?' },
-    { id:'hs5', q:'Can house systems be fully handed over to production during the shoot?' }
+  yn_housevideo:[
+    {id:'hv1',q:'Are there existing monitors or screens in the venue?'},
+    {id:'hv2',q:'Can production tap into the existing screen / display system?'},
+    {id:'hv3',q:'Are HDMI connections available?'},
+    {id:'hv4',q:'Are SDI connections available?'},
+    {id:'hv5',q:'Are VGA connections available?'}
   ],
-  yn_power: [
-    { id:'p1', q:'Are circuits in the room clearly labelled or marked?' },
-    { id:'p2', q:'Is 3-phase power available? (Check with voltage detector pen)' },
-    { id:'p3', q:'Is the 3Ph outlet a 5-pin type? (Photograph the socket)' },
-    { id:'p4', q:'Are there power points available in the ceiling or overhead structure?' }
+  yn_power:[
+    {id:'p1',q:'Are circuits in the room clearly labelled or marked?'},
+    {id:'p2',q:'Is 3-phase power available? (Check with voltage detector pen)'},
+    {id:'p3',q:'Is the 3Ph outlet a 5-pin type? (Photograph the socket)'},
+    {id:'p4',q:'Are there power points available in the ceiling or overhead structure?'}
   ],
-  yn_access: [
-    { id:'ac1', q:'Are there stairs on the gear access route?' },
-    { id:'ac2', q:'Is there a service lift available?' },
-    { id:'ac3', q:'Will the access route support a 400kg gear load?' },
-    { id:'ac4', q:'Can large roadcases manoeuvre the full route without obstruction?' },
-    { id:'ac5', q:'Does gear need to pass through public or audience spaces?' }
+  yn_access:[
+    {id:'ac1',q:'Are there stairs on the gear access route?'},
+    {id:'ac2',q:'Is there a service lift available?'},
+    {id:'ac3',q:'Will the access route support a 400kg gear load?'},
+    {id:'ac4',q:'Can large roadcases manoeuvre the full route without obstruction?'},
+    {id:'ac5',q:'Does gear need to pass through public or audience spaces?'}
   ],
-  yn_storage: [
-    { id:'st1', q:'Is there dedicated storage available for equipment?' },
-    { id:'st2', q:'Is the storage area large enough to receive all production gear?' },
-    { id:'st3', q:'Is the storage area lockable, secure and sheltered?' }
+  yn_storage:[
+    {id:'st1',q:'Is there dedicated storage available for equipment?'},
+    {id:'st2',q:'Is the storage area large enough to receive all production gear?'},
+    {id:'st3',q:'Is the storage area lockable, secure and sheltered?'}
   ],
-  yn_truck: [
-    { id:'tr1', q:'Is there a suitable unloading location at or near the venue?' },
-    { id:'tr2', q:'Is overhead clearance adequate? (Minimum 3.8m required for truck)' },
-    { id:'tr3', q:'Is the road surface suitable and level for a heavy vehicle?' },
-    { id:'tr4', q:'Is dedicated truck parking available on-site or nearby?' },
-    { id:'tr5', q:'Are there obstacles that could impede truck access or turning?' },
-    { id:'tr6', q:'Are there time restrictions on truck access or loading?' }
+  yn_truck:[
+    {id:'tr1',q:'Is there a suitable unloading location at or near the venue?'},
+    {id:'tr2',q:'Is overhead clearance adequate? (Minimum 3.8m required for truck)'},
+    {id:'tr3',q:'Is the road surface suitable and level for a heavy vehicle?'},
+    {id:'tr4',q:'Is dedicated truck parking available on-site or nearby?'},
+    {id:'tr5',q:'Are there obstacles that could impede truck access or turning?'},
+    {id:'tr6',q:'Are there time restrictions on truck access or loading?'}
   ],
-  yn_firstaid: [
-    { id:'fa1', q:'Is a first aid kit accessible in or near the production area?' },
-    { id:'fa2', q:'Is a defibrillator (AED) available on site?' },
-    { id:'fa3', q:'Does the venue provide a first aid officer during events?' },
-    { id:'fa4', q:'Are emergency exit routes clearly marked and unobstructed?' },
-    { id:'fa5', q:'Is there a clearly defined emergency muster point?' }
+  yn_firstaid:[
+    {id:'fa1',q:'Is a first aid kit accessible in or near the production area?'},
+    {id:'fa2',q:'Is a defibrillator (AED) available on site?'},
+    {id:'fa3',q:'Does the venue provide a first aid officer during events?'},
+    {id:'fa4',q:'Are emergency exit routes clearly marked and unobstructed?'},
+    {id:'fa5',q:'Is there a clearly defined emergency muster point?'}
   ],
-  yn_risk: [
-    { id:'rv1', q:'Does the venue have its own current risk assessment document?' },
-    { id:'rv2', q:'Is a production-specific risk assessment required by the venue?' },
-    { id:'rv3', q:'Has a WHS induction been completed or is one required on the day?' },
-    { id:'rv4', q:'Are there adequate measures in place to ensure crew and public duty of care?' },
-    { id:'rv5', q:'Does any gear need to be lifted into elevated or difficult-to-reach areas?' }
-  ],
-  yn_sketch: [
-    { id:'sk1', q:'Has a hand-sketch of the room been completed with items of interest?' }
+  yn_risk:[
+    {id:'rv1',q:'Does the venue have its own current risk assessment document?'},
+    {id:'rv2',q:'Is a production-specific risk assessment required by the venue?'},
+    {id:'rv3',q:'Has a WHS induction been completed or is one required on the day?'},
+    {id:'rv4',q:'Are there adequate measures in place to ensure crew and public duty of care?'},
+    {id:'rv5',q:'Does any gear need to be lifted into elevated or difficult-to-reach areas?'}
   ]
 };
-
-var hazardList = [
+var hazardList=[
   'Trip / slip hazards on gear route or stage area',
   'Low ceilings or beams — head injury risk',
   'Wet areas, open drains or uneven flooring',
@@ -747,23 +619,21 @@ var hazardList = [
   'Elevated work areas (stages, platforms, rigging)',
   'Asbestos or hazardous material risk (older buildings)'
 ];
-
-var photoItems = [
-  { id:'room',      label:'Room layout — wide shot including ceiling' },
-  { id:'items',     label:'Items of interest — bar, poles, doorways, ramps, obstacles' },
-  { id:'audience',  label:'Audience area and holding area' },
-  { id:'fusebox',   label:'Fuse box / switchboard — include circuit labels' },
-  { id:'threeph',   label:'3-phase socket (type, size and condition)' },
-  { id:'rigging',   label:'Rigging points / grid — include height reference' },
-  { id:'gearentry', label:'Gear entry points' },
-  { id:'storage',   label:'Storage areas' },
-  { id:'truck',     label:'Truck unloading area and access route' },
-  { id:'dockarea',  label:'Loading dock — include dock hours signage if visible' },
-  { id:'hazards',   label:'Any identified hazard areas' },
-  { id:'firstaid',  label:'First aid kit and AED location' }
+var photoItems=[
+  {id:'room',label:'Room layout — wide shot including ceiling'},
+  {id:'items',label:'Items of interest — bar, poles, doorways, ramps, obstacles'},
+  {id:'audience',label:'Audience area and holding area'},
+  {id:'fusebox',label:'Fuse box / switchboard — include circuit labels'},
+  {id:'threeph',label:'3-phase socket (type, size and condition)'},
+  {id:'rigging',label:'Rigging points / grid — include height reference'},
+  {id:'gearentry',label:'Gear entry points'},
+  {id:'storage',label:'Storage areas'},
+  {id:'truck',label:'Truck unloading area and access route'},
+  {id:'dockarea',label:'Loading dock — include dock hours signage if visible'},
+  {id:'hazards',label:'Any identified hazard areas'},
+  {id:'firstaid',label:'First aid kit and AED location'}
 ];
-
-var photoLabels = {
+var photoLabels={
   room:'01 - Room layout wide shot including ceiling',
   items:'02 - Items of interest bar poles doorways ramps obstacles',
   audience:'03 - Audience area and holding area',
@@ -778,602 +648,416 @@ var photoLabels = {
   firstaid:'12 - First aid kit and AED location',
   sketch:'13 - Sketch floor plan'
 };
+function getAllPhotoIds(){var ids=photoItems.map(function(p){return p.id;});ids.push('sketch');return ids;}
 
-function getAllPhotoIds() {
-  var ids = photoItems.map(function(p) { return p.id; });
-  ids.push('sketch');
-  return ids;
-}
-
-// ── BUILD UI ──────────────────────────────────────────────────────────────────
-function buildYN(id, items) {
-  var el = document.getElementById(id);
-  if (!el) return;
-  el.innerHTML = items.map(function(item) {
-    return '<div class="yn-item"><div class="yn-row"><span class="yn-question">' + item.q + '</span><div class="yn-btns"><button class="yn-btn" data-id="' + item.id + '" data-val="yes" onclick="toggleYN(this)">YES</button><button class="yn-btn" data-id="' + item.id + '" data-val="no" onclick="toggleYN(this)">NO</button></div></div></div>';
+function buildYN(id,items){
+  var el=document.getElementById(id);if(!el)return;
+  el.innerHTML=items.map(function(item){
+    return '<div class="yn-item"><div class="yn-row"><span class="yn-question">'+item.q+'</span><div class="yn-btns"><button class="yn-btn" data-id="'+item.id+'" data-val="yes" onclick="toggleYN(this)">YES</button><button class="yn-btn" data-id="'+item.id+'" data-val="no" onclick="toggleYN(this)">NO</button></div></div></div>';
   }).join('');
 }
-
-function toggleYN(btn) {
-  var btns = btn.closest('.yn-row').querySelectorAll('.yn-btn');
-  btns.forEach(function(b) { b.classList.remove('yes','no'); });
-  btn.classList.add(btn.dataset.val === 'yes' ? 'yes' : 'no');
-  updateProgress();
+function toggleYN(btn){
+  btn.closest('.yn-row').querySelectorAll('.yn-btn').forEach(function(b){b.classList.remove('yes','no');});
+  btn.classList.add(btn.dataset.val==='yes'?'yes':'no');
+  updateProgress();updateAlerts();
 }
-
-function buildHazards() {
-  document.getElementById('hazardGrid').innerHTML = hazardList.map(function(h, i) {
-    return '<div class="hazard-item"><input type="checkbox" id="haz_' + i + '" onchange="updateProgress()"><label for="haz_' + i + '">' + h + '</label></div>';
+function buildHazards(){
+  document.getElementById('hazardGrid').innerHTML=hazardList.map(function(h,i){
+    return '<div class="hazard-item"><input type="checkbox" id="haz_'+i+'" onchange="updateProgress();updateAlerts();"><label for="haz_'+i+'">'+h+'</label></div>';
   }).join('');
 }
-
-function buildPhotos() {
-  document.getElementById('photoList').innerHTML = photoItems.map(function(p) {
-    return '<div class="photo-item"><div class="photo-header"><img class="photo-thumb-small" id="th_' + p.id + '" src="" alt="' + p.label + '" onclick="openLightbox(\'' + p.id + '\')"><span class="photo-label">' + p.label + '</span><div class="photo-actions"><span class="photo-status" id="st_' + p.id + '">Pending</span><button class="photo-btn" onclick="openCamera(\'' + p.id + '\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>Camera</button><button class="photo-btn" onclick="openGallery(\'' + p.id + '\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Upload</button></div></div><input type="file" class="hidden-file" id="cam_' + p.id + '" accept="image/*" capture="environment" onchange="handlePhoto(this,\'' + p.id + '\')"><input type="file" class="hidden-file" id="gal_' + p.id + '" accept="image/*" onchange="handlePhoto(this,\'' + p.id + '\')"></div>';
+function buildPhotos(){
+  document.getElementById('photoList').innerHTML=photoItems.map(function(p){
+    return '<div class="photo-item"><div class="photo-header"><img class="photo-thumb-small" id="th_'+p.id+'" src="" alt="'+p.label+'" onclick="openLightbox(\''+p.id+'\')"><span class="photo-label">'+p.label+'</span><div class="photo-actions"><span class="photo-status" id="st_'+p.id+'">Pending</span><button class="photo-btn" onclick="openCamera(\''+p.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>Camera</button><button class="photo-btn" onclick="openGallery(\''+p.id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Upload</button></div></div><input type="file" class="hidden-file" id="cam_'+p.id+'" accept="image/*" capture="environment" onchange="handlePhoto(this,\''+p.id+'\')"><input type="file" class="hidden-file" id="gal_'+p.id+'" accept="image/*" onchange="handlePhoto(this,\''+p.id+'\')"></div>';
   }).join('');
 }
+function openCamera(id){document.getElementById('cam_'+id).click();}
+function openGallery(id){document.getElementById('gal_'+id).click();}
 
-function openCamera(id) { document.getElementById('cam_' + id).click(); }
-function openGallery(id) { document.getElementById('gal_' + id).click(); }
-
-// ── PHOTO HANDLING ────────────────────────────────────────────────────────────
-window._photos = {};
-
-function handlePhoto(input, id) {
-  if (!input.files || !input.files[0]) return;
-  var reader = new FileReader();
-  reader.onload = function(e) {
-    var img = new Image();
-    img.onload = function() {
-      var MAX = 1600, w = img.width, h = img.height;
-      if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
-      var canvas = document.createElement('canvas');
-      canvas.width = w; canvas.height = h;
-      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-      canvas.toBlob(function(blob) {
-        window._photos[id] = { blob: blob, label: id };
-        var dataUrl = canvas.toDataURL('image/jpeg', 0.85);
-        var th = document.getElementById('th_' + id);
-        var st = document.getElementById('st_' + id);
-        if (th) { th.src = dataUrl; th.classList.add('visible'); }
-        if (st) { st.textContent = 'Done'; st.className = 'photo-status done'; }
-        updateProgress();
-        updateSitePhotosGrid();
-      }, 'image/jpeg', 0.85);
-    };
-    img.src = e.target.result;
-  };
-  reader.readAsDataURL(input.files[0]);
+window._photos={};
+function handlePhoto(input,id){
+  if(!input.files||!input.files[0])return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var img=new Image();
+    img.onload=function(){
+      var MAX=1600,w=img.width,h=img.height;
+      if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}
+      var canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      canvas.toBlob(function(blob){
+        window._photos[id]={blob:blob,label:id};
+        var dataUrl=canvas.toDataURL('image/jpeg',0.85);
+        var th=document.getElementById('th_'+id),st=document.getElementById('st_'+id);
+        if(th){th.src=dataUrl;th.classList.add('visible');}
+        if(st){st.textContent='Done';st.className='photo-status done';}
+        updateProgress();updateSitePhotosGrid();
+      },'image/jpeg',0.85);
+    };img.src=e.target.result;
+  };reader.readAsDataURL(input.files[0]);
 }
-
-// ── SITE PHOTOS GRID ──────────────────────────────────────────────────────────
-function updateSitePhotosGrid() {
-  var grid = document.getElementById('sitePhotosGrid');
-  if (!grid) return;
-  var taken = getAllPhotoIds().filter(function(id) { return window._photos[id] && window._photos[id].blob; });
-  if (!taken.length) {
-    grid.innerHTML = '<div class="site-photo-empty"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#8a9bb5" stroke-width="1.5"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg><span>No photos taken yet</span></div>';
-    return;
-  }
-  grid.innerHTML = taken.map(function(id) {
-    var url = URL.createObjectURL(window._photos[id].blob);
-    var item = photoItems.filter(function(p) { return p.id === id; })[0];
-    var label = item ? item.label : (id === 'sketch' ? 'Sketch / Floor Plan' : id);
-    return '<div class="site-photo-cell" onclick="openLightbox(\'' + id + '\')"><img src="' + url + '" alt="' + label + '" onload="URL.revokeObjectURL(this.src)"><div class="site-photo-cell-label">' + label + '</div></div>';
+function updateSitePhotosGrid(){
+  var grid=document.getElementById('sitePhotosGrid');if(!grid)return;
+  var taken=getAllPhotoIds().filter(function(id){return window._photos[id]&&window._photos[id].blob;});
+  if(!taken.length){grid.innerHTML='<div class="site-photo-empty"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#8a9bb5" stroke-width="1.5"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg><span>No photos taken yet</span></div>';return;}
+  grid.innerHTML=taken.map(function(id){
+    var url=URL.createObjectURL(window._photos[id].blob);
+    var item=photoItems.filter(function(p){return p.id===id;})[0];
+    var label=item?item.label:(id==='sketch'?'Sketch / Floor Plan':id);
+    return '<div class="site-photo-cell" onclick="openLightbox(\''+id+'\')"><img src="'+url+'" alt="'+label+'" onload="URL.revokeObjectURL(this.src)"><div class="site-photo-cell-label">'+label+'</div></div>';
   }).join('');
 }
-
-// ── MAP ───────────────────────────────────────────────────────────────────────
-function loadMap() {
-  var q = document.getElementById('mapSearch').value.trim();
-  if (!q) return;
-  var enc = encodeURIComponent(q);
-  document.getElementById('mapFrame').src = 'https://maps.google.com/maps?q=' + enc + '&output=embed&z=16';
-  document.getElementById('mapFrame').style.display = 'block';
-  document.getElementById('mapPlaceholder').style.display = 'none';
-  document.getElementById('mapLinks').style.display = 'flex';
-  document.getElementById('linkApple').href = 'https://maps.apple.com/?q=' + enc;
-  document.getElementById('linkGoogle').href = 'https://www.google.com/maps/search/?api=1&query=' + enc;
-  document.getElementById('linkW3W').href = 'https://what3words.com/search?query=' + enc;
+function loadMap(){
+  var q=document.getElementById('mapSearch').value.trim();if(!q)return;
+  var enc=encodeURIComponent(q);
+  document.getElementById('mapFrame').src='https://maps.google.com/maps?q='+enc+'&output=embed&z=16';
+  document.getElementById('mapFrame').style.display='block';
+  document.getElementById('mapPlaceholder').style.display='none';
+  document.getElementById('mapLinks').style.display='flex';
+  document.getElementById('linkApple').href='https://maps.apple.com/?q='+enc;
+  document.getElementById('linkGoogle').href='https://www.google.com/maps/search/?api=1&query='+enc;
+  document.getElementById('linkW3W').href='https://what3words.com/search?query='+enc;
 }
 
-// ── PROGRESS ──────────────────────────────────────────────────────────────────
-function updateProgress() {
-  var answered = document.querySelectorAll('.yn-btn.yes,.yn-btn.no').length;
-  var total_yn = document.querySelectorAll('.yn-item').length;
-  var done_photos = document.querySelectorAll('.photo-status.done').length;
-  var total_photos = document.querySelectorAll('.photo-status').length;
-  var total = total_yn + total_photos;
-  var done = answered + done_photos;
-  var pct = total > 0 ? Math.round(done / total * 100) : 0;
-  document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressPct').textContent = pct + '%';
+// WEATHER
+window._wxRainChance=0;
+var _wxCache={};
+function wxIcon(c){if(c===0)return'☀️';if(c<=2)return'⛅';if(c===3)return'☁️';if(c<=49)return'🌫️';if(c<=59)return'🌦️';if(c<=69)return'🌧️';if(c<=79)return'❄️';if(c<=84)return'🌧️';return'⛈️';}
+function moonPhase(date){
+  var known=new Date(2000,0,6),diff=(date-known)/86400000,cycle=29.53,p=((diff%cycle)+cycle)%cycle;
+  if(p<1.85)return{icon:'🌑',name:'New Moon'};if(p<7.38)return{icon:'🌒',name:'Waxing Crescent'};
+  if(p<12.92)return{icon:'🌓',name:'First Quarter'};if(p<16.61)return{icon:'🌔',name:'Waxing Gibbous'};
+  if(p<18.46)return{icon:'🌕',name:'Full Moon'};if(p<22.15)return{icon:'🌖',name:'Waning Gibbous'};
+  if(p<25.84)return{icon:'🌗',name:'Last Quarter'};return{icon:'🌘',name:'Waning Crescent'};
 }
-
-// ── STATE ─────────────────────────────────────────────────────────────────────
-var allFieldIds = [
-  'f_prodName','f_txDate','f_recceDate','f_officer','f_venueName',
-  'f_address','f_suburb','f_state','f_contact','f_phone',
-  'f_techContact','f_techPhone','f_gps','f_w3w','f_accessNotes',
-  'f_occupancy','f_bumpIn','f_ceilingH','f_venueType',
-  'f_ssid','f_wifiPw','f_signal','f_speed','f_ispContact',
-  'f_noiseCurfew','f_noiseCurfewContact','f_limiterDb','f_limiterContact',
-  'f_houseLx','f_dmxPatch','f_housePA','f_audioPatch',
-  'f_fuseLocation','f_gpos',
-  'f_stairs','f_liftDims','f_liftKg','f_corridorW',
-  'f_truckDist','f_truckClear','f_dockHours','f_dockContact',
-  'f_firstAidKit','f_aed','f_hospital','f_muster',
-  'f_riskDoc','f_whsContact',
-  'f_roomLength','f_roomWidth','f_ceilingH2',
-  'n_venue','n_internet','n_sound','n_light','n_housesystem',
-  'n_power','n_accessstorage','n_truck','n_hazards',
-  'n_firstaid','n_risk','n_sketch',
-  'mapSearch','saveName'
-];
-
-function collectState() {
-  var fields = {};
-  allFieldIds.forEach(function(id) {
-    var el = document.getElementById(id);
-    if (el) fields[id] = el.value;
-  });
-  var yn = {};
-  document.querySelectorAll('.yn-btn.yes,.yn-btn.no').forEach(function(btn) {
-    yn[btn.dataset.id] = btn.dataset.val;
-  });
-  var haz = [];
-  hazardList.forEach(function(h, i) {
-    var cb = document.getElementById('haz_' + i);
-    if (cb && cb.checked) haz.push(i);
-  });
-  return { fields: fields, yn: yn, haz: haz };
+function fmtTime(iso){if(!iso)return'—';var d=new Date(iso);return d.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit',hour12:true});}
+function fetchWeather(){
+  var address=document.getElementById('mapSearch').value.trim();
+  if(!address)address=[document.getElementById('f_address').value,document.getElementById('f_suburb').value,document.getElementById('f_state').value].filter(Boolean).join(', ');
+  var txDate=document.getElementById('f_txDate').value;
+  var widget=document.getElementById('weatherWidget');
+  if(!address||!txDate)return;
+  var ck=address+'||'+txDate;
+  if(_wxCache[ck]){renderWeather(_wxCache[ck],txDate);return;}
+  widget.textContent='Loading weather…';
+  fetch('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(address)+'&count=1&language=en&format=json')
+    .then(function(r){return r.json();})
+    .then(function(geo){
+      if(!geo.results||!geo.results.length)throw new Error('not found');
+      var lat=geo.results[0].latitude,lon=geo.results[0].longitude,tz=geo.results[0].timezone||'Australia/Brisbane';
+      var url='https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+'&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weathercode,windspeed_10m_max,sunrise,sunset&timezone='+encodeURIComponent(tz)+'&forecast_days=16';
+      return fetch(url).then(function(r2){return r2.json();});
+    })
+    .then(function(wx){_wxCache[ck]=wx;renderWeather(wx,txDate);})
+    .catch(function(){widget.textContent='Could not load weather — check address and try again.';});
 }
-
-function restoreState(state) {
-  if (!state) return;
-  Object.entries(state.fields || {}).forEach(function(entry) {
-    var el = document.getElementById(entry[0]);
-    if (el) el.value = entry[1];
-  });
-  document.querySelectorAll('.yn-btn').forEach(function(btn) {
-    btn.classList.remove('yes','no');
-    if (state.yn && state.yn[btn.dataset.id] === btn.dataset.val) {
-      btn.classList.add(btn.dataset.val === 'yes' ? 'yes' : 'no');
+function renderWeather(wx,txDate){
+  var widget=document.getElementById('weatherWidget');
+  var dates=wx.daily.time,txIdx=dates.indexOf(txDate);
+  var moon=moonPhase(new Date(txDate+'T12:00:00'));
+  var html='';
+  if(txIdx>=0){
+    var start=Math.max(0,txIdx-3),end=Math.min(dates.length-1,txIdx+3);
+    html+='<div class="wx-meta">7-day forecast centred on TX date <strong>'+txDate+'</strong></div><div class="wx-row">';
+    for(var i=start;i<=end;i++){
+      var d=new Date(dates[i]+'T12:00:00');
+      var dl=d.toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'});
+      var isTx=(i===txIdx);
+      html+='<div class="wx-day'+(isTx?' tx-day':'')+'"><div class="wx-date">'+(isTx?'📍 TX':dl)+'</div>';
+      html+='<div class="wx-icon">'+wxIcon(wx.daily.weathercode[i])+'</div>';
+      html+='<div class="wx-temp">'+Math.round(wx.daily.temperature_2m_max[i])+'° / '+Math.round(wx.daily.temperature_2m_min[i])+'°</div>';
+      html+='<div class="wx-rain">💧 '+(wx.daily.precipitation_probability_max[i]||0)+'%</div>';
+      html+='<div class="wx-wind">💨 '+Math.round(wx.daily.windspeed_10m_max[i])+'km/h</div></div>';
     }
-  });
-  (state.haz || []).forEach(function(i) {
-    var cb = document.getElementById('haz_' + i);
-    if (cb) cb.checked = true;
-  });
-  if (state.fields && state.fields.mapSearch) {
-    document.getElementById('mapSearch').value = state.fields.mapSearch;
-    loadMap();
+    html+='</div>';
+    window._wxRainChance=wx.daily.precipitation_probability_max[txIdx]||0;
+  } else {
+    html+='<div class="wx-note">TX date is beyond the 16-day forecast window.<br>Refresh closer to the TX date for a live forecast.</div>';
+    window._wxRainChance=0;
   }
-  updateProgress();
+  var txSunrise=(txIdx>=0)?wx.daily.sunrise[txIdx]:null;
+  var txSunset=(txIdx>=0)?wx.daily.sunset[txIdx]:null;
+  html+='<div class="wx-always">';
+  if(txSunrise)html+='<div class="wx-pill"><span class="wx-lbl">🌅 Sunrise</span><span>'+fmtTime(txSunrise)+'</span></div>';
+  if(txSunset)html+='<div class="wx-pill"><span class="wx-lbl">🌇 Sunset</span><span>'+fmtTime(txSunset)+'</span></div>';
+  html+='<div class="wx-pill"><span class="wx-lbl">'+moon.icon+' Moon</span><span>'+moon.name+'</span></div></div>';
+  widget.innerHTML=html;
+  updateAlerts();
 }
 
-// ── INDEXEDDB ─────────────────────────────────────────────────────────────────
-var DB_NAME = 'RecceDB', DB_VER = 1, db = null;
+// ALERTS
+function getYN(id){var b=document.querySelector('.yn-btn.yes[data-id="'+id+'"],.yn-btn.no[data-id="'+id+'"]');return b?(b.classList.contains('yes')?'yes':'no'):null;}
+function updateAlerts(){
+  var alerts=[],wSVG='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12" y2="17"/></svg>';
+  if(getYN('nl1')==='yes'){var db=(document.getElementById('f_limiterDb')||{}).value||'';alerts.push('Noise limiter fitted'+(db?' — threshold '+db:''));}
+  var curfew=(document.getElementById('f_noiseCurfew')||{}).value||'';
+  if(curfew)alerts.push('Noise curfew — '+curfew);
+  var hazCount=document.querySelectorAll('.hazard-item input[type=checkbox]:checked').length;
+  if(hazCount>0)alerts.push('Hazards flagged — '+hazCount+' item'+(hazCount>1?'s':''));
+  if(getYN('p2')==='no')alerts.push('No 3-phase power available');
+  if(getYN('tr4')==='no')alerts.push('No dedicated truck parking');
+  if(getYN('ac1')==='yes'&&getYN('ac2')==='no')alerts.push('Stairs on gear route — no lift available');
+  if(window._wxRainChance>=40)alerts.push('Rain forecast on TX day — '+window._wxRainChance+'% chance');
+  if(getYN('v3')==='yes')alerts.push('Venue open to public during bump-in / setup');
+  var at=(document.getElementById('f_venueAccess')||{}).value||'';
+  var dt=(document.getElementById('f_dockHours')||{}).value||'';
+  if(at&&dt&&at<dt)alerts.push('Venue Access Time ('+at+') is earlier than Loading Dock Opens ('+dt+') — bump-in / dock clash');
+  var banner=document.getElementById('alertsBanner');
+  if(!alerts.length){banner.innerHTML='';banner.classList.remove('visible');return;}
+  banner.innerHTML=alerts.map(function(a){return '<div class="alert-item">'+wSVG+'<span>⚠️ '+a+'</span></div>';}).join('');
+  banner.classList.add('visible');
+}
 
-function openDB() {
-  return new Promise(function(resolve, reject) {
-    if (db) { resolve(db); return; }
-    var req = indexedDB.open(DB_NAME, DB_VER);
-    req.onupgradeneeded = function(e) {
-      var d = e.target.result;
-      if (!d.objectStoreNames.contains('surveys')) d.createObjectStore('surveys', { keyPath: 'key' });
-      if (!d.objectStoreNames.contains('photos')) d.createObjectStore('photos', { keyPath: 'id' });
-    };
-    req.onsuccess = function(e) { db = e.target.result; resolve(db); };
-    req.onerror = function() { reject(req.error); };
+function updateProgress(){
+  var answered=document.querySelectorAll('.yn-btn.yes,.yn-btn.no').length;
+  var total_yn=document.querySelectorAll('.yn-item').length;
+  var done_photos=document.querySelectorAll('.photo-status.done').length;
+  var total_photos=document.querySelectorAll('.photo-status').length;
+  var total=total_yn+total_photos,done=answered+done_photos;
+  var pct=total>0?Math.round(done/total*100):0;
+  document.getElementById('progressFill').style.width=pct+'%';
+  document.getElementById('progressPct').textContent=pct+'%';
+}
+
+var allFieldIds=['f_prodName','f_txDate','f_recceDate','f_officer','f_venueName','f_address','f_suburb','f_state','f_contact','f_phone','f_techContact','f_techPhone','f_gps','f_w3w','f_accessNotes','f_occupancy','f_venueAccess','f_ceilingH','f_venueType','f_roomLength','f_roomWidth','f_signal','f_noiseCurfew','f_noiseCurfewContact','f_limiterDb','f_limiterContact','f_houseLx','f_dmxPatch','f_housePA','f_audioPatch','f_houseScreens','f_videoConns','f_3phaseAmps','f_fuseLocation','f_gpos','f_stairs','f_liftDims','f_liftKg','f_corridorW','f_truckDist','f_truckClear','f_dockHours','f_dockContact','f_firstAidKit','f_aed','f_hospital','f_muster','f_riskDoc','f_whsContact','n_venue','n_internet','n_sound','n_light','n_housesystem','n_power','n_accessstorage','n_truck','n_hazards','n_firstaid','n_risk','mapSearch','saveName'];
+
+function collectState(){
+  var fields={};
+  allFieldIds.forEach(function(id){var el=document.getElementById(id);if(el)fields[id]=el.value;});
+  var yn={};
+  document.querySelectorAll('.yn-btn.yes,.yn-btn.no').forEach(function(btn){yn[btn.dataset.id]=btn.dataset.val;});
+  var haz=[];
+  hazardList.forEach(function(h,i){var cb=document.getElementById('haz_'+i);if(cb&&cb.checked)haz.push(i);});
+  return{fields:fields,yn:yn,haz:haz};
+}
+function restoreState(state){
+  if(!state)return;
+  Object.entries(state.fields||{}).forEach(function(e){var el=document.getElementById(e[0]);if(el)el.value=e[1];});
+  document.querySelectorAll('.yn-btn').forEach(function(btn){
+    btn.classList.remove('yes','no');
+    if(state.yn&&state.yn[btn.dataset.id]===btn.dataset.val)btn.classList.add(btn.dataset.val==='yes'?'yes':'no');
   });
+  (state.haz||[]).forEach(function(i){var cb=document.getElementById('haz_'+i);if(cb)cb.checked=true;});
+  if(state.fields&&state.fields.mapSearch){document.getElementById('mapSearch').value=state.fields.mapSearch;loadMap();}
+  updateProgress();updateAlerts();
 }
 
-function dbPut(store, obj) {
-  return openDB().then(function(d) {
-    return new Promise(function(res, rej) {
-      var tx = d.transaction(store, 'readwrite');
-      tx.objectStore(store).put(obj).onsuccess = res;
-      tx.onerror = function() { rej(tx.error); };
-    });
-  });
-}
+// INDEXEDDB
+var DB_NAME='RecceDB',DB_VER=1,db=null;
+function openDB(){return new Promise(function(res,rej){if(db){res(db);return;}var req=indexedDB.open(DB_NAME,DB_VER);req.onupgradeneeded=function(e){var d=e.target.result;if(!d.objectStoreNames.contains('surveys'))d.createObjectStore('surveys',{keyPath:'key'});if(!d.objectStoreNames.contains('photos'))d.createObjectStore('photos',{keyPath:'id'});};req.onsuccess=function(e){db=e.target.result;res(db);};req.onerror=function(){rej(req.error);};});}
+function dbPut(store,obj){return openDB().then(function(d){return new Promise(function(res,rej){var tx=d.transaction(store,'readwrite');tx.objectStore(store).put(obj).onsuccess=res;tx.onerror=function(){rej(tx.error);};});});}
+function dbGet(store,key){return openDB().then(function(d){return new Promise(function(res,rej){var tx=d.transaction(store,'readonly');var r=tx.objectStore(store).get(key);r.onsuccess=function(){res(r.result);};r.onerror=function(){rej(r.error);};});});}
+function dbGetAll(store){return openDB().then(function(d){return new Promise(function(res,rej){var tx=d.transaction(store,'readonly');var r=tx.objectStore(store).getAll();r.onsuccess=function(){res(r.result);};r.onerror=function(){rej(r.error);};});});}
+function dbDelete(store,key){return openDB().then(function(d){return new Promise(function(res,rej){var tx=d.transaction(store,'readwrite');tx.objectStore(store).delete(key).onsuccess=res;tx.onerror=function(){rej(tx.error);};});});}
 
-function dbGet(store, key) {
-  return openDB().then(function(d) {
-    return new Promise(function(res, rej) {
-      var tx = d.transaction(store, 'readonly');
-      var r = tx.objectStore(store).get(key);
-      r.onsuccess = function() { res(r.result); };
-      r.onerror = function() { rej(r.error); };
-    });
-  });
-}
-
-function dbGetAll(store) {
-  return openDB().then(function(d) {
-    return new Promise(function(res, rej) {
-      var tx = d.transaction(store, 'readonly');
-      var r = tx.objectStore(store).getAll();
-      r.onsuccess = function() { res(r.result); };
-      r.onerror = function() { rej(r.error); };
-    });
-  });
-}
-
-function dbDelete(store, key) {
-  return openDB().then(function(d) {
-    return new Promise(function(res, rej) {
-      var tx = d.transaction(store, 'readwrite');
-      tx.objectStore(store).delete(key).onsuccess = res;
-      tx.onerror = function() { rej(tx.error); };
-    });
-  });
-}
-
-// ── SAVE ──────────────────────────────────────────────────────────────────────
-function saveSurvey() {
-  var name = document.getElementById('saveName').value.trim() || document.getElementById('f_prodName').value.trim() || 'Untitled';
-  var now = new Date();
-  var key = name + ' — ' + now.toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'}) + ' ' + now.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'});
-  var record = { key: key, name: name, date: now.toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'}), time: now.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'}), state: collectState() };
-
-  dbPut('surveys', record).then(function() {
-    var saves = getAllPhotoIds().map(function(pid) {
-      if (window._photos[pid] && window._photos[pid].blob) {
-        var item = photoItems.filter(function(p) { return p.id === pid; })[0];
-        return dbPut('photos', { id: key + '__' + pid, surveyKey: key, photoId: pid, blob: window._photos[pid].blob, label: item ? item.label : pid });
-      }
+function saveSurvey(){
+  var name=document.getElementById('saveName').value.trim()||document.getElementById('f_prodName').value.trim()||'Untitled';
+  var now=new Date();
+  var key=name+' — '+now.toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'})+' '+now.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'});
+  var record={key:key,name:name,date:now.toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'}),time:now.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'}),state:collectState()};
+  dbPut('surveys',record).then(function(){
+    var saves=getAllPhotoIds().map(function(pid){
+      if(window._photos[pid]&&window._photos[pid].blob){var item=photoItems.filter(function(p){return p.id===pid;})[0];return dbPut('photos',{id:key+'__'+pid,surveyKey:key,photoId:pid,blob:window._photos[pid].blob,label:item?item.label:pid});}
       return Promise.resolve();
-    });
-    return Promise.all(saves);
-  }).then(function() {
-    window._activeKey = key;
-    renderSaved(key);
-    // Show green tick permanently
-    var btn = document.getElementById('btnSave');
-    btn.textContent = 'Save Survey  ✓';
-    btn.style.background = 'linear-gradient(135deg,#27ae60,#2ecc71)';
-  }).catch(function(e) {
-    alert('Could not save: ' + e.message);
-  });
+    });return Promise.all(saves);
+  }).then(function(){
+    window._activeKey=key;renderSaved(key);
+    var btn=document.getElementById('btnSave');btn.textContent='Save Survey  ✓';btn.style.background='linear-gradient(135deg,#27ae60,#2ecc71)';
+  }).catch(function(e){alert('Could not save: '+e.message);});
 }
-
-// ── LOAD ──────────────────────────────────────────────────────────────────────
-function loadSurveyByKey(key) {
-  dbGet('surveys', key).then(function(record) {
-    if (!record) return;
-    if (!confirm('Load "' + record.name + '"? This replaces everything on screen.')) return;
-    clearAll();
-    restoreState(record.state);
-    document.getElementById('saveName').value = record.name;
-
-    var loads = getAllPhotoIds().map(function(pid) {
-      return dbGet('photos', key + '__' + pid).then(function(pr) {
-        if (pr && pr.blob) {
-          window._photos[pid] = { blob: pr.blob, label: pid };
-          var url = URL.createObjectURL(pr.blob);
-          var th = document.getElementById('th_' + pid);
-          var st = document.getElementById('st_' + pid);
-          if (th) { th.src = url; th.classList.add('visible'); }
-          if (st) { st.textContent = 'Done'; st.className = 'photo-status done'; }
-        }
+function loadSurveyByKey(key){
+  dbGet('surveys',key).then(function(record){
+    if(!record)return;
+    if(!confirm('Load "'+record.name+'"? This replaces everything on screen.'))return;
+    clearAll();restoreState(record.state);document.getElementById('saveName').value=record.name;
+    var loads=getAllPhotoIds().map(function(pid){
+      return dbGet('photos',key+'__'+pid).then(function(pr){
+        if(pr&&pr.blob){window._photos[pid]={blob:pr.blob,label:pid};var url=URL.createObjectURL(pr.blob);var th=document.getElementById('th_'+pid),st=document.getElementById('st_'+pid);if(th){th.src=url;th.classList.add('visible');}if(st){st.textContent='Done';st.className='photo-status done';}}
       });
     });
-
-    Promise.all(loads).then(function() {
-      window._activeKey = key;
-      renderSaved(key);
-      updateSitePhotosGrid();
-      updateProgress();
-      document.getElementById('loaderList').style.display = 'none';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    Promise.all(loads).then(function(){window._activeKey=key;renderSaved(key);updateSitePhotosGrid();updateProgress();updateAlerts();document.getElementById('loaderList').style.display='none';window.scrollTo({top:0,behavior:'smooth'});});
   });
 }
-
-function deleteSurveyByKey(key) {
-  if (!confirm('Delete this survey? This cannot be undone.')) return;
-  var dels = getAllPhotoIds().map(function(pid) { return dbDelete('photos', key + '__' + pid); });
-  Promise.all(dels).then(function() { return dbDelete('surveys', key); }).then(function() {
-    if (window._activeKey === key) window._activeKey = null;
-    renderSaved(window._activeKey);
+function deleteSurveyByKey(key){
+  if(!confirm('Delete this survey? This cannot be undone.'))return;
+  var dels=getAllPhotoIds().map(function(pid){return dbDelete('photos',key+'__'+pid);});
+  Promise.all(dels).then(function(){return dbDelete('surveys',key);}).then(function(){if(window._activeKey===key)window._activeKey=null;renderSaved(window._activeKey);});
+}
+function renderSaved(highlightKey){
+  dbGetAll('surveys').then(function(all){
+    all.sort(function(a,b){return b.key.localeCompare(a.key);});
+    window._savedKeys=all.map(function(s){return s.key;});
+    var loader=document.getElementById('loaderList');
+    if(!all.length){if(loader)loader.innerHTML='<div style="color:var(--grey);font-size:0.85rem;padding:8px 0;">No saved surveys yet.</div>';return;}
+    var rows=all.map(function(s,i){return '<div class="saved-row'+(s.key===highlightKey?' active':'')+'"><div class="saved-info"><span class="saved-name">'+s.name+'</span><span class="saved-meta">'+s.date+' &nbsp;'+s.time+'</span></div><div class="saved-actions"><button class="saved-btn load" onclick="loadSurveyByIndex('+i+')">Load</button><button class="saved-btn del" onclick="deleteSurveyByIndex('+i+')">Delete</button></div></div>';}).join('');
+    if(loader)loader.innerHTML=rows;
   });
 }
+function loadSurveyByIndex(i){var k=window._savedKeys&&window._savedKeys[i];if(k)loadSurveyByKey(k);}
+function deleteSurveyByIndex(i){var k=window._savedKeys&&window._savedKeys[i];if(k)deleteSurveyByKey(k);}
 
-function renderSaved(highlightKey) {
-  dbGetAll('surveys').then(function(all) {
-    all.sort(function(a, b) { return b.key.localeCompare(a.key); });
-    window._savedKeys = all.map(function(s) { return s.key; });
-    var loader = document.getElementById('loaderList');
-    var noMsg = '<div style="color:var(--grey);font-size:0.85rem;padding:8px 0;">No saved surveys yet.</div>';
-    if (!all.length) { if (loader) loader.innerHTML = noMsg; return; }
-    var rows = all.map(function(s, i) {
-      return '<div class="saved-row' + (s.key === highlightKey ? ' active' : '') + '"><div class="saved-info"><span class="saved-name">' + s.name + '</span><span class="saved-meta">' + s.date + ' &nbsp;' + s.time + '</span></div><div class="saved-actions"><button class="saved-btn load" onclick="loadSurveyByIndex(' + i + ')">Load</button><button class="saved-btn del" onclick="deleteSurveyByIndex(' + i + ')">Delete</button></div></div>';
-    }).join('');
-    if (loader) loader.innerHTML = rows;
-  });
+function clearAll(){
+  document.querySelectorAll('input[type=text],input[type=date],input[type=time],input[type=number],input[type=tel],input[type=email],textarea').forEach(function(el){el.value='';});
+  document.querySelectorAll('select').forEach(function(el){el.selectedIndex=0;});
+  document.querySelectorAll('.yn-btn').forEach(function(b){b.classList.remove('yes','no');});
+  document.querySelectorAll('.hazard-item input[type=checkbox]').forEach(function(cb){cb.checked=false;});
+  window._photos={};window._wxRainChance=0;
+  document.querySelectorAll('.photo-thumb-small').forEach(function(th){th.src='';th.classList.remove('visible');});
+  document.querySelectorAll('.photo-status').forEach(function(st){st.textContent='Pending';st.className='photo-status';});
+  document.getElementById('mapFrame').style.display='none';
+  document.getElementById('mapPlaceholder').style.display='flex';
+  document.getElementById('mapLinks').style.display='none';
+  document.getElementById('f_recceDate').valueAsDate=new Date();
+  document.getElementById('weatherWidget').innerHTML='Enter address and TX date to load weather forecast.';
+  var btn=document.getElementById('btnSave');if(btn){btn.textContent='Save Survey';btn.style.background='';}
+  updateSitePhotosGrid();updateAlerts();
+}
+function newSurvey(){
+  if(document.getElementById('f_prodName').value.trim()){if(!confirm('Start a new survey? Unsaved changes will be lost.'))return;}
+  clearAll();window._activeKey=null;renderSaved(null);updateProgress();window.scrollTo({top:0,behavior:'smooth'});
+}
+function toggleLoader(){
+  var list=document.getElementById('loaderList'),btn=document.getElementById('btnLoadSurvey');
+  var open=list.style.display==='none'||list.style.display==='';
+  list.style.display=open?'block':'none';btn.classList.toggle('active',open);
+  if(open)renderSaved(window._activeKey);
 }
 
-function loadSurveyByIndex(i) { var k = window._savedKeys && window._savedKeys[i]; if (k) loadSurveyByKey(k); }
-function deleteSurveyByIndex(i) { var k = window._savedKeys && window._savedKeys[i]; if (k) deleteSurveyByKey(k); }
-
-// ── CLEAR ─────────────────────────────────────────────────────────────────────
-function clearAll() {
-  document.querySelectorAll('input[type=text],input[type=date],input[type=time],input[type=number],input[type=tel],input[type=email],textarea').forEach(function(el) { el.value = ''; });
-  document.querySelectorAll('select').forEach(function(el) { el.selectedIndex = 0; });
-  document.querySelectorAll('.yn-btn').forEach(function(b) { b.classList.remove('yes','no'); });
-  document.querySelectorAll('.hazard-item input[type=checkbox]').forEach(function(cb) { cb.checked = false; });
-  window._photos = {};
-  document.querySelectorAll('.photo-thumb-small').forEach(function(th) { th.src = ''; th.classList.remove('visible'); });
-  document.querySelectorAll('.photo-status').forEach(function(st) { st.textContent = 'Pending'; st.className = 'photo-status'; });
-  document.getElementById('mapFrame').style.display = 'none';
-  document.getElementById('mapPlaceholder').style.display = 'flex';
-  document.getElementById('mapLinks').style.display = 'none';
-  document.getElementById('f_recceDate').valueAsDate = new Date();
-  // Reset save button
-  var btn = document.getElementById('btnSave');
-  if (btn) { btn.textContent = 'Save Survey'; btn.style.background = ''; }
-  updateSitePhotosGrid();
-}
-
-function newSurvey() {
-  if (document.getElementById('f_prodName').value.trim()) {
-    if (!confirm('Start a new survey? Unsaved changes will be lost.')) return;
-  }
-  clearAll();
-  window._activeKey = null;
-  renderSaved(null);
-  updateProgress();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function toggleLoader() {
-  var list = document.getElementById('loaderList');
-  var btn = document.getElementById('btnLoadSurvey');
-  var open = list.style.display === 'none' || list.style.display === '';
-  list.style.display = open ? 'block' : 'none';
-  btn.classList.toggle('active', open);
-  if (open) renderSaved(window._activeKey);
-}
-
-// ── EXPORT SURVEY (ZIP) ───────────────────────────────────────────────────────
-function exportSurvey() {
-  var name = document.getElementById('saveName').value.trim() || document.getElementById('f_prodName').value.trim() || 'Recce Survey';
-  var dated = document.getElementById('f_recceDate').value || new Date().toISOString().slice(0,10);
-  var fname = name.replace(/[^a-zA-Z0-9 _-]/g,'').trim() + ' - ' + dated;
-  var zip = new JSZip();
-  zip.file('survey.json', JSON.stringify({ _v:2, name:name, date:dated, exported:new Date().toISOString(), state:collectState() }, null, 2));
-  var folder = zip.folder('photos');
-  getAllPhotoIds().forEach(function(pid) {
-    if (window._photos[pid] && window._photos[pid].blob) {
-      folder.file((photoLabels[pid] || pid) + '.jpg', window._photos[pid].blob);
-    }
-  });
-  zip.generateAsync({ type:'blob', compression:'DEFLATE', compressionOptions:{ level:6 } }).then(function(zipBlob) {
-    if (isSafari) {
-      var file = new File([zipBlob], fname + '.zip', { type:'application/zip' });
-      if (navigator.share && navigator.canShare && navigator.canShare({ files:[file] })) {
-        navigator.share({ files:[file], title:fname + '.zip' });
-      } else {
-        var url = URL.createObjectURL(zipBlob);
-        window.open(url, '_blank');
-        setTimeout(function() { URL.revokeObjectURL(url); }, 15000);
-        alert('Tap Share in your browser, then Save to Files.');
-      }
+function exportSurvey(){
+  var name=document.getElementById('saveName').value.trim()||document.getElementById('f_prodName').value.trim()||'Recce Survey';
+  var dated=document.getElementById('f_recceDate').value||new Date().toISOString().slice(0,10);
+  var fname=name.replace(/[^a-zA-Z0-9 _-]/g,'').trim()+' - '+dated;
+  var zip=new JSZip();
+  zip.file('survey.json',JSON.stringify({_v:3,name:name,date:dated,exported:new Date().toISOString(),state:collectState()},null,2));
+  var folder=zip.folder('photos');
+  getAllPhotoIds().forEach(function(pid){if(window._photos[pid]&&window._photos[pid].blob)folder.file((photoLabels[pid]||pid)+'.jpg',window._photos[pid].blob);});
+  zip.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:6}}).then(function(zipBlob){
+    if(isSafari){
+      var file=new File([zipBlob],fname+'.zip',{type:'application/zip'});
+      if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],title:fname+'.zip'});}
+      else{var url=URL.createObjectURL(zipBlob);window.open(url,'_blank');setTimeout(function(){URL.revokeObjectURL(url);},15000);alert('Tap Share in your browser, then Save to Files.');}
     } else {
-      var url = URL.createObjectURL(zipBlob);
-      var a = document.createElement('a');
-      a.href = url; a.download = fname + '.zip';
-      document.body.appendChild(a); a.click(); document.body.removeChild(a);
-      setTimeout(function() { URL.revokeObjectURL(url); }, 5000);
+      var url=URL.createObjectURL(zipBlob);var a=document.createElement('a');a.href=url;a.download=fname+'.zip';document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(function(){URL.revokeObjectURL(url);},5000);
     }
   });
 }
 
-// ── GENERATE REPORT ───────────────────────────────────────────────────────────
-function generateReport() {
-  var name = document.getElementById('f_prodName').value || '';
-  var venue = document.getElementById('f_venueName').value || 'Venue';
-  var dated = document.getElementById('f_recceDate').value || new Date().toISOString().slice(0,10);
-  var state = collectState();
-  var fields = state.fields || {};
-  var yn = state.yn || {};
-
-  function fv(id, fallback) { return fields[id] || (fallback !== undefined ? fallback : '—'); }
-  function ynLabel(id) { return yn[id] === 'yes' ? 'YES' : yn[id] === 'no' ? 'NO' : '—'; }
-  function ynClass(id) { return yn[id] === 'yes' ? 'yn-yes' : yn[id] === 'no' ? 'yn-no' : 'yn-na'; }
-
-  // Convert photos to data URLs first
-  var takenIds = getAllPhotoIds().filter(function(id) { return window._photos[id] && window._photos[id].blob; });
-  var promises = takenIds.map(function(id) {
-    return new Promise(function(resolve) {
-      var reader = new FileReader();
-      reader.onload = function(e) { resolve({ id: id, dataUrl: e.target.result }); };
-      reader.readAsDataURL(window._photos[id].blob);
-    });
-  });
-
-  Promise.all(promises).then(function(results) {
-    var dataUrls = {};
-    results.forEach(function(r) { dataUrls[r.id] = r.dataUrl; });
-
-    function labelFor(id) {
-      var item = photoItems.filter(function(p) { return p.id === id; })[0];
-      return item ? item.label : (id === 'sketch' ? 'Sketch / Floor Plan' : id);
+function generateReport(){
+  var state=collectState(),fields=state.fields||{},yn=state.yn||{};
+  function fv(id,fb){return(fields[id]&&fields[id].trim())?fields[id]:(fb!==undefined?fb:'—');}
+  function ynLabel(id){return yn[id]==='yes'?'YES':yn[id]==='no'?'NO':'—';}
+  function ynClass(id){return yn[id]==='yes'?'yn-yes':yn[id]==='no'?'yn-no':'yn-na';}
+  var takenIds=getAllPhotoIds().filter(function(id){return window._photos[id]&&window._photos[id].blob;});
+  var promises=takenIds.map(function(id){return new Promise(function(resolve){var reader=new FileReader();reader.onload=function(e){resolve({id:id,dataUrl:e.target.result});};reader.readAsDataURL(window._photos[id].blob);});});
+  Promise.all(promises).then(function(results){
+    var dataUrls={};results.forEach(function(r){dataUrls[r.id]=r.dataUrl;});
+    function labelFor(id){var item=photoItems.filter(function(p){return p.id===id;})[0];return item?item.label:(id==='sketch'?'Sketch / Floor Plan':id);}
+    var photoRows=[];
+    for(var i=0;i<takenIds.length;i+=2){
+      var a=takenIds[i],b=takenIds[i+1];
+      photoRows.push('<tr><td style="width:50%;padding:8px;vertical-align:top;"><img src="'+dataUrls[a]+'" style="width:100%;border-radius:4px;display:block;"><p style="margin-top:5px;font-size:11px;font-weight:600;color:#555;">'+labelFor(a)+'</p></td>'+(b?'<td style="width:50%;padding:8px;vertical-align:top;"><img src="'+dataUrls[b]+'" style="width:100%;border-radius:4px;display:block;"><p style="margin-top:5px;font-size:11px;font-weight:600;color:#555;">'+labelFor(b)+'</p></td>':'<td></td>')+'</tr>');
     }
-
-    var photoRows = [];
-    for (var i = 0; i < takenIds.length; i += 2) {
-      var a = takenIds[i], b = takenIds[i+1];
-      photoRows.push('<tr><td style="width:50%;padding:8px;vertical-align:top;"><img src="' + dataUrls[a] + '" style="width:100%;border-radius:4px;display:block;"><p style="margin-top:5px;font-size:11px;font-weight:600;color:#555;">' + labelFor(a) + '</p></td>' + (b ? '<td style="width:50%;padding:8px;vertical-align:top;"><img src="' + dataUrls[b] + '" style="width:100%;border-radius:4px;display:block;"><p style="margin-top:5px;font-size:11px;font-weight:600;color:#555;">' + labelFor(b) + '</p></td>' : '<td></td>') + '</tr>');
+    function ynTable(section){
+      if(!ynSections[section])return'';
+      return'<table class="yn-table">'+ynSections[section].map(function(q){return'<tr><td>'+q.q+'</td><td class="'+ynClass(q.id)+'">'+ynLabel(q.id)+'</td></tr>';}).join('')+'</table>';
     }
-
-    function ynTable(section) {
-      return '<table class="yn-table">' + ynSections[section].map(function(q) {
-        return '<tr><td>' + q.q + '</td><td class="' + ynClass(q.id) + '">' + ynLabel(q.id) + '</td></tr>';
-      }).join('') + '</table>';
-    }
-
-    function fieldRows(pairs) {
-      return pairs.map(function(pair) {
-        return '<div class="field-row"><span class="field-key">' + pair[0] + '</span><span class="field-val">' + fv(pair[1]) + '</span></div>';
-      }).join('');
-    }
-
-    var hazardsHtml = hazardList.map(function(h, i) {
-      return (state.haz && state.haz.indexOf(i) !== -1) ? '<div class="field-row"><span class="field-val" style="color:#c0392b;">&#10003; ' + h + '</span></div>' : '';
-    }).join('') || '<div class="field-row"><span class="field-val" style="color:#aaa;">No hazards flagged</span></div>';
-
-    var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Site Survey — ' + venue + '</title><style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#1a1a1a;background:white;}.page{max-width:800px;margin:0 auto;padding:30px 40px;}.top-bar{background:#0a1628;color:white;padding:20px 40px;}.top-bar h1{font-size:20px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;}.top-bar p{font-size:11px;color:#c8a84b;letter-spacing:0.1em;text-transform:uppercase;margin-top:4px;}.meta{background:#f5f5f5;padding:12px 40px;font-size:12px;color:#555;display:flex;gap:24px;flex-wrap:wrap;border-bottom:2px solid #c8a84b;}.meta strong{color:#1a1a1a;}h2{font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#0a1628;margin:18px 0 6px;padding-bottom:4px;border-bottom:2px solid #c8a84b;}.field-row{display:flex;gap:6px;padding:4px 0;border-bottom:1px solid #eee;font-size:12px;}.field-row:last-child{border-bottom:none;}.field-key{color:#666;min-width:180px;flex-shrink:0;}.field-val{color:#1a1a1a;font-weight:500;}.yn-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:4px;}.yn-table td{padding:4px 6px;border-bottom:1px solid #eee;}.yn-table td:last-child{width:44px;text-align:center;font-weight:700;}.yn-yes{color:#27ae60;}.yn-no{color:#c0392b;}.yn-na{color:#aaa;}table{width:100%;border-collapse:collapse;}.print-btn{background:#0a1628;color:white;border:none;padding:10px 24px;border-radius:4px;font-size:13px;cursor:pointer;margin:16px 40px 0;}@media print{.print-btn{display:none;}.page{padding:20px;}}</style></head><body>';
-    html += '<div class="top-bar"><h1>Site Survey — Tech Recce</h1><p>Recce Survey List &nbsp;|&nbsp; Patrice Roblin</p></div>';
-    html += '<div class="meta"><span><strong>Production:</strong> ' + fv('f_prodName') + '</span><span><strong>Venue:</strong> ' + fv('f_venueName') + '</span><span><strong>Date:</strong> ' + fv('f_recceDate') + '</span><span><strong>Officer:</strong> ' + fv('f_officer') + '</span></div>';
-    html += '<button class="print-btn" onclick="window.print()">Print / Save as PDF</button>';
-    html += '<div class="page">';
-    html += '<h2>Job Details</h2>' + fieldRows([['Production','f_prodName'],['TX Date','f_txDate'],['Recce Date','f_recceDate'],['Officer','f_officer'],['Venue','f_venueName'],['Address','f_address'],['Suburb','f_suburb'],['State','f_state'],['Booking Contact','f_contact'],['Booking Phone','f_phone'],['Tech Contact (On Day)','f_techContact'],['Tech Phone','f_techPhone']]);
-    html += '<h2>Venue</h2>' + fieldRows([['Ceiling Height','f_ceilingH'],['Occupancy','f_occupancy'],['Bump-in Window','f_bumpIn'],['Venue Type','f_venueType']]) + ynTable('yn_venue') + (fv('n_venue','') ? '<div class="field-row"><span class="field-key">Notes</span><span class="field-val">' + fv('n_venue') + '</span></div>' : '');
-    html += '<h2>Internet &amp; Connectivity</h2>' + fieldRows([['WiFi SSID','f_ssid'],['WiFi Password','f_wifiPw'],['Signal','f_signal'],['Speed Test','f_speed'],['ISP Contact','f_ispContact']]) + ynTable('yn_internet');
-    html += '<h2>Sound</h2>' + ynTable('yn_sound') + '<div style="margin-top:6px;font-size:10px;font-weight:700;color:#0a1628;text-transform:uppercase;letter-spacing:0.08em;">Noise Limiter</div>' + ynTable('yn_noiselimiter') + fieldRows([['Curfew Time','f_noiseCurfew'],['Curfew Contact','f_noiseCurfewContact'],['Limiter dB','f_limiterDb'],['Limiter Contact','f_limiterContact']]) + (fv('n_sound','') ? '<div class="field-row"><span class="field-key">Notes</span><span class="field-val">' + fv('n_sound') + '</span></div>' : '');
-    html += '<h2>Light</h2>' + ynTable('yn_light') + (fv('n_light','') ? '<div class="field-row"><span class="field-key">Notes</span><span class="field-val">' + fv('n_light') + '</span></div>' : '');
-    html += '<h2>House Lighting &amp; Sound System</h2>' + ynTable('yn_housesystem') + fieldRows([['House LX','f_houseLx'],['DMX Patch','f_dmxPatch'],['House PA','f_housePA'],['Audio Patch','f_audioPatch']]);
-    html += '<h2>Power</h2>' + ynTable('yn_power') + fieldRows([['Fuse Box','f_fuseLocation'],['GPOs','f_gpos']]);
-    html += '<h2>Access &amp; Storage</h2>' + ynTable('yn_access') + ynTable('yn_storage') + fieldRows([['Stairs','f_stairs'],['Lift Dims','f_liftDims'],['Lift Capacity','f_liftKg'],['Corridor Width','f_corridorW']]) + (fv('n_accessstorage','') ? '<div class="field-row"><span class="field-key">Notes</span><span class="field-val">' + fv('n_accessstorage') + '</span></div>' : '');
-    html += '<h2>Truck &amp; Loading</h2>' + ynTable('yn_truck') + fieldRows([['Truck Distance','f_truckDist'],['Clearance','f_truckClear'],['Dock Hours','f_dockHours'],['Dock Contact','f_dockContact']]);
-    html += '<h2>Hazards</h2>' + hazardsHtml + (fv('n_hazards','') ? '<div class="field-row"><span class="field-key">Notes</span><span class="field-val">' + fv('n_hazards') + '</span></div>' : '');
-    html += '<h2>First Aid &amp; Emergency</h2>' + ynTable('yn_firstaid') + fieldRows([['First Aid Kit','f_firstAidKit'],['AED','f_aed'],['Hospital','f_hospital'],['Muster Point','f_muster']]);
-    html += '<h2>Risk Assessment &amp; Duty of Care</h2>' + ynTable('yn_risk') + fieldRows([['RA Doc Ref','f_riskDoc'],['WHS Contact','f_whsContact']]) + (fv('n_risk','') ? '<div class="field-row"><span class="field-key">Notes</span><span class="field-val">' + fv('n_risk') + '</span></div>' : '');
-    html += '<h2>Sketch &amp; Floor Plan</h2>' + fieldRows([['Room Length','f_roomLength'],['Room Width','f_roomWidth'],['Ceiling Height','f_ceilingH2']]);
-    if (takenIds.length) { html += '<h2>Site Photos</h2><table>' + photoRows.join('') + '</table>'; }
-    html += '</div></body></html>';
-
-    // Open report — use iframe fallback for iOS
-    var reportWin = window.open('', '_blank');
-    if (reportWin) {
-      reportWin.document.write(html);
-      reportWin.document.close();
-      reportWin.onload = function() { reportWin.print(); };
-      setTimeout(function() { reportWin.print(); }, 800);
-    } else {
-      var iframe = document.getElementById('reportFrame');
-      if (!iframe) {
-        iframe = document.createElement('iframe');
-        iframe.id = 'reportFrame';
-        iframe.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;border:none;z-index:99999;background:white;';
-        document.body.appendChild(iframe);
-      }
-      iframe.style.display = 'block';
-      iframe.contentDocument.open();
-      iframe.contentDocument.write(html);
-      iframe.contentDocument.close();
-      setTimeout(function() {
-        iframe.contentWindow.print();
-        setTimeout(function() { iframe.style.display = 'none'; }, 1000);
-      }, 800);
+    function fr(lbl,val){return'<div class="field-row"><span class="field-key">'+lbl+'</span><span class="field-val">'+(val||'—')+'</span></div>';}
+    // Alerts for report
+    var rAlerts=[];
+    if(yn['nl1']==='yes')rAlerts.push('Noise limiter fitted'+(fv('f_limiterDb','')?(' — '+fv('f_limiterDb')):''));
+    if(fv('f_noiseCurfew',''))rAlerts.push('Noise curfew — '+fv('f_noiseCurfew'));
+    var hc=(state.haz||[]).length;if(hc>0)rAlerts.push('Hazards flagged — '+hc+' item'+(hc>1?'s':''));
+    if(yn['p2']==='no')rAlerts.push('No 3-phase power available');
+    if(yn['tr4']==='no')rAlerts.push('No dedicated truck parking');
+    if(yn['ac1']==='yes'&&yn['ac2']==='no')rAlerts.push('Stairs on gear route — no lift available');
+    if(window._wxRainChance>=40)rAlerts.push('Rain forecast on TX day — '+window._wxRainChance+'% chance');
+    if(yn['v3']==='yes')rAlerts.push('Venue open to public during bump-in / setup');
+    var at=fv('f_venueAccess',''),dt=fv('f_dockHours','');
+    if(at&&dt&&at<dt)rAlerts.push('Venue Access Time ('+at+') is earlier than Loading Dock Opens ('+dt+') — bump-in / dock clash');
+    var alertsHtml='';
+    if(rAlerts.length){alertsHtml='<div style="background:#fff5f5;border:1px solid #e74c3c;border-radius:4px;padding:12px 16px;margin-bottom:16px;"><div style="font-size:11px;font-weight:700;color:#c0392b;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">⚠️ Critical Alerts</div>'+rAlerts.map(function(a){return'<div style="font-size:12px;color:#c0392b;padding:2px 0;">• '+a+'</div>';}).join('')+'</div>';}
+    var hazHtml=hazardList.map(function(h,i){return(state.haz&&state.haz.indexOf(i)!==-1)?'<div class="field-row"><span class="field-val" style="color:#c0392b;">&#10003; '+h+'</span></div>':'';}).join('')||'<div class="field-row"><span class="field-val" style="color:#aaa;">No hazards flagged</span></div>';
+    var css='*{box-sizing:border-box;margin:0;padding:0;}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#1a1a1a;background:white;}.page{max-width:800px;margin:0 auto;padding:30px 40px;}.top-bar{background:#0a1628;color:white;padding:20px 40px;}.top-bar h1{font-size:20px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;}.top-bar p{font-size:11px;color:#c8a84b;letter-spacing:0.1em;text-transform:uppercase;margin-top:4px;}.meta{background:#f5f5f5;padding:12px 40px;font-size:12px;color:#555;display:flex;gap:24px;flex-wrap:wrap;border-bottom:2px solid #c8a84b;}.meta strong{color:#1a1a1a;}h2{font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#0a1628;margin:18px 0 6px;padding-bottom:4px;border-bottom:2px solid #c8a84b;}.field-row{display:flex;gap:6px;padding:4px 0;border-bottom:1px solid #eee;font-size:12px;}.field-row:last-child{border-bottom:none;}.field-key{color:#666;min-width:180px;flex-shrink:0;}.field-val{color:#1a1a1a;font-weight:500;}.yn-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:4px;}.yn-table td{padding:4px 6px;border-bottom:1px solid #eee;}.yn-table td:last-child{width:44px;text-align:center;font-weight:700;}.yn-yes{color:#27ae60;}.yn-no{color:#c0392b;}.yn-na{color:#aaa;}table{width:100%;border-collapse:collapse;}.print-btn{background:#0a1628;color:white;border:none;padding:10px 24px;border-radius:4px;font-size:13px;cursor:pointer;margin:16px 40px 0;}@media print{.print-btn{display:none;}.page{padding:20px;}}';
+    var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Site Survey — '+fv('f_venueName','Venue')+'</title><style>'+css+'</style></head><body>';
+    html+='<div class="top-bar"><h1>Site Survey — Tech Recce</h1><p>Recce Survey List &nbsp;|&nbsp; Patrice Roblin</p></div>';
+    html+='<div class="meta"><span><strong>Production:</strong> '+fv('f_prodName')+'</span><span><strong>Venue:</strong> '+fv('f_venueName')+'</span><span><strong>TX Date:</strong> '+fv('f_txDate')+'</span><span><strong>Recce Date:</strong> '+fv('f_recceDate')+'</span><span><strong>Officer:</strong> '+fv('f_officer')+'</span></div>';
+    html+='<button class="print-btn" onclick="window.print()">Print / Save as PDF</button>';
+    html+='<div class="page">'+alertsHtml;
+    html+='<h2>Job Details</h2>'+fr('Production',fv('f_prodName'))+fr('TX Date',fv('f_txDate'))+fr('Recce Date',fv('f_recceDate'))+fr('Officer',fv('f_officer'))+fr('Venue',fv('f_venueName'))+fr('Address',fv('f_address'))+fr('Suburb',fv('f_suburb'))+fr('State',fv('f_state'))+fr('Booking Contact',fv('f_contact'))+fr('Booking Phone',fv('f_phone'))+fr('Tech Contact (On Day)',fv('f_techContact'))+fr('Tech Phone',fv('f_techPhone'));
+    html+='<h2>Venue &amp; Space</h2>'+fr('Ceiling Height',fv('f_ceilingH'))+fr('Room Length',fv('f_roomLength'))+fr('Room Width',fv('f_roomWidth'))+fr('Occupancy',fv('f_occupancy'))+fr('Venue Access Time',fv('f_venueAccess'))+fr('Venue Type',fv('f_venueType'))+ynTable('yn_venue')+(fv('n_venue','')?fr('Notes',fv('n_venue')):'');
+    html+='<h2>Transmission &amp; Connectivity</h2>'+fr('4G / 5G Signal',fv('f_signal'))+(fv('n_internet','')?fr('Notes',fv('n_internet')):'');
+    html+='<h2>Sound</h2>'+ynTable('yn_sound')+'<div style="margin-top:6px;font-size:10px;font-weight:700;color:#0a1628;text-transform:uppercase;letter-spacing:0.08em;">Noise Limiter</div>'+ynTable('yn_noiselimiter')+fr('Curfew Time',fv('f_noiseCurfew'))+fr('Curfew Contact',fv('f_noiseCurfewContact'))+fr('Limiter dB',fv('f_limiterDb'))+fr('Limiter Contact',fv('f_limiterContact'))+(fv('n_sound','')?fr('Notes',fv('n_sound')):'');
+    html+='<h2>Light</h2>'+ynTable('yn_light')+(fv('n_light','')?fr('Notes',fv('n_light')):'');
+    html+='<h2>House Lighting, Sound &amp; Video System</h2>'+ynTable('yn_housesystem')+'<div style="margin-top:6px;font-size:10px;font-weight:700;color:#0a1628;text-transform:uppercase;letter-spacing:0.08em;">Video System</div>'+ynTable('yn_housevideo')+fr('House LX',fv('f_houseLx'))+fr('DMX Patch',fv('f_dmxPatch'))+fr('House PA',fv('f_housePA'))+fr('Audio Patch',fv('f_audioPatch'))+fr('Screens / Monitors',fv('f_houseScreens'))+fr('Video Connections',fv('f_videoConns'))+(fv('n_housesystem','')?fr('Notes',fv('n_housesystem')):'');
+    html+='<h2>Power</h2>'+ynTable('yn_power')+fr('3-Phase Amperage',fv('f_3phaseAmps'))+fr('Fuse Box',fv('f_fuseLocation'))+fr('GPOs',fv('f_gpos'))+(fv('n_power','')?fr('Notes',fv('n_power')):'');
+    html+='<h2>Access &amp; Storage</h2>'+ynTable('yn_access')+ynTable('yn_storage')+fr('Stairs',fv('f_stairs'))+fr('Lift Dims',fv('f_liftDims'))+fr('Lift Capacity',fv('f_liftKg'))+fr('Corridor Width',fv('f_corridorW'))+(fv('n_accessstorage','')?fr('Notes',fv('n_accessstorage')):'');
+    html+='<h2>Truck &amp; Loading</h2>'+ynTable('yn_truck')+fr('Truck Distance',fv('f_truckDist'))+fr('Clearance',fv('f_truckClear'))+fr('Loading Dock Opens',fv('f_dockHours'))+fr('Dock Contact',fv('f_dockContact'))+(fv('n_truck','')?fr('Notes',fv('n_truck')):'');
+    html+='<h2>Hazards</h2>'+hazHtml+(fv('n_hazards','')?fr('Notes',fv('n_hazards')):'');
+    html+='<h2>First Aid &amp; Emergency</h2>'+ynTable('yn_firstaid')+fr('First Aid Kit',fv('f_firstAidKit'))+fr('AED',fv('f_aed'))+fr('Hospital',fv('f_hospital'))+fr('Muster Point',fv('f_muster'))+(fv('n_firstaid','')?fr('Notes',fv('n_firstaid')):'');
+    html+='<h2>Risk Assessment &amp; Duty of Care</h2>'+ynTable('yn_risk')+fr('RA Doc Ref',fv('f_riskDoc'))+fr('WHS Contact',fv('f_whsContact'))+(fv('n_risk','')?fr('Notes',fv('n_risk')):'');
+    if(takenIds.length)html+='<h2>Site Photos</h2><table>'+photoRows.join('')+'</table>';
+    html+='</div></body></html>';
+    // Open report window
+    var rw=window.open('','_blank');
+    if(rw){rw.document.open();rw.document.write(html);rw.document.close();setTimeout(function(){try{rw.print();}catch(e){}},800);}
+    else {
+      var iframe=document.getElementById('reportFrame');
+      if(!iframe){iframe=document.createElement('iframe');iframe.id='reportFrame';iframe.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;border:none;z-index:99999;background:white;';document.body.appendChild(iframe);}
+      iframe.style.display='block';iframe.contentDocument.open();iframe.contentDocument.write(html);iframe.contentDocument.close();
+      setTimeout(function(){try{iframe.contentWindow.print();}catch(e){}setTimeout(function(){iframe.style.display='none';},1500);},800);
     }
   });
 }
 
-// ── IMPORT ────────────────────────────────────────────────────────────────────
-function importFile(input) {
-  if (!input.files || !input.files[0]) return;
-  var file = input.files[0];
-  if (file.name.endsWith('.zip')) {
-    importZip(file);
-  } else {
-    importJson(file);
-  }
-  input.value = '';
-}
-
-function importZip(file) {
-  JSZip.loadAsync(file).then(function(zip) {
-    var jf = zip.file('survey.json');
-    if (!jf) { alert('No survey.json found in ZIP.'); return; }
-    jf.async('string').then(function(text) {
-      var data = JSON.parse(text);
-      if (!data.state) throw new Error('bad');
-      if (!confirm('Load "' + (data.name || 'Survey') + '"? This replaces everything on screen.')) return;
-      clearAll();
-      restoreState(data.state);
-      if (data.name) document.getElementById('saveName').value = data.name;
-      var loads = getAllPhotoIds().map(function(pid) {
-        var pf = zip.file('photos/' + (photoLabels[pid] || pid) + '.jpg');
-        if (pf) {
-          return pf.async('blob').then(function(blob) {
-            window._photos[pid] = { blob: blob, label: pid };
-            var url = URL.createObjectURL(blob);
-            var th = document.getElementById('th_' + pid);
-            var st = document.getElementById('st_' + pid);
-            if (th) { th.src = url; th.classList.add('visible'); }
-            if (st) { st.textContent = 'Done'; st.className = 'photo-status done'; }
-          });
-        }
+function importFile(input){if(!input.files||!input.files[0])return;var file=input.files[0];if(file.name.endsWith('.zip'))importZip(file);else importJson(file);input.value='';}
+function importZip(file){
+  JSZip.loadAsync(file).then(function(zip){
+    var jf=zip.file('survey.json');if(!jf){alert('No survey.json found in ZIP.');return;}
+    jf.async('string').then(function(text){
+      var data=JSON.parse(text);if(!data.state)throw new Error('bad');
+      if(!confirm('Load "'+(data.name||'Survey')+'"? This replaces everything on screen.'))return;
+      clearAll();restoreState(data.state);if(data.name)document.getElementById('saveName').value=data.name;
+      var loads=getAllPhotoIds().map(function(pid){
+        var pf=zip.file('photos/'+(photoLabels[pid]||pid)+'.jpg');
+        if(pf)return pf.async('blob').then(function(blob){window._photos[pid]={blob:blob,label:pid};var url=URL.createObjectURL(blob);var th=document.getElementById('th_'+pid),st=document.getElementById('st_'+pid);if(th){th.src=url;th.classList.add('visible');}if(st){st.textContent='Done';st.className='photo-status done';}});
         return Promise.resolve();
       });
-      Promise.all(loads).then(function() {
-        updateProgress();
-        updateSitePhotosGrid();
-        window.scrollTo({ top:0, behavior:'smooth' });
-      });
+      Promise.all(loads).then(function(){updateProgress();updateSitePhotosGrid();updateAlerts();window.scrollTo({top:0,behavior:'smooth'});});
     });
-  }).catch(function() {
-    alert('Could not read ZIP. Make sure it was exported from this app.');
-  });
+  }).catch(function(){alert('Could not read ZIP. Make sure it was exported from this app.');});
 }
-
-function importJson(file) {
-  var reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      var data = JSON.parse(e.target.result);
-      if (!data.state) throw new Error('bad');
-      if (!confirm('Load "' + (data.name || 'Survey') + '"? This replaces everything on screen.')) return;
-      clearAll();
-      restoreState(data.state);
-      if (data.name) document.getElementById('saveName').value = data.name;
-      window.scrollTo({ top:0, behavior:'smooth' });
-    } catch(err) {
-      alert('Could not read that file.');
-    }
-  };
+function importJson(file){
+  var reader=new FileReader();
+  reader.onload=function(e){try{var data=JSON.parse(e.target.result);if(!data.state)throw new Error('bad');if(!confirm('Load "'+(data.name||'Survey')+'"? This replaces everything on screen.'))return;clearAll();restoreState(data.state);if(data.name)document.getElementById('saveName').value=data.name;updateAlerts();window.scrollTo({top:0,behavior:'smooth'});}catch(err){alert('Could not read that file.');}};
   reader.readAsText(file);
 }
 
-// ── INIT ──────────────────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', function() {
-  Object.keys(ynSections).forEach(function(id) { buildYN(id, ynSections[id]); });
-  buildHazards();
-  buildPhotos();
-  document.getElementById('f_recceDate').valueAsDate = new Date();
-  updateProgress();
-  renderSaved(null);
-  updateSitePhotosGrid();
-
-  document.addEventListener('input', function(e) {
-    if (e.target.tagName === 'TEXTAREA') {
-      e.target.style.height = 'auto';
-      e.target.style.height = e.target.scrollHeight + 'px';
+document.addEventListener('DOMContentLoaded',function(){
+  Object.keys(ynSections).forEach(function(id){buildYN(id,ynSections[id]);});
+  buildHazards();buildPhotos();
+  document.getElementById('f_recceDate').valueAsDate=new Date();
+  updateProgress();updateAlerts();renderSaved(null);updateSitePhotosGrid();
+  document.addEventListener('input',function(e){
+    if(e.target.tagName==='TEXTAREA'){e.target.style.height='auto';e.target.style.height=e.target.scrollHeight+'px';}
+    if(['f_venueAccess','f_dockHours','f_noiseCurfew','f_limiterDb'].indexOf(e.target.id)>-1)updateAlerts();
+    if(e.target.id==='f_txDate'||e.target.id==='mapSearch'){
+      var addr=document.getElementById('mapSearch').value.trim()||[document.getElementById('f_address').value,document.getElementById('f_suburb').value,document.getElementById('f_state').value].filter(Boolean).join(', ');
+      if(addr&&document.getElementById('f_txDate').value)fetchWeather();
     }
   });
-
-  document.getElementById('mapSearch').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') loadMap();
+  document.getElementById('mapSearch').addEventListener('keydown',function(e){if(e.key==='Enter')loadMap();});
+  document.getElementById('f_address').addEventListener('blur',function(){
+    var v=[this.value,document.getElementById('f_suburb').value,document.getElementById('f_state').value].filter(Boolean).join(', ');
+    if(v)document.getElementById('mapSearch').value=v;
+    if(v&&document.getElementById('f_txDate').value)fetchWeather();
   });
-
-  document.getElementById('f_address').addEventListener('blur', function() {
-    var v = [this.value, document.getElementById('f_suburb').value, document.getElementById('f_state').value].filter(Boolean).join(', ');
-    if (v) document.getElementById('mapSearch').value = v;
+  document.getElementById('f_txDate').addEventListener('change',function(){
+    var addr=document.getElementById('mapSearch').value.trim()||[document.getElementById('f_address').value,document.getElementById('f_suburb').value,document.getElementById('f_state').value].filter(Boolean).join(', ');
+    if(addr&&this.value)fetchWeather();
   });
-
-  document.getElementById('f_prodName').addEventListener('input', function() {
-    var sn = document.getElementById('saveName');
-    if (!sn.value) sn.value = this.value;
-  });
+  document.getElementById('f_prodName').addEventListener('input',function(){var sn=document.getElementById('saveName');if(!sn.value)sn.value=this.value;});
 });
-
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/Tech-Survey/sw.js', { scope: '/Tech-Survey/' }).catch(function() {});
-}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('/Tech-Survey/sw.js',{scope:'/Tech-Survey/'}).catch(function(){});}
 </script>
 </body>
 </html>
