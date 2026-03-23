@@ -22,11 +22,11 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-weight:400;min-height:100vh;}
 /* HEADER */
-header{background:var(--white);padding:24px 40px 0;display:flex;flex-direction:column;}
+header{background:var(--white);padding:24px 40px 0 52px;display:flex;flex-direction:column;}
 header::before{display:none;}
 .logo-wrap{flex-shrink:0;padding-bottom:14px;}
 .logo-wrap svg{width:auto;height:68px;}
-.header-blue-line{height:1.5px;background:var(--blue);margin:0 -40px;}
+.header-blue-line{height:1.5px;background:var(--blue);margin:0 -52px 0 -52px;}
 .header-text{display:none;}
 .header-contact{display:none;}
 /* SURVEY TITLE */
@@ -237,9 +237,9 @@ footer{text-align:center;padding:22px 20px;color:var(--hint);font-size:0.75rem;l
       <text x="196" y="82" text-anchor="middle" style="font-size:88px;font-weight:300;fill:#0099FF;font-family:sans-serif;">K</text>
       <text x="248" y="82" style="font-size:88px;font-weight:300;fill:#111;font-family:sans-serif;">O</text>
       <text x="324" y="82" style="font-size:88px;font-weight:300;fill:#111;font-family:sans-serif;">N</text>
-      <line x1="420" y1="16" x2="420" y2="88" stroke="#ccc" stroke-width="1"/>
-      <text x="434" y="55" style="font-size:15px;font-weight:400;fill:#888;font-family:sans-serif;letter-spacing:0.14em;">TECHNICAL SURVEY,</text>
-      <text x="434" y="79" style="font-size:15px;font-weight:400;fill:#0099FF;font-family:sans-serif;letter-spacing:0.14em;">REDESIGNED</text>
+      <line x1="420" y1="14" x2="420" y2="90" stroke="#ccc" stroke-width="1"/>
+      <text x="434" y="52" style="font-size:15px;font-weight:400;fill:#888;font-family:sans-serif;letter-spacing:0.14em;">TECHNICAL SURVEY,</text>
+      <text x="434" y="76" style="font-size:15px;font-weight:400;fill:#0099FF;font-family:sans-serif;letter-spacing:0.14em;">REDESIGNED</text>
     </svg>
   </div>
   <div class="header-blue-line"></div>
@@ -274,7 +274,7 @@ footer{text-align:center;padding:22px 20px;color:var(--hint);font-size:0.75rem;l
   <div id="alertsBanner"></div>
   <!-- SEC 0: PROJECT DETAILS -->
   <div class="section" id="sec0">
-    <div class="section-header"><div class="section-num">0</div><div class="section-title">Project Details</div></div>
+    <div class="section-header collapsible" onclick="toggleSection('sec0')"><div class="section-num">0</div><div class="section-title">Project Details</div><span class="collapse-icon">&#9660;</span></div>
     <div class="section-body">
       <div id="jobDetailsWarning" style="display:flex;align-items:center;gap:10px;background:#fff8e1;border:1px solid #ffe082;border-radius:6px;padding:10px 14px;margin-bottom:16px;font-size:0.83rem;color:#b8860b;">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12" y2="17"/></svg>
@@ -1213,4 +1213,17 @@ document.addEventListener('DOMContentLoaded',function(){
 
   // TX date change - refetch weather
   document.getElementById('f_txDate').addEventListener('change',function(){
-    checkJ
+    checkJobDetailsWarning();
+    autoGeocodeFromJobDetails();
+    triggerAutosave();
+  });
+
+  document.getElementById('f_prodName').addEventListener('input',function(){
+    var sn=document.getElementById('saveName');if(!sn.value)sn.value=this.value;
+    triggerAutosave();
+  });
+
+});
+</script>
+</body>
+</html>
