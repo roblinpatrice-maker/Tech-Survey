@@ -247,11 +247,11 @@ footer{text-align:center;padding:22px 20px;color:var(--hint);font-size:0.75rem;l
   <div class="header-blue-line"></div>
 </header>
 <div class="survey-title-bar">
-  <h2>Tech Recce / Location Survey</h2>
+  <h2>Tech Recce / Survey — Location Survey</h2>
 </div>
 <main>
   <div class="form-intro" style="display:none;">
-    <h2>Tech Recce / Location Survey</h2>
+    <h2>Tech Recce / Survey — Location Survey</h2>
     <div class="gold-line"></div>
     
   </div>
@@ -276,17 +276,14 @@ footer{text-align:center;padding:22px 20px;color:var(--hint);font-size:0.75rem;l
   <div id="alertsBanner"></div>
   <!-- SEC 0: PROJECT DETAILS -->
   <div class="section" id="sec0">
-    <div class="section-header collapsible" onclick="toggleSection('sec0')"><div class="section-num">0</div><div class="section-title">Project Details</div><span class="collapse-icon">&#9660;</span></div>
+    <div class="section-header"><div class="section-num">0</div><div class="section-title">Project Details</div></div>
     <div class="section-body">
-      <div id="jobDetailsWarning" style="display:flex;align-items:center;gap:10px;background:#fff8e1;border:1px solid #ffe082;border-radius:6px;padding:10px 14px;margin-bottom:16px;font-size:0.83rem;color:#b8860b;">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12" y2="17"/></svg>
-        Please fill in Venue Name, Street Address and TX Date before starting your survey.
-      </div>
       <div class="field-grid">
-        <div class="field"><label>Production / Show Name</label><input type="text" id="f_prodName" placeholder="Show or project name"></div>
-        <div class="field"><label>TX / Transmission Date</label><input type="date" id="f_txDate"></div>
-        <div class="field"><label>Recce Date</label><input type="date" id="f_recceDate"></div>
-        <div class="field"><label>Recce Officer</label><input type="text" id="f_officer" placeholder="Your name"></div>
+        <div class="field"><label>Production / Show Name <span style="color:var(--danger)">*</span></label><input type="text" id="f_prodName" placeholder="Show or project name"></div>
+        <div class="field"><label>TX / Transmission Date <span style="color:var(--danger)">*</span></label><input type="date" id="f_txDate"></div>
+        <div class="field"><label>Recce / Survey Date <span style="color:var(--danger)">*</span></label><input type="date" id="f_recceDate"></div>
+        <div class="field"><label>Project Manager <span style="color:var(--danger)">*</span></label><input type="text" id="f_projectManager" placeholder="Project manager's name"></div>
+        <div class="field"><label>Recce / Survey Officer <span style="color:var(--danger)">*</span></label><input type="text" id="f_officer" placeholder="Your name"></div>
         <div class="field full"><label>Venue Name</label><input type="text" id="f_venueName" placeholder="Venue or location name"></div>
         <div class="field full"><label>Street Address</label><input type="text" id="f_address" placeholder="Full street address"></div>
         <div class="field"><label>Suburb / Town</label><input type="text" id="f_suburb" placeholder="Suburb"></div>
@@ -1004,13 +1001,22 @@ function updateProgress(){
   document.getElementById('progressPct').textContent=pct+'%';
 }
 
-// JOB DETAILS WARNING
+// MANDATORY FIELD VALIDATION
 function checkJobDetailsWarning(){
-  var venue=document.getElementById('f_venueName').value.trim();
-  var addr=document.getElementById('f_address').value.trim();
-  var txDate=document.getElementById('f_txDate').value;
-  var warning=document.getElementById('jobDetailsWarning');
-  if(warning)warning.style.display=(venue&&addr&&txDate)?'none':'flex';
+  var mandatory=[
+    {id:'f_prodName',label:'Production / Show Name'},
+    {id:'f_txDate',label:'TX / Transmission Date'},
+    {id:'f_recceDate',label:'Recce / Survey Date'},
+    {id:'f_projectManager',label:'Project Manager'},
+    {id:'f_officer',label:'Recce / Survey Officer'}
+  ];
+  mandatory.forEach(function(f){
+    var el=document.getElementById(f.id);
+    if(!el)return;
+    var empty=!el.value.trim();
+    el.style.borderColor=empty?'var(--danger)':'';
+    el.style.boxShadow=empty?'0 0 0 3px rgba(192,57,43,0.1)':'';
+  });
 }
 
 // AUTOSAVE
@@ -1046,7 +1052,7 @@ function triggerAutosave(){
   },30000); // 30 seconds
 }
 
-var allFieldIds=['f_prodName','f_txDate','f_recceDate','f_officer','f_venueName','f_address','f_suburb','f_state','f_contact','f_phone','f_techContact','f_techPhone','f_gps','f_accessNotes','f_occupancy','f_venueAccess','f_ceilingH','f_venueType','f_roomLength','f_roomWidth','f_signal','f_noiseCurfew','f_noiseCurfewContact','f_limiterDb','f_limiterContact','f_houseLx','f_dmxPatch','f_housePA','f_audioPatch','f_houseScreens','f_videoConns','f_3phaseAmps','f_fuseLocation','f_gpos','f_stairs','f_liftDims','f_liftKg','f_corridorW','f_truckDist','f_truckClear','f_dockHours','f_dockContact','f_firstAidKit','f_aed','f_hospital','f_muster','f_riskDoc','f_whsContact','n_venue','n_internet','n_sound','n_light','n_housesystem','n_power','n_accessstorage','n_truck','n_hazards','n_firstaid','n_risk','mapSearch','saveName'];
+var allFieldIds=['f_prodName','f_txDate','f_recceDate','f_projectManager','f_officer','f_venueName','f_address','f_suburb','f_state','f_contact','f_phone','f_techContact','f_techPhone','f_gps','f_accessNotes','f_occupancy','f_venueAccess','f_ceilingH','f_venueType','f_roomLength','f_roomWidth','f_signal','f_noiseCurfew','f_noiseCurfewContact','f_limiterDb','f_limiterContact','f_houseLx','f_dmxPatch','f_housePA','f_audioPatch','f_houseScreens','f_videoConns','f_3phaseAmps','f_fuseLocation','f_gpos','f_stairs','f_liftDims','f_liftKg','f_corridorW','f_truckDist','f_truckClear','f_dockHours','f_dockContact','f_firstAidKit','f_aed','f_hospital','f_muster','f_riskDoc','f_whsContact','n_venue','n_internet','n_sound','n_light','n_housesystem','n_power','n_accessstorage','n_truck','n_hazards','n_firstaid','n_risk','mapSearch','saveName'];
 
 function collectState(){
   var fields={};
@@ -1244,10 +1250,10 @@ function generateReport(){
     var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>REKON Survey — '+fv('f_venueName','Venue')+'</title><style>'+css+'</style></head><body>';
     html+='<div class="top-bar"><svg viewBox="0 0 900 100" xmlns="http://www.w3.org/2000/svg"><text x="14" y="82" style="font-size:88px;font-weight:300;fill:#111;font-family:sans-serif;">R</text><text x="84" y="82" style="font-size:88px;font-weight:300;fill:#111;font-family:sans-serif;">E</text><text x="196" y="82" text-anchor="middle" style="font-size:88px;font-weight:300;fill:#0099FF;font-family:sans-serif;">K</text><text x="248" y="82" style="font-size:88px;font-weight:300;fill:#111;font-family:sans-serif;">O</text><text x="324" y="82" style="font-size:88px;font-weight:300;fill:#111;font-family:sans-serif;">N</text><line x1="420" y1="14" x2="420" y2="90" stroke="#ccc" stroke-width="1"/><text x="434" y="52" style="font-size:15px;font-weight:400;fill:#888;font-family:sans-serif;letter-spacing:0.14em;">TECHNICAL SURVEY,</text><text x="434" y="76" style="font-size:15px;font-weight:400;fill:#0099FF;font-family:sans-serif;letter-spacing:0.14em;">REDESIGNED</text></svg></div>';
     html+='<div class="blue-line"></div>';
-    html+='<div class="survey-title">Tech Recce / Location Survey &nbsp;—&nbsp; Live TV / Outside Broadcast module </div>';
-    html+='<div class="meta"><span><strong>Production:</strong> '+fv('f_prodName')+'</span><span><strong>Venue:</strong> '+fv('f_venueName')+'</span><span><strong>TX Date:</strong> '+fv('f_txDate')+'</span><span><strong>Recce Date:</strong> '+fv('f_recceDate')+'</span><span><strong>Officer:</strong> '+fv('f_officer')+'</span></div>';
+    html+='<div class="survey-title">Tech Recce / Survey — Location Survey &nbsp;—&nbsp; Live TV / Outside Broadcast module </div>';
+    html+='<div class="meta"><span><strong>Production:</strong> '+fv('f_prodName')+'</span><span><strong>Venue:</strong> '+fv('f_venueName')+'</span><span><strong>TX Date:</strong> '+fv('f_txDate')+'</span><span><strong>Recce / Survey Date:</strong> '+fv('f_recceDate')+'</span><span><strong>Project Manager:</strong> '+fv('f_projectManager')+'</span><span><strong>Officer:</strong> '+fv('f_officer')+'</span></div>';
     html+='<div class="page"><button class="print-btn" onclick="window.print()">Print / Save as PDF</button>'+alertsHtml;
-    html+='<h2>Project Details</h2>'+fr('Production',fv('f_prodName'))+fr('TX Date',fv('f_txDate'))+fr('Recce Date',fv('f_recceDate'))+fr('Officer',fv('f_officer'))+fr('Venue',fv('f_venueName'))+fr('Address',fv('f_address'))+fr('Suburb',fv('f_suburb'))+fr('State',fv('f_state'))+fr('GPS',fv('f_gps'))+fr('Booking Contact',fv('f_contact'))+fr('Booking Phone',fv('f_phone'))+fr('Tech Contact (On Day)',fv('f_techContact'))+fr('Tech Phone',fv('f_techPhone'));
+    html+='<h2>Project Details</h2>'+fr('Production',fv('f_prodName'))+fr('TX Date',fv('f_txDate'))+fr('Recce / Survey Date',fv('f_recceDate'))+fr('Project Manager',fv('f_projectManager'))+fr('Recce / Survey Officer',fv('f_officer'))+fr('Venue',fv('f_venueName'))+fr('Address',fv('f_address'))+fr('Suburb',fv('f_suburb'))+fr('State',fv('f_state'))+fr('GPS',fv('f_gps'))+fr('Booking Contact',fv('f_contact'))+fr('Booking Phone',fv('f_phone'))+fr('Tech Contact (On Day)',fv('f_techContact'))+fr('Tech Phone',fv('f_techPhone'));
     html+='<h2>Venue &amp; Space</h2>'+fr('Ceiling Height',fv('f_ceilingH'))+fr('Room Length',fv('f_roomLength'))+fr('Room Width',fv('f_roomWidth'))+fr('Occupancy',fv('f_occupancy'))+fr('Venue Access Time',fv('f_venueAccess'))+fr('Venue Type',fv('f_venueType'))+ynTable('yn_venue')+(fv('n_venue','')?fr('Notes',fv('n_venue')):'');
     html+='<h2>Transmission &amp; Connectivity</h2>'+fr('4G / 5G Signal',fv('f_signal'))+(fv('n_internet','')?fr('Notes',fv('n_internet')):'');
     html+='<h2>Sound</h2>'+ynTable('yn_sound')+'<div style="margin-top:6px;font-size:10px;font-weight:700;color:#0099FF;text-transform:uppercase;letter-spacing:0.08em;">Noise Limiter</div>'+ynTable('yn_noiselimiter')+fr('Curfew Time',fv('f_noiseCurfew'))+fr('Curfew Contact',fv('f_noiseCurfewContact'))+fr('Limiter dB',fv('f_limiterDb'))+fr('Limiter Contact',fv('f_limiterContact'))+(fv('n_sound','')?fr('Notes',fv('n_sound')):'');
@@ -1337,7 +1343,7 @@ document.addEventListener('DOMContentLoaded',function(){
   document.addEventListener('input',function(e){
     if(e.target.tagName==='TEXTAREA'){e.target.style.height='auto';e.target.style.height=e.target.scrollHeight+'px';}
     if(['f_venueAccess','f_dockHours','f_noiseCurfew','f_limiterDb'].indexOf(e.target.id)>-1)updateAlerts();
-    if(['f_venueName','f_address','f_txDate'].indexOf(e.target.id)>-1)checkJobDetailsWarning();
+    if(['f_venueName','f_address','f_txDate','f_prodName','f_recceDate','f_projectManager','f_officer'].indexOf(e.target.id)>-1)checkJobDetailsWarning();
     triggerAutosave();
   });
 
