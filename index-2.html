@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>REKON — Technical Survey, Redesigned</title>
+<meta name="theme-color" content="#ffffff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="REKON">
+<link rel="manifest" href="manifest.json">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+:root{
+  --blue:#0099FF;--blue-light:#e0f2ff;--blue-mid:#b8ddf8;
+  --bg:#f5f7fa;--white:#ffffff;--text:#111111;
+  --muted:#666666;--hint:#888888;
+  --border:#e0e8f0;--field-bg:#f0f4f8;--field-border:#d0dae8;
+  --danger:#c0392b;--danger-bg:#fdf0f0;--danger-border:#f5c6c6;
+  --success:#1a8048;--success-bg:#e8f7ee;--success-border:#a8dbbe;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-weight:400;min-height:100vh;}
+/* HEADER */
+header{background:var(--white);padding:24px 40px 0 52px;display:flex;flex-direction:column;}
+header::before{display:none;}
+.logo-wrap{flex-shrink:0;padding-bottom:14px;}
+.logo-wrap svg{width:100%;height:auto;max-height:68px;}
+.header-blue-line{height:1.5px;background:var(--blue);margin:0 -52px 0 -52px;}
+.header-text{display:none;}
+.header-contact{display:none;}
+/* SURVEY TITLE */
+.survey-title-bar{background:var(--white);padding:13px 40px;border-bottom:1px solid var(--border);text-align:center;}
+.survey-title-bar h2{font-size:13px;font-weight:500;color:var(--text);letter-spacing:0.1em;text-transform:uppercase;}
+/* MAIN */
+main{max-width:860px;margin:0 auto;padding:20px 20px 60px;}
+.form-intro{display:none;}
+/* EDITION LABEL */
+.edition-label{font-size:11px;color:var(--blue);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:10px;padding-left:2px;}
+/* LOADER */
+.loader-panel{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px 20px;margin-bottom:16px;}
+.loader-btns{display:flex;gap:8px;flex-wrap:wrap;}
+.loader-btn{display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 16px;border-radius:6px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.15s;border:1px solid;font-family:inherit;flex:1 1 140px;min-width:0;text-align:center;}
+.loader-btn.new{background:var(--blue);color:var(--white);border-color:var(--blue);}
+.loader-btn.new:hover{background:#0088ee;}
+.loader-btn.load{background:transparent;color:var(--text);border-color:var(--border);}
+.loader-btn.load:hover,.loader-btn.load.active{background:var(--field-bg);border-color:var(--blue);}
+.loader-list{margin-top:14px;}
+.saved-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:11px 14px;background:var(--field-bg);border:1px solid var(--border);border-radius:6px;margin-bottom:8px;}
+.saved-row.active{border-color:var(--success-border);background:var(--success-bg);}
+.saved-row.active .saved-name{color:var(--success);}
+.saved-info{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;}
+.saved-name{font-size:0.92rem;color:var(--text);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.saved-meta{font-size:0.75rem;color:var(--muted);}
+.saved-actions{display:flex;gap:7px;flex-shrink:0;}
+.saved-btn{padding:5px 13px;border-radius:5px;font-size:0.8rem;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;cursor:pointer;transition:all 0.13s;border:1px solid;font-family:inherit;}
+.saved-btn.load{border-color:var(--blue-mid);background:var(--blue-light);color:var(--blue);}
+.saved-btn.load:hover{background:var(--blue-mid);}
+.saved-btn.del{border-color:var(--danger-border);background:var(--danger-bg);color:var(--danger);}
+.saved-btn.del:hover{background:#f9d5d5;}
+/* PROGRESS */
+.progress-wrap{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:12px 20px;margin-bottom:12px;display:flex;align-items:center;gap:16px;}
+.progress-label{font-size:0.78rem;color:var(--blue);letter-spacing:0.1em;text-transform:uppercase;white-space:nowrap;}
+.progress-track{flex:1;height:4px;background:var(--blue-light);border-radius:2px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--blue);border-radius:2px;transition:width 0.4s;width:0%;}
+.progress-pct{font-size:0.95rem;font-weight:600;color:var(--blue);min-width:36px;text-align:right;}
+/* ALERTS */
+#alertsBanner{margin-bottom:16px;display:none;flex-direction:column;gap:0;}
+#alertsBanner.visible{display:flex;}
+.alerts-header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;background:var(--danger-bg);border:1px solid var(--danger-border);border-radius:6px;cursor:pointer;user-select:none;}
+.alerts-header-text{font-size:0.88rem;color:var(--danger);font-weight:600;}
+.alerts-chevron{color:var(--danger);font-size:0.8rem;transition:transform 0.2s;}
+.alerts-body{display:none;flex-direction:column;gap:0;border:1px solid var(--danger-border);border-top:none;border-radius:0 0 6px 6px;overflow:hidden;}
+.alerts-body.open{display:flex;}
+.alert-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:var(--danger-bg);border-bottom:1px solid var(--danger-border);font-size:0.84rem;color:var(--danger);line-height:1.4;}
+.alert-item:last-child{border-bottom:none;}
+/* SECTIONS */
+.section{background:var(--white);border:1px solid var(--border);border-radius:8px;margin-bottom:14px;overflow:hidden;}
+.section-header{background:var(--white);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:12px;}
+.section-header.collapsible{cursor:pointer;user-select:none;}
+.section-header.collapsible:hover{background:var(--field-bg);}
+.section-num{background:var(--blue-light);color:#0077cc;font-weight:700;font-size:0.8rem;width:26px;height:26px;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.section-title{font-size:0.85rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text);}
+.section-tag{margin-left:auto;font-size:0.7rem;color:var(--hint);letter-spacing:0.1em;text-transform:uppercase;}
+.collapse-icon{margin-left:auto;color:var(--hint);font-size:1rem;transition:transform 0.25s;flex-shrink:0;line-height:1;}
+.section-tag+.collapse-icon{margin-left:10px;}
+.section.collapsed .collapse-icon{transform:rotate(-90deg);}
+.section-body{padding:20px;}
+.section.collapsed .section-body{display:none;}
+/* FIELDS */
+.sub-label{font-size:0.75rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--blue);margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.sub-label:first-child{margin-top:0;}
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.field-grid.triple{grid-template-columns:1fr 1fr 1fr;}
+.field{display:flex;flex-direction:column;gap:5px;}
+.field.full{grid-column:1/-1;}
+label{font-size:0.72rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--blue);}
+input[type=text],input[type=email],input[type=tel],input[type=date],input[type=time],input[type=number],textarea,select{background:var(--field-bg);border:1px solid var(--field-border);border-radius:5px;color:var(--text);font-family:inherit;font-size:0.92rem;padding:9px 13px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;width:100%;}
+input:focus,textarea:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,153,255,0.1);}
+textarea{resize:none;min-height:70px;overflow:hidden;}
+select option{background:var(--white);color:var(--text);}
+input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:0.5;}
+.section-notes{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.section-notes label{display:block;margin-bottom:6px;}
+.section-notes textarea{min-height:64px;font-size:0.88rem;}
+/* YES/NO */
+.yn-list{display:flex;flex-direction:column;}
+.yn-item{border-bottom:1px solid var(--border);}
+.yn-item:last-child{border-bottom:none;}
+.yn-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 12px;background:var(--white);transition:background 0.15s;}
+.yn-row:hover{background:var(--field-bg);}
+.yn-question{font-size:0.88rem;color:var(--text);flex:1;line-height:1.4;}
+.yn-btns{display:flex;gap:6px;flex-shrink:0;}
+.yn-btn{padding:4px 13px;border-radius:4px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:0.8rem;font-weight:600;letter-spacing:0.08em;cursor:pointer;transition:all 0.13s;font-family:inherit;}
+.yn-btn:hover{border-color:var(--blue);color:var(--blue);}
+.yn-btn.yes{background:var(--success-bg);border-color:var(--success-border);color:var(--success);}
+.yn-btn.no{background:var(--danger-bg);border-color:var(--danger-border);color:var(--danger);}
+/* HAZARDS */
+.hazard-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.hazard-item{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--field-bg);border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:all 0.15s;}
+.hazard-item:hover{border-color:var(--blue);}
+.hazard-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--danger);flex-shrink:0;cursor:pointer;}
+.hazard-item label{font-size:0.85rem;color:var(--muted);text-transform:none;letter-spacing:0;font-weight:400;cursor:pointer;line-height:1.3;}
+.hazard-item:has(input:checked){border-color:var(--danger-border);background:var(--danger-bg);}
+.hazard-item:has(input:checked) label{color:var(--danger);}
+/* MAP */
+.map-row{display:flex;gap:10px;margin-bottom:10px;}
+.map-row input{flex:1;}
+.map-btn{padding:9px 18px;background:var(--blue);color:var(--white);border:none;border-radius:6px;font-size:0.9rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;white-space:nowrap;font-family:inherit;}
+.map-btn:hover{background:#0088ee;}
+.map-container{background:var(--field-bg);border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.map-link-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:5px;border:1px solid var(--border);background:var(--white);color:var(--text);font-size:0.82rem;text-decoration:none;transition:all 0.15s;}
+.map-link-btn:hover{background:var(--field-bg);border-color:var(--blue);}
+.map-placeholder{height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--hint);font-size:0.88rem;text-align:center;padding:20px;}
+.map-placeholder svg{opacity:0.3;}
+#mapFrame{width:100%;height:260px;border:none;display:none;}
+/* WEATHER */
+.weather-wrap{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+#weatherWidget{background:var(--field-bg);border:1px solid var(--border);border-radius:6px;padding:14px 16px;color:var(--muted);font-size:0.84rem;}
+.wx-meta{font-size:0.78rem;color:var(--muted);margin-bottom:10px;}
+.wx-meta strong{color:var(--blue);}
+.wx-row{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;}
+.wx-day{flex-shrink:0;min-width:74px;background:var(--white);border:1px solid var(--border);border-radius:6px;padding:8px 6px;text-align:center;}
+.wx-day.tx-day{border-color:var(--blue);background:var(--blue-light);}
+.wx-date{font-size:0.62rem;color:var(--hint);text-transform:uppercase;letter-spacing:0.04em;line-height:1.3;}
+.wx-icon{font-size:1.4rem;margin:4px 0;line-height:1;}
+.wx-temp{font-size:0.78rem;font-weight:600;color:var(--text);}
+.wx-rain{font-size:0.68rem;color:var(--blue);margin-top:2px;}
+.wx-wind{font-size:0.65rem;color:var(--hint);margin-top:1px;}
+.wx-always{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
+.wx-pill{display:flex;align-items:center;gap:5px;font-size:0.78rem;color:var(--muted);}
+.wx-pill .wx-lbl{color:var(--blue);font-weight:600;}
+.wx-note{font-size:0.8rem;color:var(--hint);text-align:center;padding:8px 0;}
+/* PHOTOS */
+.photo-list{display:flex;flex-direction:column;gap:8px;}
+.photo-item{background:var(--white);border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.photo-header{display:flex;align-items:flex-start;gap:8px;padding:8px 12px;flex-wrap:wrap;width:100%;}
+.photo-thumb-small{width:38px;height:38px;object-fit:cover;border-radius:4px;border:1px solid var(--border);flex-shrink:0;display:none;cursor:pointer;margin-top:2px;}
+.photo-thumb-small.visible{display:block;}
+.photo-label{font-size:0.82rem;color:var(--text);flex:1;line-height:1.3;min-width:120px;}
+.photo-actions{display:flex;gap:5px;align-items:center;flex-shrink:0;flex-wrap:wrap;max-width:100%;}
+.photo-status{font-size:0.65rem;padding:2px 6px;border-radius:4px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;background:var(--field-bg);border:1px solid var(--border);color:var(--hint);white-space:nowrap;}
+.photo-status.done{background:var(--success-bg);border-color:var(--success-border);color:var(--success);}
+.photo-btn{display:flex;align-items:center;gap:3px;padding:5px 8px;border-radius:4px;border:1px solid var(--blue-mid);background:var(--blue-light);color:var(--blue);font-size:0.7rem;font-weight:600;letter-spacing:0.04em;cursor:pointer;transition:all 0.13s;text-transform:uppercase;font-family:inherit;white-space:nowrap;flex-shrink:0;}
+.photo-btn:hover{background:var(--blue-mid);}
+.photo-btn svg{width:11px;height:11px;flex-shrink:0;}
+.hidden-file{display:none;}
+/* SITE PHOTOS */
+.site-photos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:6px;}
+.site-photo-cell{background:var(--field-bg);border:1px solid var(--border);border-radius:6px;overflow:hidden;cursor:pointer;transition:border-color 0.15s;}
+.site-photo-cell:hover{border-color:var(--blue);}
+.site-photo-cell img{width:100%;height:80px;object-fit:cover;display:block;}
+.site-photo-cell-label{font-size:0.7rem;color:var(--hint);padding:5px 7px;line-height:1.3;}
+.site-photo-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;gap:8px;color:var(--hint);font-size:0.82rem;opacity:0.5;text-align:center;}
+/* LIGHTBOX */
+.lightbox{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.92);z-index:9999;align-items:center;justify-content:center;flex-direction:column;gap:12px;padding:20px;}
+.lightbox.open{display:flex;}
+.lightbox img{max-width:100%;max-height:75vh;border-radius:4px;object-fit:contain;}
+.lightbox-label{font-size:0.85rem;color:#ccc;text-align:center;}
+.lightbox-close{position:absolute;top:16px;right:20px;font-size:2rem;color:#fff;cursor:pointer;line-height:1;background:none;border:none;}
+.lightbox-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:1.8rem;width:44px;height:44px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s;}
+.lightbox-nav:hover{background:rgba(255,255,255,0.3);}
+.lightbox-nav.prev{left:12px;}
+.lightbox-nav.next{right:12px;}
+.lightbox-counter{font-size:0.75rem;color:#aaa;margin-top:4px;}
+/* BUTTONS */
+.action-wrap{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:36px;margin-bottom:40px;}
+.btn-gold{background:var(--blue);color:var(--white);font-size:1rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;border:none;padding:14px 32px;border-radius:7px;cursor:pointer;transition:background 0.2s;font-family:inherit;}
+.btn-gold:hover{background:#0088ee;}
+.btn-outline{background:transparent;color:var(--blue);font-size:1rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;border:1px solid var(--blue-mid);padding:13px 32px;border-radius:7px;cursor:pointer;transition:all 0.2s;font-family:inherit;}
+.btn-outline:hover{background:var(--blue-light);border-color:var(--blue);}
+/* SAVE */
+.save-section{background:var(--white);border:1px solid var(--border);border-radius:8px;margin-bottom:14px;overflow:hidden;}
+.save-section .section-header{background:var(--white);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:12px;}
+.save-section .section-body{padding:20px;}
+/* FOOTER */
+footer{text-align:center;padding:22px 20px;color:var(--hint);font-size:0.75rem;letter-spacing:0.05em;border-top:1px solid var(--border);background:var(--white);}
+.footer-inner{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;}
+.footer-inner a{display:inline-flex;align-items:center;gap:4px;color:var(--hint);text-decoration:none;transition:color 0.2s;}
+.footer-inner a:hover{color:var(--blue);}
+.footer-inner a svg{width:11px;height:11px;stroke:var(--blue);flex-shrink:0;}
+.footer-sep{opacity:0.4;}
+@media(max-width:600px){
+  .field-grid,.field-grid.triple{grid-template-columns:1fr;}
+  header{padding:16px 20px 0;}
+  .header-blue-line{margin:0 -20px;}
+  .survey-title-bar{padding:12px 20px;}
+  main{padding:16px 14px 60px;}
+  .yn-row{flex-wrap:wrap;gap:8px;}
+  .yn-btns{width:100%;justify-content:flex-start;}
+  .loader-btns{flex-direction:column;}
+  .loader-btn{width:100%;min-width:0;flex:none;}
+  .hazard-grid{grid-template-columns:1fr;}
+}
+@media print{
+  body{background:white!important;color:#000;}
+  header{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .action-wrap,.photo-btn,.map-btn,.lightbox,.loader-panel,.progress-wrap,#alertsBanner{display:none!important;}
+  .section.collapsed .section-body{display:block!important;}
+}
+</style>
+</head>
+<body>
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" onclick="closeLightbox()">&#10005;</button>
+  <button class="lightbox-nav prev" id="lbPrev" onclick="lightboxNav(-1)">&#8249;</button>
+  <img id="lightboxImg" src="" alt="">
+  <button class="lightbox-nav next" id="lbNext" onclick="lightboxNav(1)">&#8250;</button>
+  <div class="lightbox-label" id="lightboxLabel"></div>
+  <div class="lightbox-counter" id="lightboxCounter"></div>
+  <button id="lbRemove" onclick="removeLightboxPhoto()" style="margin-top:8px;padding:7px 22px;border-radius:6px;border:1px solid rgba(255,255,255,0.3);background:rgba(180,0,0,0.7);color:#fff;font-size:0.85rem;font-weight:600;letter-spacing:0.08em;cursor:pointer;">REMOVE</button>
+</div>
+<header>
+  <div class="logo-wrap">
+    <svg width="100%" viewBox="0 0 900 100" xmlns="http://www.w3.org/2000/svg">
+      <text x="14" y="82" style="font-size:88px;font-weight:300;fill:#111;font-family:sans-serif;">R</text>
+      <text x="84" y="82" style="font-size:88px;font-weight:300;fill:#111;font-family:sans-serif;">E</text>
+      <text x="196" y="82" text-anchor="middle" style="font-size:88px;font-weight:300;fill:#0099FF;font-family:sans-serif;">K</text>
+      <text x="248" y="82" style="font-size:88px;font-weight:300;fill:#111;font-family:sans-serif;">O</text>
+      <text x="324" y="82" style="font-size:88px;font-weight:300;fill:#111;font-family:sans-serif;">N</text>
+      <text x="396" y="88" style="font-size:14px;font-weight:400;fill:#999999;font-family:sans-serif;">©</text>
+      <line x1="420" y1="14" x2="420" y2="90" stroke="#ccc" stroke-width="1"/>
+      <text x="434" y="52" style="font-size:15px;font-weight:400;fill:#888;font-family:sans-serif;letter-spacing:0.14em;">TECHNICAL SURVEY,</text>
+      <text x="434" y="76" style="font-size:15px;font-weight:400;fill:#0099FF;font-family:sans-serif;letter-spacing:0.14em;">REDESIGNED</text>
+    </svg>
+  </div>
+  <div class="header-blue-line"></div>
+</header>
+<div class="survey-title-bar">
+  <h2>Tech Recce / Survey — Location Survey</h2>
+</div>
+<main>
+  <div class="form-intro" style="display:none;">
+    <h2>Tech Recce / Survey — Location Survey</h2>
+    <div class="gold-line"></div>
+    
+  </div>
+  <div class="edition-label">Live TV / Outside Broadcast Recce / Survey Module </div>
+  <!-- LOADER -->
+  <div class="loader-panel" id="loaderPanel">
+    <div class="loader-btns">
+      <button class="loader-btn new" onclick="newSurvey()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New Survey</button>
+      <button class="loader-btn load" id="btnLoadSurvey" onclick="toggleLoader()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>Load Survey</button>
+      <button class="loader-btn load" onclick="document.getElementById('importInput').click()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Import Survey</button>
+      <input type="file" id="importInput" accept=".zip,.json,.recce" style="display:none" onchange="importFile(this)">
+    </div>
+    <div class="loader-list" id="loaderList" style="display:none;"></div>
+  </div>
+  <!-- PROGRESS -->
+  <div class="progress-wrap">
+    <span class="progress-label">Completion</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <span class="progress-pct" id="progressPct">0%</span>
+  </div>
+  <!-- ALERTS BANNER -->
+  <div id="alertsBanner"></div>
+  <!-- SEC 0: PROJECT DETAILS -->
+  <div class="section" id="sec0">
+    <div class="section-header"><div class="section-num">0</div><div class="section-title">Project Details</div></div>
+    <div class="section-body">
+      <div class="field-grid">
+        <div class="field"><label>Production / Show Name <span style="color:var(--danger)">*</span></label><input type="text" id="f_prodName" placeholder="Show or project name"></div>
+        <div class="field"><label>TX / Transmission Date <span style="color:var(--danger)">*</span></label><input type="date" id="f_txDate"></div>
+        <div class="field"><label>Recce / Survey Date <span style="color:var(--danger)">*</span></label><input type="date" id="f_recceDate"></div>
+        <div class="field"><label>Project Manager <span style="color:var(--danger)">*</span></label><input type="text" id="f_projectManager" placeholder="Project manager's name"></div>
+        <div class="field"><label>Recce / Survey Officer <span style="color:var(--danger)">*</span></label><input type="text" id="f_officer" placeholder="Your name"></div>
+        <div class="field full"><label>Venue Name</label><input type="text" id="f_venueName" placeholder="Venue or location name"></div>
+        <div class="field full"><label>Street Address</label><input type="text" id="f_address" placeholder="Full street address"></div>
+        <div class="field"><label>Suburb / Town</label><input type="text" id="f_suburb" placeholder="Suburb"></div>
+        <div class="field"><label>State</label><select id="f_state"><option value="">— Select —</option><option>QLD</option><option>NSW</option><option>VIC</option><option>SA</option><option>WA</option><option>TAS</option><option>ACT</option><option>NT</option></select></div>
+        <div class="field"><label>Venue Booking Contact</label><input type="text" id="f_contact" placeholder="Name"></div>
+        <div class="field"><label>Booking Contact Phone</label><input type="tel" id="f_phone" placeholder="+61 4xx xxx xxx"></div>
+        <div class="field"><label>Venue Tech Contact (On the Day)</label><input type="text" id="f_techContact" placeholder="Name"></div>
+        <div class="field"><label>Tech Contact Phone</label><input type="tel" id="f_techPhone" placeholder="+61 4xx xxx xxx"></div>
+      </div>
+    </div>
+  </div>
+  <!-- SEC 1: LOCATION & MAP -->
+  <div class="section collapsed" id="sec1">
+    <div class="section-header collapsible" onclick="toggleSection('sec1')"><div class="section-num">1</div><div class="section-title">Location &amp; Map</div><span class="collapse-icon">&#9660;</span></div>
+    <div class="section-body">
+      <div class="map-row"><input type="text" id="mapSearch" placeholder="Address auto-fills from Job Details…" readonly></div>
+      <div class="map-container">
+        <div class="map-placeholder" id="mapPlaceholder"><svg width="44" height="44" viewBox="0 0 48 48" fill="none"><path d="M24 4C16.27 4 10 10.27 10 18c0 11.25 14 26 14 26s14-14.75 14-26c0-7.73-6.27-14-14-14z" stroke="#c8a84b" stroke-width="2" fill="none"/><circle cx="24" cy="18" r="4" stroke="#c8a84b" stroke-width="2" fill="none"/></svg><span>Enter the address above and tap <strong>Show Map</strong></span></div>
+        <iframe id="mapFrame" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+      <div id="mapLinks" style="display:none;margin-top:10px;flex-wrap:wrap;gap:8px;">
+        <a id="linkApple" href="#" target="_blank" class="map-link-btn">&#127757; Apple Maps</a>
+        <a id="linkGoogle" href="#" target="_blank" class="map-link-btn">&#127758; Google Maps</a>
+        <a id="linkW3W" href="#" target="_blank" class="map-link-btn">&#35; What3Words</a>
+      </div>
+      <div class="field-grid" style="margin-top:14px;">
+        <div class="field"><label>GPS Coordinates</label><input type="text" id="f_gps" placeholder="Auto-fills from address" readonly></div>
+        <div class="field full"><label>Access / Directions Notes</label><textarea id="f_accessNotes" placeholder="Gate codes, parking, entry instructions…"></textarea></div>
+      </div>
+      <!-- WEATHER WIDGET -->
+      <div class="weather-wrap">
+        <div class="sub-label"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>TX Day Weather</div>
+        <div id="weatherWidget">Enter address and TX date to load weather forecast.</div>
+      </div>
+    </div>
+  </div>
+  <!-- SEC 2: VENUE & SPACE (merged) -->
+  <div class="section collapsed" id="sec2">
+    <div class="section-header collapsible" onclick="toggleSection('sec2')"><div class="section-num">2</div><div class="section-title">Venue &amp; Space</div><span class="collapse-icon">&#9660;</span></div>
+    <div class="section-body">
+      <div class="field-grid">
+        <div class="field"><label>Maximum Audience Occupancy</label><input type="number" id="f_occupancy" placeholder="e.g. 250"></div>
+        <div class="field"><label>Venue Access Time (when crew can enter)</label><input type="time" id="f_venueAccess"></div>
+        <div class="field"><label>Venue Type</label><select id="f_venueType"><option value="">— Select —</option><option>Indoor</option><option>Outdoor</option><option>Outdoor Undercover</option><option>Mixed Indoor / Outdoor</option></select></div>
+        <div class="field"><label>Ceiling / Roof Height (metres)</label><input type="text" id="f_ceilingH" placeholder="e.g. 4.5m"></div>
+        <div class="field"><label>Room Length</label><input type="text" id="f_roomLength" placeholder="e.g. 24m"></div>
+        <div class="field"><label>Room Width</label><input type="text" id="f_roomWidth" placeholder="e.g. 15m"></div>
+      </div>
+      <div style="margin-top:14px;"><div class="yn-list" id="yn_venue"></div></div>
+      <div class="sub-label" style="margin-top:20px;">Sketch / Floor Plan</div>
+      <div class="photo-list">
+        <div class="photo-item">
+          <div class="photo-header">
+            <span class="photo-label">Hand sketch / floor plan — dimensions, ceiling height, items of interest</span>
+            <div class="photo-actions">
+              <span class="photo-status" id="st_sketch">Pending</span>
+              <button class="photo-btn" onclick="openCamera('sketch')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>Camera</button>
+              <button class="photo-btn" onclick="openGallery('sketch')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Upload</button>
+            </div>
+          </div>
+          <input type="file" class="hidden-file" id="cam_sketch" accept="image/*" capture="environment" onchange="handlePhoto(this,'sketch')">
+          <input type="file" class="hidden-file" id="gal_sketch" accept="image/*" onchange="handlePhoto(this,'sketch')">
+        </div>
+      </div>
+      <div class="section-notes"><label>Venue &amp; Space Notes</label><textarea id="n_venue" placeholder="General observations, follow-up items…"></textarea></div>
+    </div>
+  </div>
+  <!-- SEC 3: TRANSMISSION & CONNECTIVITY (4G/5G only, no tag) -->
+  <div class="section collapsed" id="sec3">
+    <div class="section-header collapsible" onclick="toggleSection('sec3')"><div class="section-num">3</div><div class="section-title">Transmission &amp; Connectivity</div><span class="collapse-icon">&#9660;</span></div>
+    <div class="section-body">
+      <div class="field-grid">
+        <div class="field full"><label>4G / 5G Signal Strength</label>
+          <select id="f_signal"><option value="">— Test on site —</option><option>Excellent (5 bars)</option><option>Good (4 bars)</option><option>Fair (3 bars)</option><option>Poor (1–2 bars)</option><option>No signal</option></select>
+        </div>
+      </div>
+      <div class="section-notes"><label>Connectivity Notes</label><textarea id="n_internet" placeholder="Additional notes on connectivity or signal testing…"></textarea></div>
+    </div>
+  </div>
+  <!-- SEC 4: SOUND (no tag) -->
+  <div class="section collapsed" id="sec4">
+    <div class="section-header collapsible" onclick="toggleSection('sec4')"><div class="section-num">4</div><div class="section-title">Sound</div><span class="collapse-icon">&#9660;</span></div>
+    <div class="section-body">
+      <div class="yn-list" id="yn_sound"></div>
+      <div class="sub-label">Noise Limiter</div>
+      <div class="yn-list" id="yn_noiselimiter"></div>
+      <div class="field-grid" style="margin-top:14px;">
+        <div class="field"><label>Noise Curfew Time (if any)</label><input type="time" id="f_noiseCurfew"></div>
+        <div class="field"><label>Curfew Contact / Who Controls It</label><input type="text" id="f_noiseCurfewContact" placeholder="e.g. Venue manager — John Smith"></div>
+        <div class="field"><label>Limiter Threshold (dB)</label><input type="text" id="f_limiterDb" placeholder="e.g. 95 dB"></div>
+        <div class="field"><label>Who Controls / Resets Limiter</label><input type="text" id="f_limiterContact" placeholder="e.g. Venue duty manager"></div>
+      </div>
+      <div class="section-notes"><label>Sound Notes</label><textarea id="n_sound" placeholder="Observations, follow-up items…"></textarea></div>
+    </div>
+  </div>
+  <!-- SEC 5: LIGHT -->
+  <div class="section collapsed" id="sec5">
+    <div class="section-header collapsible" onclick="toggleSection('sec5')"><div class="section-num">5</div><div class="section-title">Light</div><span class="collapse-icon">&#9660;</span></div>
+    <div class="section-body">
+      <div class="yn-list" id="yn_light"></div>
+      <div class="section-notes"><label>Lighting Notes</label><textarea id="n_light" placeholder="Observations, follow-up items…"></textarea></div>
+    </div>
+  </div>
+  <!-- SEC 6: HOUSE LIGHTING, SOUND & VIDEO SYSTEM (renamed + video) -->
+  <div class="section collapsed" id="sec6">
+    <div class="section-header collapsible" onclick="toggleSection('sec6')"><div class="section-num">6</div><div class="section-title">House Lighting, Sound &amp; Video System</div><span class="collapse-icon">&#9660;</span></div>
+    <div class="section-body">
+      <div class="yn-list" id="yn_housesystem"></div>
+      <div class="sub-label" style="margin-top:18px;">Video System</div>
+      <div class="yn-list" id="yn_housevideo"></div>
+      <div class="field-grid" style="margin-top:14px;">
+        <div class="field"><label>House Lighting System / Brand</label><input type="text" id="f_houseLx" placeholder="e.g. ETC Ion, generic dimmer rack"></div>
+        <div class="field"><label>DMX Patch Points Available</label><input type="text" id="f_dmxPatch" placeholder="e.g. 2x DMX outlets stage left"></div>
+        <div class="field"><label>House PA System / Brand</label><input type="text" id="f_housePA" placeholder="e.g. JBL line array, ceiling speakers"></div>
+        <div class="field"><label>Audio Patch / Connection Points</label><input type="text" id="f_audioPatch" placeholder="e.g. XLR patch panel at FOH"></div>
+        <div class="field"><label>Existing Screens / Monitors</label><input type="text" id="f_houseScreens" placeholder="e.g. 2x 75″ LED panels front of stage"></div>
+        <div class="field"><label>Video Connections Available</label><input type="text" id="f_videoConns" placeholder="e.g. HDMI, SDI, VGA"></div>
+      </div>
+      <div class="section-notes"><label>House System Notes</label><textarea id="n_housesystem" placeholder="Control locations, patch details, compatibility…"></textarea></div>
+    </div>
+  </div>
+  <!-- SEC 7: POWER (+ 3-phase amperage) -->
+  <div class="section collapsed" id="sec7">
+    <div class="section-header collapsible" onclick="toggleSection('sec7')"><div class="section-num">7</div><div class="section-title">Power</div><span class="collapse-icon">&#9660;</span></div>
+    <div class="section-body">
+      <div class="yn-list" id="yn_power"></div>
+      <div class="field-grid" style="margin-top:14px;">
+        <div class="field"><label>3-Phase Amperage</label><select id="f_3phaseAmps"><option value="">— Select if 3-phase available —</option><option>32A</option><option>50A</option><option>63A</option><option>Unknown</option></select></div>
+        <div class="field"><label>Fuse Box / Switchboard Location</label><input type="text" id="f_fuseLocation" placeholder="e.g. Back corridor, east wall"></div>
+        <div class="field"><label>Number of GPOs in Room</label><input type="text" id="f_gpos" placeholder="e.g. 8 GPOs on 3 circuits"></div>
+      </div>
+      <div class="section-notes"><label>Power Notes</label><textarea id="n_power" placeholder="Circuit details, cable route notes, voltage readings…"></textarea></div>
+    </div>
+  </div>
+  <!-- SEC 8: ACCESS & STORAGE -->
+  <div class="section collapsed" id="sec8">
+    <div class="section-header collapsible" onclick="toggleSection('sec8')"><div class="section-num">8</div><div class="section-title">Access &amp; Storage</div><span class="collapse-icon">&#9660;</span></div>
+    <div class="section-body">
+      <div class="sub-label">Access</div>
+      <div class="yn-list" id="yn_access"></div>
+      <div class="field-grid" style="margin-top:14px;">
+        <div class="field"><label>Number of Stair Flights</label><input type="text" id="f_stairs" placeholder="e.g. 2 flights, ~24 steps"></div>
+        <div class="field"><label>Lift Internal Dimensions (W × D × H)</label><input type="text" id="f_liftDims" placeholder="e.g. 1.2m × 1.4m × 2.1m"></div>
+        <div class="field"><label>Lift Max Weight Capacity</label><input type="text" id="f_liftKg" placeholder="e.g. 630kg"></div>
+        <div class="field"><label>Narrowest Door / Corridor Width</label><input type="text" id="f_corridorW" placeholder="e.g. 900mm"></div>
+      </div>
+      <div class="sub-label">Storage</div>
+      <div class="yn-list" id="yn_storage"></div>
+      <div class="section-notes"><label>Access &amp; Storage Notes</label><textarea id="n_accessstorage" placeholder="Route description, obstacles, ramps needed, cable trays, security, storage details…"></textarea></div>
+    </div>
+  </div>
+  <!-- SEC 9: TRUCK & LOADING -->
+  <div class="section collapsed" id="sec9">
+    <div class="section-header collapsible" onclick="toggleSection('sec9')"><div class="section-num">9</div><div class="section-title">Truck &amp; Loading</div><span class="collapse-icon">&#9660;</span></div>
+    <div class="section-body">
+      <div class="yn-list" id="yn_truck"></div>
+      <div class="field-grid" style="margin-top:14px;">
+        <div class="field"><label>Distance from Truck Bay to Venue</label><input type="text" id="f_truckDist" placeholder="e.g. 40m level surface"></div>
+        <div class="field"><label>Overhead Clearance Height</label><input type="text" id="f_truckClear" placeholder="Min. 3.8m required"></div>
+        <div class="field"><label>Loading Dock Opens</label><input type="time" id="f_dockHours"></div>
+        <div class="field"><label>Loading Dock Contact</label><input type="text" id="f_dockContact" placeholder="e.g. Building manager"></div>
+      </div>
+      <div class="section-notes"><label>Truck &amp; Loading Notes</label><textarea id="n_truck" placeholder="Bollards, slopes, time restrictions, turning radius…"></textarea></div>
+    </div>
+  </div>
+  <!-- SEC 10: HAZARDS -->
+  <div class="section collapsed" id="sec10">
+    <div class="section-header collapsible" onclick="toggleSection('sec10')"><div class="section-num">10</div><div class="section-title">Hazards</div><span class="section-tag">Tick all that apply</span><span class="collapse-icon">&#9660;</span></div>
+    <div class="section-body">
+      <div class="hazard-grid" id="hazardGrid"></div>
+      <div class="section-notes"><label>Hazard Notes</label><textarea id="n_hazards" placeholder="Specific hazards, required PPE, exclusion zones, WHS concerns…"></textarea></div>
+    </div>
+  </div>
+  <!-- SEC 11: FIRST AID -->
+  <div class="section collapsed" id="sec11">
+    <div class="section-header collapsible" onclick="toggleSection('sec11')"><div class="section-num">11</div><div class="section-title">First Aid &amp; Emergency</div><span class="collapse-icon">&#9660;</span></div>
+    <div class="section-body">
+      <div class="yn-list" id="yn_firstaid"></div>
+      <div class="field-grid" style="margin-top:14px;">
+        <div class="field"><label>First Aid Kit Location</label><input type="text" id="f_firstAidKit" placeholder="e.g. Stage left, wall mounted"></div>
+        <div class="field"><label>AED / Defibrillator Location</label><input type="text" id="f_aed" placeholder="e.g. Main foyer near reception"></div>
+        <div class="field"><label>Nearest Hospital / Medical Centre</label><input type="text" id="f_hospital" placeholder="e.g. Royal Brisbane — 2.3km"></div>
+        <div class="field"><label>Emergency Muster Point</label><input type="text" id="f_muster" placeholder="e.g. Car park B, north end"></div>
+      </div>
+      <div class="section-notes"><label>First Aid &amp; Emergency Notes</label><textarea id="n_firstaid" placeholder="Venue first aid officer, emergency procedures, evacuation route…"></textarea></div>
+    </div>
+  </div>
+  <!-- SEC 12: RISK -->
+  <div class="section collapsed" id="sec12">
+    <div class="section-header collapsible" onclick="toggleSection('sec12')"><div class="section-num">12</div><div class="section-title">Risk Assessment &amp; Duty of Care</div><span class="collapse-icon">&#9660;</span></div>
+    <div class="section-body">
+      <div class="yn-list" id="yn_risk"></div>
+      <div class="field-grid" style="margin-top:14px;">
+        <div class="field"><label>Venue Risk Assessment Document Ref</label><input type="text" id="f_riskDoc" placeholder="e.g. VRA-2024-032"></div>
+        <div class="field"><label>Venue WHS / Safety Officer Contact</label><input type="text" id="f_whsContact" placeholder="Name and phone number"></div>
+        <div class="field full"><label>Known Risks / Items Flagged in Venue RA</label><textarea id="n_risk" placeholder="List any specific risks noted in the venue's own risk assessment…"></textarea></div>
+      </div>
+    </div>
+  </div>
+  <!-- SEC 13: PHOTO DOCUMENTATION -->
+  <div class="section collapsed" id="sec13">
+    <div class="section-header collapsible" onclick="toggleSection('sec13')"><div class="section-num">13</div><div class="section-title">Photo</div><span class="section-tag">Camera or upload</span><span class="collapse-icon">&#9660;</span></div>
+    <div class="section-body"><div class="photo-list" id="photoList"></div></div>
+  </div>
+  <!-- SEC 14: SITE PHOTOS -->
+  <div class="section collapsed" id="sec14">
+    <div class="section-header collapsible" onclick="toggleSection('sec14')"><div class="section-num">14</div><div class="section-title">Site Photos</div><span class="section-tag">Tap any photo to enlarge</span><span class="collapse-icon">&#9660;</span></div>
+    <div class="section-body">
+      <div class="site-photos-grid" id="sitePhotosGrid">
+        <div class="site-photo-empty"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#8a9bb5" stroke-width="1.5"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg><span>No photos taken yet</span></div>
+      </div>
+    </div>
+  </div>
+  <!-- SAVE -->
+  <div class="save-section">
+    <div class="section-header"><div class="section-num" style="font-size:1rem;">&#9733;</div><div class="section-title">Save</div></div>
+    <div class="section-body">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;">
+        <div class="field" style="flex:1;min-width:200px;"><label>Survey Name</label><input type="text" id="saveName" placeholder="e.g. Crown Casino — Main Ballroom"></div>
+        <button id="btnSave" class="btn-gold" style="padding:10px 24px;font-size:0.9rem;white-space:nowrap;flex-shrink:0;" onclick="saveSurvey()">Save Survey</button>
+      </div>
+    </div>
+  </div>
+  <div class="action-wrap">
+    <button class="btn-gold" onclick="exportSurvey()">Export / Share</button>
+    <button class="btn-outline" onclick="generateReport()">Print / PDF Report</button>
+  </div>
+</main>
+<footer>
+  <div class="footer-inner">
+    <span>&copy; 2026 Patrice Roblin</span><span class="footer-sep">|</span>
+    <a href="tel:0402096781"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>0402 096 781</a><span class="footer-sep">|</span>
+    <a href="/cdn-cgi/l/email-protection#f98b969b95909789988d8b909a9cb99e94989095d79a9694"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg><span class="__cf_email__" data-cfemail="3d4f525f5154534d5c494f545e587d5a505c5451135e5250">[email&#160;protected]</span></a><span class="footer-sep">|</span>
+    <a href="https://patriceroblin.com" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>patriceroblin.com</a>
+  </div>
+</footer>
+<script>
+var isSafari=/^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+// ACCORDION - one section open at a time, scroll to top of opened section
+function toggleSection(id){
+  var t=document.getElementById(id);if(!t)return;
+  var wasOpen=!t.classList.contains('collapsed');
+  document.querySelectorAll('.section').forEach(function(s){if(s.querySelector('.section-header.collapsible'))s.classList.add('collapsed');});
+  if(!wasOpen){
+    t.classList.remove('collapsed');
+    setTimeout(function(){t.scrollIntoView({behavior:'smooth',block:'start'});},50);
+  }
+}
+
+// LIGHTBOX with swipe/nav
+var _lbIds=[];var _lbIdx=0;var _lbFlat=false;
+function openLightbox(id){
+  _lbFlat=false;
+  var allIds=getAllPhotoIds();
+  _lbIds=[];
+  allIds.forEach(function(pid){
+    var arr=window._photos[pid]||[];
+    arr.forEach(function(ph,i){_lbIds.push({id:pid,idx:i});});
+  });
+  _lbIdx=_lbIds.findIndex(function(e){return e.id===id;});
+  if(_lbIdx<0)_lbIdx=0;
+  showLightboxFrame(_lbIdx);
+  document.getElementById('lightbox').classList.add('open');
+}
+function openLightboxFlat(flatIdx){
+  _lbFlat=true;
+  var allIds=getAllPhotoIds();
+  _lbIds=[];
+  allIds.forEach(function(pid){
+    var arr=window._photos[pid]||[];
+    arr.forEach(function(ph,i){_lbIds.push({id:pid,idx:i});});
+  });
+  _lbIdx=Math.min(flatIdx,_lbIds.length-1);
+  showLightboxFrame(_lbIdx);
+  document.getElementById('lightbox').classList.add('open');
+}
+function showLightboxFrame(idx){
+  var entry=_lbIds[idx];if(!entry)return;
+  var arr=window._photos[entry.id]||[];
+  var ph=arr[entry.idx];if(!ph||!ph.blob)return;
+  var url=ph.dataUrl||URL.createObjectURL(ph.blob);
+  var img=document.getElementById('lightboxImg');
+  img.src=url;
+  var item=photoItems.filter(function(x){return x.id===entry.id;})[0];
+  var label=item?item.label:(entry.id==='sketch'?'Sketch / Floor Plan':entry.id);
+  document.getElementById('lightboxLabel').textContent=label;
+  document.getElementById('lightboxCounter').textContent=(_lbIds.length>1)?(idx+1)+' / '+_lbIds.length:'';
+  document.getElementById('lbPrev').style.display=_lbIds.length>1?'flex':'none';
+  document.getElementById('lbNext').style.display=_lbIds.length>1?'flex':'none';
+}
+function lightboxNav(dir){
+  _lbIdx=(_lbIdx+dir+_lbIds.length)%_lbIds.length;
+  showLightboxFrame(_lbIdx);
+}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
+
+// ALERTS - tap to expand
+var _alertsOpen=false;
+function toggleAlerts(){
+  _alertsOpen=!_alertsOpen;
+  var body=document.getElementById('alertsBody');
+  var chev=document.getElementById('alertsChevron');
+  if(body)body.classList.toggle('open',_alertsOpen);
+  if(chev)chev.textContent=_alertsOpen?'▲':'▼';
+}
+
+// DATA
+var ynSections={
+  yn_venue:[
+    {id:'v1',q:'Is the entry access and route for the audience clear and suitable?'},
+    {id:'v2',q:'Is there a holding or waiting area for the audience?'},
+    {id:'v3',q:'Is the venue open to the public during bump-in / setup?'}
+  ],
+  yn_sound:[
+    {id:'s1',q:'Is the roof tin/metal or acoustically treated? (Rain noise risk for live TV)'},
+    {id:'s2',q:'Is there a venue PA system that can be independently switched off during the shoot?'},
+    {id:'s3',q:'Is there an HVAC / air conditioning system that creates background noise?'},
+    {id:'s4',q:'Can the HVAC be independently switched off during recording?'},
+    {id:'s5',q:'Are there adjacent rooms, kitchens or bars that generate noise during the shoot?'},
+    {id:'s6',q:'Is the room affected by external noise — traffic, trains or aircraft?'}
+  ],
+  yn_noiselimiter:[
+    {id:'nl1',q:'Is a physical noise limiter device fitted at this venue?'},
+    {id:'nl2',q:'Is the limiter threshold negotiable with venue management?'},
+    {id:'nl3',q:'Does the limiter cut power to the PA if the threshold is exceeded?'}
+  ],
+  yn_light:[
+    {id:'l1',q:'Are there windows that allow sunlight or ambient light into the room?'},
+    {id:'l2',q:'Can sunlight or ambient light be fully blocked or controlled?'},
+    {id:'l3',q:'Can the room lighting be adjusted or dimmed?'},
+    {id:'l4',q:'Is the room lighting independent from other areas of the venue?'},
+    {id:'l5',q:'Can we hang lighting fixtures to the ceiling or beams?'},
+    {id:'l6',q:'Are there dedicated rigging points or a grid available for lighting?'},
+    {id:'l7',q:'Will elevation equipment be required to hang or focus fixtures?'},
+    {id:'l8',q:'Does the venue have an elevating platform available? (scissor lift, forklift with cage)'}
+  ],
+  yn_housesystem:[
+    {id:'hs1',q:'Is there a house lighting system available for production use?'},
+    {id:'hs2',q:'Are DMX patch points available in the room?'},
+    {id:'hs3',q:'Is there a house PA / sound system available for production use?'},
+    {id:'hs4',q:'Are audio patch or tie-line points available?'},
+    {id:'hs5',q:'Can house systems be fully handed over to production during the shoot?'}
+  ],
+  yn_housevideo:[
+    {id:'hv1',q:'Are there existing monitors or screens in the venue?'},
+    {id:'hv2',q:'Can production tap into the existing screen / display system?'},
+    {id:'hv3',q:'Are HDMI connections available?'},
+    {id:'hv4',q:'Are SDI connections available?'},
+    {id:'hv5',q:'Are VGA connections available?'}
+  ],
+  yn_power:[
+    {id:'p1',q:'Are circuits in the room clearly labelled or marked?'},
+    {id:'p2',q:'Is 3-phase power available? (Check with voltage detector pen)'},
+    {id:'p3',q:'Is the 3Ph outlet a 5-pin type? (Photograph the socket)'},
+    {id:'p4',q:'Are there power points available in the ceiling or overhead structure?'}
+  ],
+  yn_access:[
+    {id:'ac1',q:'Are there stairs on the gear access route?'},
+    {id:'ac2',q:'Is there a service lift available?'},
+    {id:'ac3',q:'Will the access route support a 400kg gear load?'},
+    {id:'ac4',q:'Can large roadcases manoeuvre the full route without obstruction?'},
+    {id:'ac5',q:'Does gear need to pass through public or audience spaces?'}
+  ],
+  yn_storage:[
+    {id:'st1',q:'Is there dedicated storage available for equipment?'},
+    {id:'st2',q:'Is the storage area large enough to receive all production gear?'},
+    {id:'st3',q:'Is the storage area lockable, secure and sheltered?'}
+  ],
+  yn_truck:[
+    {id:'tr1',q:'Is there a suitable unloading location at or near the venue?'},
+    {id:'tr2',q:'Is overhead clearance adequate? (Minimum 3.8m required for truck)'},
+    {id:'tr3',q:'Is the road surface suitable and level for a heavy vehicle?'},
+    {id:'tr4',q:'Is dedicated truck parking available on-site or nearby?'},
+    {id:'tr5',q:'Are there obstacles that could impede truck access or turning?'},
+    {id:'tr6',q:'Are there time restrictions on truck access or loading?'}
+  ],
+  yn_firstaid:[
+    {id:'fa1',q:'Is a first aid kit accessible in or near the production area?'},
+    {id:'fa2',q:'Is a defibrillator (AED) available on site?'},
+    {id:'fa3',q:'Does the venue provide a first aid officer during events?'},
+    {id:'fa4',q:'Are emergency exit routes clearly marked and unobstructed?'},
+    {id:'fa5',q:'Is there a clearly defined emergency muster point?'}
+  ],
+  yn_risk:[
+    {id:'rv1',q:'Does the venue have its own current risk assessment document?'},
+    {id:'rv2',q:'Is a production-specific risk assessment required by the venue?'},
+    {id:'rv3',q:'Has a WHS induction been completed or is one required on the day?'},
+    {id:'rv4',q:'Are there adequate measures in place to ensure crew and public duty of care?'},
+    {id:'rv5',q:'Does any gear need to be lifted into elevated or difficult-to-reach areas?'}
+  ]
+};
+var hazardList=[
+  'Trip / slip hazards on gear route or stage area',
+  'Low ceilings or beams — head injury risk',
+  'Wet areas, open drains or uneven flooring',
+  'Exposed electrical equipment or power lines',
+  'Chemical or gas storage nearby',
+  'Heavy machinery operating on site',
+  'Poor lighting in access routes or back-of-house',
+  'Restricted areas requiring escort or clearance',
+  'Fire exits blocked or not clearly marked',
+  'Children or public likely in gear zones',
+  'Elevated work areas (stages, platforms, rigging)',
+  'Asbestos or hazardous material risk (older buildings)'
+];
+var photoItems=[
+  {id:'room',label:'Room layout — wide shot including ceiling'},
+  {id:'items',label:'Items of interest — bar, poles, doorways, ramps, obstacles'},
+  {id:'audience',label:'Audience area and holding area'},
+  {id:'fusebox',label:'Fuse box / switchboard — include circuit labels'},
+  {id:'threeph',label:'3-phase socket (type, size and condition)'},
+  {id:'rigging',label:'Rigging points / grid — include height reference'},
+  {id:'gearentry',label:'Gear entry points'},
+  {id:'storage',label:'Storage areas'},
+  {id:'truck',label:'Truck unloading area and access route'},
+  {id:'dockarea',label:'Loading dock — include dock hours signage if visible'},
+  {id:'hazards',label:'Any identified hazard areas'},
+  {id:'firstaid',label:'First aid kit and AED location'}
+];
+var photoLabels={
+  room:'01 - Room layout wide shot including ceiling',
+  items:'02 - Items of interest bar poles doorways ramps obstacles',
+  audience:'03 - Audience area and holding area',
+  fusebox:'04 - Fuse box switchboard include circuit labels',
+  threeph:'05 - 3-phase socket type size and condition',
+  rigging:'06 - Rigging points grid include height reference',
+  gearentry:'07 - Gear entry points',
+  storage:'08 - Storage areas',
+  truck:'09 - Truck unloading area and access route',
+  dockarea:'10 - Loading dock area',
+  hazards:'11 - Identified hazard areas',
+  firstaid:'12 - First aid kit and AED location',
+  sketch:'13 - Sketch floor plan'
+};
+function getAllPhotoIds(){var ids=photoItems.map(function(p){return p.id;});ids.push('sketch');return ids;}
+
+function buildYN(id,items){
+  var el=document.getElementById(id);if(!el)return;
+  el.innerHTML=items.map(function(item){
+    return '<div class="yn-item"><div class="yn-row"><span class="yn-question">'+item.q+'</span><div class="yn-btns"><button class="yn-btn" data-id="'+item.id+'" data-val="yes" onclick="toggleYN(this)">YES</button><button class="yn-btn" data-id="'+item.id+'" data-val="no" onclick="toggleYN(this)">NO</button></div></div></div>';
+  }).join('');
+}
+function toggleYN(btn){
+  btn.closest('.yn-row').querySelectorAll('.yn-btn').forEach(function(b){b.classList.remove('yes','no');});
+  btn.classList.add(btn.dataset.val==='yes'?'yes':'no');
+  updateProgress();updateAlerts();
+}
+function buildHazards(){
+  document.getElementById('hazardGrid').innerHTML=hazardList.map(function(h,i){
+    return '<div class="hazard-item"><input type="checkbox" id="haz_'+i+'" onchange="updateProgress();updateAlerts();"><label for="haz_'+i+'">'+h+'</label></div>';
+  }).join('');
+}
+function buildPhotos(){
+  document.getElementById('photoList').innerHTML=photoItems.map(function(p){
+    return '<div class="photo-item"><div class="photo-header"><span class="photo-label">'+p.label+'</span><div class="photo-actions"><span class="photo-status" id="st_'+p.id+'">Pending</span><button class="photo-btn" onclick="openCamera(&apos;'+p.id+'&apos;)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>Camera</button><button class="photo-btn" onclick="openGallery(&apos;'+p.id+'&apos;)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Upload</button></div></div><input type="file" class="hidden-file" id="cam_'+p.id+'" accept="image/*" capture="environment" onchange="handlePhoto(this,&apos;'+p.id+'&apos;)"><input type="file" class="hidden-file" id="gal_'+p.id+'" accept="image/*" onchange="handlePhoto(this,&apos;'+p.id+'&apos;)"></div>';
+  }).join('');
+}
+function openCamera(id){document.getElementById('cam_'+id).click();}
+function openGallery(id){document.getElementById('gal_'+id).click();}
+
+window._photos={};
+function handlePhoto(input,id){
+  if(!input.files||!input.files[0])return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var img=new Image();
+    img.onload=function(){
+      var MAX=1600,w=img.width,h=img.height;
+      if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}
+      var canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      canvas.toBlob(function(blob){
+        if(!window._photos[id])window._photos[id]=[];
+        var dataUrl=canvas.toDataURL('image/jpeg',0.85);
+        window._photos[id].push({blob:blob,dataUrl:dataUrl});
+        updatePhotoStatus(id);
+        updateProgress();updateSitePhotosGrid();
+      },'image/jpeg',0.85);
+    };img.src=e.target.result;
+  };reader.readAsDataURL(input.files[0]);
+  input.value='';
+}
+function updatePhotoStatus(id){
+  var arr=window._photos[id]||[];
+  var st=document.getElementById('st_'+id);
+  if(!st)return;
+  if(!arr.length){st.textContent='Pending';st.className='photo-status';}
+  else{st.textContent=arr.length+(arr.length===1?' photo':' photos');st.className='photo-status done';}
+}
+function removePhoto(id,idx){
+  if(!window._photos[id])return;
+  var ph=window._photos[id][idx];
+  if(ph&&ph.dataUrl)URL.revokeObjectURL(ph.dataUrl);
+  window._photos[id].splice(idx,1);
+  if(!window._photos[id].length)delete window._photos[id];
+  updatePhotoStatus(id);
+  updateProgress();updateSitePhotosGrid();
+}
+
+function removeLightboxPhoto(){
+  if(!_lbIds.length)return;
+  var entry=_lbIds[_lbIdx];
+  if(!entry)return;
+  removePhoto(entry.id,entry.idx);
+  var allIds=getAllPhotoIds();
+  _lbIds=[];
+  allIds.forEach(function(pid){
+    var arr=window._photos[pid]||[];
+    arr.forEach(function(ph,i){_lbIds.push({id:pid,idx:i});});
+  });
+  if(!_lbIds.length){closeLightbox();return;}
+  _lbIdx=Math.min(_lbIdx,_lbIds.length-1);
+  showLightboxFrame(_lbIdx);
+}
+  
+function updateSitePhotosGrid(){
+  var grid=document.getElementById('sitePhotosGrid');if(!grid)return;
+  var allIds=getAllPhotoIds();
+  var cells=[];
+  allIds.forEach(function(id){
+    var arr=window._photos[id];
+    if(!arr||!arr.length)return;
+    var item=photoItems.filter(function(p){return p.id===id;})[0];
+    var label=item?item.label:(id==='sketch'?'Sketch / Floor Plan':id);
+    arr.forEach(function(ph,idx){
+      cells.push({id:id,idx:idx,blob:ph.blob,dataUrl:ph.dataUrl,label:label});
+    });
+  });
+  if(!cells.length){
+    grid.innerHTML='<div class="site-photo-empty"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#8a9bb5" stroke-width="1.5"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg><span>No photos taken yet</span></div>';
+    return;
+  }
+  grid.innerHTML=cells.map(function(c,i){
+    var src=c.dataUrl||URL.createObjectURL(c.blob);
+    return '<div class="site-photo-cell" style="position:relative;">'+
+      '<img src="'+src+'" alt="'+c.label+'" style="width:100%;height:80px;object-fit:cover;display:block;cursor:pointer;" onclick="openLightboxFlat('+i+')">'+
+      '<button onclick="removePhoto(&apos;'+c.id+'&apos;,'+c.idx+')" style="position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;background:rgba(160,0,0,0.82);border:none;color:#fff;font-size:13px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;">&#10005;</button>'+
+      '<div class="site-photo-cell-label">'+c.label+'</div>'+
+    '</div>';
+  }).join('');
+  window._flatPhotoCache=cells;
+}
+
+// NOMINATIM GEOCODE - one call does map + GPS + weather
+window._wxRainChance=0;
+var _wxCache={};
+var _geocodeCache={};
+var _autosaveTimer=null;
+var _autosaveKey=null;
+
+function geocodeAddress(address,callback){
+  if(!address)return;
+  if(_geocodeCache[address]){callback(_geocodeCache[address]);return;}
+  fetch('https://nominatim.openstreetmap.org/search?format=json&q='+encodeURIComponent(address)+'&limit=1&countrycodes=au',{headers:{'Accept-Language':'en'}})
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(!data||!data.length)return;
+      var result={lat:parseFloat(data[0].lat),lon:parseFloat(data[0].lon),display:data[0].display_name};
+      _geocodeCache[address]=result;
+      callback(result);
+    }).catch(function(){});
+}
+
+function autoGeocodeFromJobDetails(){
+  var addr=document.getElementById('f_address').value.trim();
+  var suburb=document.getElementById('f_suburb').value.trim();
+  var state=document.getElementById('f_state').value.trim();
+  if(!addr&&!suburb)return;
+  var query=[addr,suburb,state].filter(Boolean).join(', ');
+  geocodeAddress(query,function(result){
+    // Fill map search
+    document.getElementById('mapSearch').value=query;
+    // Fill GPS
+    document.getElementById('f_gps').value=result.lat.toFixed(6)+', '+result.lon.toFixed(6);
+    // Load map
+    loadMapFromCoords(result.lat,result.lon,query);
+    // Fetch weather if TX date available
+    var txDate=document.getElementById('f_txDate').value;
+    if(txDate)fetchWeatherFromCoords(result.lat,result.lon,txDate);
+  });
+}
+
+function loadMapFromCoords(lat,lon,q){
+  var enc=encodeURIComponent(q||lat+','+lon);
+  document.getElementById('mapFrame').src='https://maps.google.com/maps?q='+enc+'&output=embed&z=16';
+  document.getElementById('mapFrame').style.display='block';
+  document.getElementById('mapPlaceholder').style.display='none';
+  document.getElementById('mapLinks').style.display='flex';
+  document.getElementById('linkApple').href='https://maps.apple.com/?q='+enc;
+  document.getElementById('linkGoogle').href='https://www.google.com/maps/search/?api=1&query='+enc;
+  document.getElementById('linkW3W').href='https://what3words.com/search?query='+enc;
+}
+
+function loadMap(){
+  var q=document.getElementById('mapSearch').value.trim();if(!q)return;
+  var enc=encodeURIComponent(q);
+  document.getElementById('mapFrame').src='https://maps.google.com/maps?q='+enc+'&output=embed&z=16';
+  document.getElementById('mapFrame').style.display='block';
+  document.getElementById('mapPlaceholder').style.display='none';
+  document.getElementById('mapLinks').style.display='flex';
+  document.getElementById('linkApple').href='https://maps.apple.com/?q='+enc;
+  document.getElementById('linkGoogle').href='https://www.google.com/maps/search/?api=1&query='+enc;
+  document.getElementById('linkW3W').href='https://what3words.com/search?query='+enc;
+}
+
+// WEATHER via Open-Meteo (coords from Nominatim)
+function fetchWeatherFromCoords(lat,lon,txDate){
+  var ck=lat+'|'+lon+'|'+txDate;
+  var widget=document.getElementById('weatherWidget');
+  if(_wxCache[ck]){renderWeather(_wxCache[ck],txDate);return;}
+  widget.textContent='Loading weather…';
+  var tz='Australia/Brisbane';
+  // Guess timezone from longitude
+  if(lon<130)tz='Australia/Perth';
+  else if(lon<138)tz='Australia/Darwin';
+  else if(lon<141)tz='Australia/Adelaide';
+  else if(lon>150.5&&lat<-33)tz='Australia/Sydney';
+  else if(lon>144&&lat<-37)tz='Australia/Melbourne';
+  var url='https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+'&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weathercode,windspeed_10m_max,sunrise,sunset&timezone='+encodeURIComponent(tz)+'&forecast_days=16';
+  fetch(url).then(function(r){return r.json();})
+    .then(function(wx){_wxCache[ck]=wx;renderWeather(wx,txDate);})
+    .catch(function(){widget.textContent='Could not load weather. Check connection and try again.';});
+}
+
+function fetchWeather(){
+  var addr=document.getElementById('f_address').value.trim();
+  var suburb=document.getElementById('f_suburb').value.trim();
+  var state=document.getElementById('f_state').value.trim();
+  var txDate=document.getElementById('f_txDate').value;
+  if((!addr&&!suburb)||!txDate)return;
+  var query=[addr,suburb,state].filter(Boolean).join(', ');
+  geocodeAddress(query,function(result){
+    fetchWeatherFromCoords(result.lat,result.lon,txDate);
+  });
+}
+
+function wxIcon(c){if(c===0)return'☀️';if(c<=2)return'⛅';if(c===3)return'☁️';if(c<=49)return'🌫️';if(c<=59)return'🌦️';if(c<=69)return'🌧️';if(c<=79)return'❄️';if(c<=84)return'🌧️';return'⛈️';}
+function moonPhase(date){
+  var known=new Date(2000,0,6),diff=(date-known)/86400000,cycle=29.53,p=((diff%cycle)+cycle)%cycle;
+  if(p<1.85)return{icon:'🌑',name:'New Moon'};if(p<7.38)return{icon:'🌒',name:'Waxing Crescent'};
+  if(p<12.92)return{icon:'🌓',name:'First Quarter'};if(p<16.61)return{icon:'🌔',name:'Waxing Gibbous'};
+  if(p<18.46)return{icon:'🌕',name:'Full Moon'};if(p<22.15)return{icon:'🌖',name:'Waning Gibbous'};
+  if(p<25.84)return{icon:'🌗',name:'Last Quarter'};return{icon:'🌘',name:'Waning Crescent'};
+}
+function fmtTime(iso){if(!iso)return'—';var d=new Date(iso);return d.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit',hour12:true});}
+function renderWeather(wx,txDate){
+  var widget=document.getElementById('weatherWidget');
+  var dates=wx.daily.time,txIdx=dates.indexOf(txDate);
+  var moon=moonPhase(new Date(txDate+'T12:00:00'));
+  var html='';
+  if(txIdx>=0){
+    var start=Math.max(0,txIdx-3),end=Math.min(dates.length-1,txIdx+3);
+    html+='<div class="wx-meta">Forecast centred on TX date <strong>'+txDate+'</strong></div><div class="wx-row">';
+    for(var i=start;i<=end;i++){
+      var d=new Date(dates[i]+'T12:00:00');
+      var dl=d.toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'});
+      var isTx=(i===txIdx);
+      html+='<div class="wx-day'+(isTx?' tx-day':'')+'"><div class="wx-date">'+(isTx?'📍 TX':dl)+'</div>';
+      html+='<div class="wx-icon">'+wxIcon(wx.daily.weathercode[i])+'</div>';
+      html+='<div class="wx-temp">'+Math.round(wx.daily.temperature_2m_max[i])+'° / '+Math.round(wx.daily.temperature_2m_min[i])+'°</div>';
+      html+='<div class="wx-rain">💧 '+(wx.daily.precipitation_probability_max[i]||0)+'%</div>';
+      html+='<div class="wx-wind">💨 '+Math.round(wx.daily.windspeed_10m_max[i])+'km/h</div></div>';
+    }
+    html+='</div>';
+    window._wxRainChance=wx.daily.precipitation_probability_max[txIdx]||0;
+  } else {
+    html+='<div class="wx-note">TX date is beyond the 16-day forecast window.<br>Refresh closer to the TX date for a live forecast.</div>';
+    window._wxRainChance=0;
+  }
+  var txSunrise=(txIdx>=0)?wx.daily.sunrise[txIdx]:null;
+  var txSunset=(txIdx>=0)?wx.daily.sunset[txIdx]:null;
+  html+='<div class="wx-always">';
+  if(txSunrise)html+='<div class="wx-pill"><span class="wx-lbl">🌅 Sunrise</span><span>'+fmtTime(txSunrise)+'</span></div>';
+  if(txSunset)html+='<div class="wx-pill"><span class="wx-lbl">🌇 Sunset</span><span>'+fmtTime(txSunset)+'</span></div>';
+  html+='<div class="wx-pill"><span class="wx-lbl">'+moon.icon+' Moon</span><span>'+moon.name+'</span></div></div>';
+  widget.innerHTML=html;
+  updateAlerts();
+}
+
+// ALERTS - collapsible
+function getYN(id){var b=document.querySelector('.yn-btn.yes[data-id="'+id+'"],.yn-btn.no[data-id="'+id+'"]');return b?(b.classList.contains('yes')?'yes':'no'):null;}
+function updateAlerts(){
+  var alerts=[],wSVG='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12" y2="17"/></svg>';
+  if(getYN('nl1')==='yes'){var db=(document.getElementById('f_limiterDb')||{}).value||'';alerts.push('Noise limiter fitted'+(db?' — threshold '+db:''));}
+  var curfew=(document.getElementById('f_noiseCurfew')||{}).value||'';
+  if(curfew)alerts.push('Noise curfew — '+curfew);
+  var hazCount=document.querySelectorAll('.hazard-item input[type=checkbox]:checked').length;
+  if(hazCount>0)alerts.push('Hazards flagged — '+hazCount+' item'+(hazCount>1?'s':''));
+  if(getYN('p2')==='no')alerts.push('No 3-phase power available');
+  if(getYN('tr4')==='no')alerts.push('No dedicated truck parking');
+  if(getYN('ac1')==='yes'&&getYN('ac2')==='no')alerts.push('Stairs on gear route — no lift available');
+  if(window._wxRainChance>=40)alerts.push('Rain forecast on TX day — '+window._wxRainChance+'% chance');
+  if(getYN('v3')==='yes')alerts.push('Venue open to public during bump-in / setup');
+  var at=(document.getElementById('f_venueAccess')||{}).value||'';
+  var dt=(document.getElementById('f_dockHours')||{}).value||'';
+  if(at&&dt&&at<dt)alerts.push('Venue Access Time ('+at+') is earlier than Loading Dock Opens ('+dt+') — bump-in / dock clash');
+  var banner=document.getElementById('alertsBanner');
+  if(!alerts.length){banner.innerHTML='';banner.classList.remove('visible');_alertsOpen=false;return;}
+  var headerHtml='<div class="alerts-header" onclick="toggleAlerts()"><span class="alerts-header-text">⚠️ '+alerts.length+' Alert'+(alerts.length>1?'s':'')+' — tap to '+(  _alertsOpen?'collapse':'expand')+'</span><span class="alerts-chevron" id="alertsChevron">'+(_alertsOpen?'▲':'▼')+'</span></div>';
+  var bodyHtml='<div class="alerts-body'+(_alertsOpen?' open':'')+'" id="alertsBody">'+alerts.map(function(a){return'<div class="alert-item">'+wSVG+'<span>'+a+'</span></div>';}).join('')+'</div>';
+  banner.innerHTML=headerHtml+bodyHtml;
+  banner.classList.add('visible');
+}
+
+function updateProgress(){
+  var answered=document.querySelectorAll('.yn-btn.yes,.yn-btn.no').length;
+  var total_yn=document.querySelectorAll('.yn-item').length;
+  var allIds=getAllPhotoIds();
+  var done_photos=allIds.filter(function(id){return window._photos[id]&&window._photos[id].length;}).length;
+  var total_photos=allIds.length;
+  var total=total_yn+total_photos,done=answered+done_photos;
+  var pct=total>0?Math.round(done/total*100):0;
+  document.getElementById('progressFill').style.width=pct+'%';
+  document.getElementById('progressPct').textContent=pct+'%';
+}
+
+// MANDATORY FIELD VALIDATION
+function checkJobDetailsWarning(){
+  var mandatory=[
+    {id:'f_prodName',label:'Production / Show Name'},
+    {id:'f_txDate',label:'TX / Transmission Date'},
+    {id:'f_recceDate',label:'Recce / Survey Date'},
+    {id:'f_projectManager',label:'Project Manager'},
+    {id:'f_officer',label:'Recce / Survey Officer'}
+  ];
+  mandatory.forEach(function(f){
+    var el=document.getElementById(f.id);
+    if(!el)return;
+    var empty=!el.value.trim();
+    el.style.borderColor=empty?'var(--danger)':'';
+    el.style.boxShadow=empty?'0 0 0 3px rgba(192,57,43,0.1)':'';
+  });
+}
+
+// AUTOSAVE
+function triggerAutosave(){
+  clearTimeout(_autosaveTimer);
+  _autosaveTimer=setTimeout(function(){
+    var venue=document.getElementById('f_venueName').value.trim();
+    var txDate=document.getElementById('f_txDate').value;
+    if(!venue&&!txDate)return; // nothing worth saving
+    var label='Autosave — '+(venue||'Untitled')+(txDate?' '+txDate:'');
+    var now=new Date();
+    var key='__autosave__';
+    var record={key:key,name:label,date:now.toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'}),time:now.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'}),state:collectState()};
+    dbPut('surveys',record).then(function(){
+      var saves=[];
+      getAllPhotoIds().forEach(function(pid){
+        var arr=window._photos[pid]||[];
+        arr.forEach(function(ph,i){
+          var item=photoItems.filter(function(p){return p.id===pid;})[0];
+          saves.push(dbPut('photos',{id:key+'__'+pid+'__'+i,surveyKey:key,photoId:pid,photoIdx:i,blob:ph.blob,label:item?item.label:pid}));
+        });
+      });
+      return Promise.all(saves);
+    }).then(function(){
+      // Show subtle autosave indicator
+      var btn=document.getElementById('btnSave');
+      if(btn&&btn.textContent==='Save Survey'){
+        var orig=btn.textContent;
+        btn.textContent='Autosaved ✓';
+        setTimeout(function(){if(btn.textContent==='Autosaved ✓')btn.textContent=orig;},2000);
+      }
+    }).catch(function(){});
+  },30000); // 30 seconds
+}
+
+var allFieldIds=['f_prodName','f_txDate','f_recceDate','f_projectManager','f_officer','f_venueName','f_address','f_suburb','f_state','f_contact','f_phone','f_techContact','f_techPhone','f_gps','f_accessNotes','f_occupancy','f_venueAccess','f_ceilingH','f_venueType','f_roomLength','f_roomWidth','f_signal','f_noiseCurfew','f_noiseCurfewContact','f_limiterDb','f_limiterContact','f_houseLx','f_dmxPatch','f_housePA','f_audioPatch','f_houseScreens','f_videoConns','f_3phaseAmps','f_fuseLocation','f_gpos','f_stairs','f_liftDims','f_liftKg','f_corridorW','f_truckDist','f_truckClear','f_dockHours','f_dockContact','f_firstAidKit','f_aed','f_hospital','f_muster','f_riskDoc','f_whsContact','n_venue','n_internet','n_sound','n_light','n_housesystem','n_power','n_accessstorage','n_truck','n_hazards','n_firstaid','n_risk','mapSearch','saveName'];
+
+function collectState(){
+  var fields={};
+  allFieldIds.forEach(function(id){var el=document.getElementById(id);if(el)fields[id]=el.value;});
+  var yn={};
+  document.querySelectorAll('.yn-btn.yes,.yn-btn.no').forEach(function(btn){yn[btn.dataset.id]=btn.dataset.val;});
+  var haz=[];
+  hazardList.forEach(function(h,i){var cb=document.getElementById('haz_'+i);if(cb&&cb.checked)haz.push(i);});
+  return{fields:fields,yn:yn,haz:haz};
+}
+function restoreState(state){
+  if(!state)return;
+  Object.entries(state.fields||{}).forEach(function(e){var el=document.getElementById(e[0]);if(el)el.value=e[1];});
+  document.querySelectorAll('.yn-btn').forEach(function(btn){
+    btn.classList.remove('yes','no');
+    if(state.yn&&state.yn[btn.dataset.id]===btn.dataset.val)btn.classList.add(btn.dataset.val==='yes'?'yes':'no');
+  });
+  (state.haz||[]).forEach(function(i){var cb=document.getElementById('haz_'+i);if(cb)cb.checked=true;});
+  if(state.fields&&state.fields.mapSearch){document.getElementById('mapSearch').value=state.fields.mapSearch;}
+  updateProgress();updateAlerts();checkJobDetailsWarning();
+}
+
+// INDEXEDDB
+var DB_NAME='RecceDB',DB_VER=1,db=null;
+function openDB(){return new Promise(function(res,rej){if(db){res(db);return;}var req=indexedDB.open(DB_NAME,DB_VER);req.onupgradeneeded=function(e){var d=e.target.result;if(!d.objectStoreNames.contains('surveys'))d.createObjectStore('surveys',{keyPath:'key'});if(!d.objectStoreNames.contains('photos'))d.createObjectStore('photos',{keyPath:'id'});};req.onsuccess=function(e){db=e.target.result;res(db);};req.onerror=function(){rej(req.error);};});}
+function dbPut(store,obj){return openDB().then(function(d){return new Promise(function(res,rej){var tx=d.transaction(store,'readwrite');tx.objectStore(store).put(obj).onsuccess=res;tx.onerror=function(){rej(tx.error);};});});}
+function dbGet(store,key){return openDB().then(function(d){return new Promise(function(res,rej){var tx=d.transaction(store,'readonly');var r=tx.objectStore(store).get(key);r.onsuccess=function(){res(r.result);};r.onerror=function(){rej(r.error);};});});}
+function dbGetAll(store){return openDB().then(function(d){return new Promise(function(res,rej){var tx=d.transaction(store,'readonly');var r=tx.objectStore(store).getAll();r.onsuccess=function(){res(r.result);};r.onerror=function(){rej(r.error);};});});}
+function dbDelete(store,key){return openDB().then(function(d){return new Promise(function(res,rej){var tx=d.transaction(store,'readwrite');tx.objectStore(store).delete(key).onsuccess=res;tx.onerror=function(){rej(tx.error);};});});}
+
+function saveSurvey(){
+  var venue=document.getElementById('f_venueName').value.trim();
+  var txDate=document.getElementById('f_txDate').value;
+  var autoName=(venue||'Survey')+(txDate?' — TX '+txDate:'');
+  document.getElementById('saveName').value=autoName;
+  var name=autoName;
+  var now=new Date();
+  var key=name+' '+now.toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'})+' '+now.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'});
+  var record={key:key,name:name,date:now.toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'}),time:now.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'}),state:collectState()};
+  dbPut('surveys',record).then(function(){
+    var saves=[];
+    getAllPhotoIds().forEach(function(pid){
+      var arr=window._photos[pid]||[];
+      arr.forEach(function(ph,i){
+        var item=photoItems.filter(function(p){return p.id===pid;})[0];
+        saves.push(dbPut('photos',{id:key+'__'+pid+'__'+i,surveyKey:key,photoId:pid,photoIdx:i,blob:ph.blob,label:item?item.label:pid}));
+      });
+    });
+    return Promise.all(saves);
+  }).then(function(){
+    window._activeKey=key;renderSaved(key);
+    var btn=document.getElementById('btnSave');btn.textContent='Save Survey  ✓';btn.style.background='linear-gradient(135deg,#27ae60,#2ecc71)';
+  }).catch(function(e){alert('Could not save: '+e.message);});
+}
+
+function loadSurveyByKey(key){
+  dbGet('surveys',key).then(function(record){
+    if(!record)return;
+    if(!confirm('Load "'+record.name+'"? This replaces everything on screen.'))return;
+    clearAll();restoreState(record.state);document.getElementById('saveName').value=record.name;
+    dbGetAll('photos').then(function(allPhotos){
+      var mine=allPhotos.filter(function(pr){return pr.surveyKey===key;});
+      mine.forEach(function(pr){
+        var pid=pr.photoId;var i=pr.photoIdx||0;
+        if(!window._photos[pid])window._photos[pid]=[];
+        while(window._photos[pid].length<=i)window._photos[pid].push(null);
+        var url=URL.createObjectURL(pr.blob);
+        window._photos[pid][i]={blob:pr.blob,dataUrl:url};
+        updatePhotoStatus(pid);
+      });
+      window._activeKey=key;renderSaved(key);updateSitePhotosGrid();updateProgress();updateAlerts();
+      document.getElementById('loaderList').style.display='none';window.scrollTo({top:0,behavior:'smooth'});
+    });
+  });
+}
+function deleteSurveyByKey(key){
+  if(!confirm('Delete this survey? This cannot be undone.'))return;
+  dbGetAll('photos').then(function(all){
+    var mine=all.filter(function(pr){return pr.surveyKey===key;});
+    var dels=mine.map(function(pr){return dbDelete('photos',pr.id);});
+    Promise.all(dels).then(function(){return dbDelete('surveys',key);}).then(function(){if(window._activeKey===key)window._activeKey=null;renderSaved(window._activeKey);});
+  });
+}
+function renderSaved(highlightKey){
+  dbGetAll('surveys').then(function(all){
+    // Filter out autosave from the visible list
+    all=all.filter(function(s){return s.key!=='__autosave__';});
+    all.sort(function(a,b){return b.key.localeCompare(a.key);});
+    window._savedKeys=all.map(function(s){return s.key;});
+    var loader=document.getElementById('loaderList');
+    if(!all.length){if(loader)loader.innerHTML='<div style="color:var(--grey);font-size:0.85rem;padding:8px 0;">No saved surveys yet.</div>';return;}
+    var rows=all.map(function(s,i){return'<div class="saved-row'+(s.key===highlightKey?' active':'')+'"><div class="saved-info"><span class="saved-name">'+s.name+'</span><span class="saved-meta">'+s.date+' &nbsp;'+s.time+'</span></div><div class="saved-actions"><button class="saved-btn load" onclick="loadSurveyByIndex('+i+')">Load</button><button class="saved-btn del" onclick="deleteSurveyByIndex('+i+')">Delete</button></div></div>';}).join('');
+    if(loader)loader.innerHTML=rows;
+  });
+}
+function loadSurveyByIndex(i){var k=window._savedKeys&&window._savedKeys[i];if(k)loadSurveyByKey(k);}
+function deleteSurveyByIndex(i){var k=window._savedKeys&&window._savedKeys[i];if(k)deleteSurveyByKey(k);}
+
+function clearAll(){
+  document.querySelectorAll('input[type=text],input[type=date],input[type=time],input[type=number],input[type=tel],input[type=email],textarea').forEach(function(el){el.value='';});
+  document.querySelectorAll('select').forEach(function(el){el.selectedIndex=0;});
+  document.querySelectorAll('.yn-btn').forEach(function(b){b.classList.remove('yes','no');});
+  document.querySelectorAll('.hazard-item input[type=checkbox]').forEach(function(cb){cb.checked=false;});
+  window._photos={};window._wxRainChance=0;
+  document.querySelectorAll('.photo-thumb-small').forEach(function(th){th.src='';th.classList.remove('visible');});
+  getAllPhotoIds().forEach(function(pid){
+    var st=document.getElementById('st_'+pid);
+    if(st){st.textContent='Pending';st.className='photo-status';}
+  });
+  document.getElementById('mapFrame').style.display='none';
+  document.getElementById('mapPlaceholder').style.display='flex';
+  document.getElementById('mapLinks').style.display='none';
+  document.getElementById('f_recceDate').valueAsDate=new Date();
+  document.getElementById('weatherWidget').innerHTML='Enter address and TX date to load weather forecast.';
+  var btn=document.getElementById('btnSave');if(btn){btn.textContent='Save Survey';btn.style.background='';}
+  updateSitePhotosGrid();updateAlerts();checkJobDetailsWarning();
+}
+function newSurvey(){
+  if(document.getElementById('f_prodName').value.trim()||document.getElementById('f_venueName').value.trim()){if(!confirm('Start a new survey? Unsaved changes will be lost.'))return;}
+  clearAll();window._activeKey=null;renderSaved(null);updateProgress();window.scrollTo({top:0,behavior:'smooth'});
+}
+function toggleLoader(){
+  var list=document.getElementById('loaderList'),btn=document.getElementById('btnLoadSurvey');
+  var open=list.style.display==='none'||list.style.display==='';
+  list.style.display=open?'block':'none';btn.classList.toggle('active',open);
+  if(open)renderSaved(window._activeKey);
+}
+
+function exportSurvey(){
+  var venue=document.getElementById('f_venueName').value.trim()||'Recce Survey';
+  var dated=document.getElementById('f_recceDate').value||new Date().toISOString().slice(0,10);
+  var fname=venue.replace(/[^a-zA-Z0-9 _-]/g,'').trim()+' - '+dated;
+  var zip=new JSZip();
+  zip.file('survey.json',JSON.stringify({_v:3,name:venue,date:dated,exported:new Date().toISOString(),state:collectState()},null,2));
+  var folder=zip.folder('photos');
+  getAllPhotoIds().forEach(function(pid){
+    var arr=window._photos[pid]||[];
+    arr.forEach(function(ph,i){
+      if(ph&&ph.blob){
+        var base=photoLabels[pid]||pid;
+        var fname=arr.length>1?base+'_'+(i+1)+'.jpg':base+'.jpg';
+        folder.file(fname,ph.blob);
+      }
+    });
+  });
+  zip.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:6}}).then(function(zipBlob){
+    if(isSafari){
+      var file=new File([zipBlob],fname+'.zip',{type:'application/zip'});
+      if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],title:fname+'.zip'});}
+      else{var url=URL.createObjectURL(zipBlob);window.open(url,'_blank');setTimeout(function(){URL.revokeObjectURL(url);},15000);alert('Tap Share in your browser, then Save to Files.');}
+    } else {
+      var url=URL.createObjectURL(zipBlob);var a=document.createElement('a');a.href=url;a.download=fname+'.zip';document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(function(){URL.revokeObjectURL(url);},5000);
+    }
+  });
+}
+
+function generateReport(){
+  var state=collectState(),fields=state.fields||{},yn=state.yn||{};
+  function fv(id,fb){return(fields[id]&&fields[id].trim())?fields[id]:(fb!==undefined?fb:'—');}
+  function ynLabel(id){return yn[id]==='yes'?'YES':yn[id]==='no'?'NO':'—';}
+  function ynClass(id){return yn[id]==='yes'?'yn-yes':yn[id]==='no'?'yn-no':'yn-na';}
+  var flatPhotos=[];
+  getAllPhotoIds().forEach(function(id){
+    var arr=window._photos[id]||[];
+    arr.forEach(function(ph){if(ph&&ph.blob)flatPhotos.push({id:id,blob:ph.blob,dataUrl:ph.dataUrl});});
+  });
+  var promises=flatPhotos.map(function(fp){return new Promise(function(resolve){
+    if(fp.dataUrl){resolve({id:fp.id,dataUrl:fp.dataUrl});return;}
+    var reader=new FileReader();reader.onload=function(e){resolve({id:fp.id,dataUrl:e.target.result});};reader.readAsDataURL(fp.blob);
+  });});
+  Promise.all(promises).then(function(results){
+    function labelFor(id){var item=photoItems.filter(function(p){return p.id===id;})[0];return item?item.label:(id==='sketch'?'Sketch / Floor Plan':id);}
+    var photoRows=[];
+    for(var i=0;i<results.length;i+=2){
+      var a=results[i],b=results[i+1];
+      photoRows.push('<tr><td style="width:50%;padding:8px;vertical-align:top;"><img src="'+a.dataUrl+'" style="width:100%;border-radius:4px;display:block;"><p style="margin-top:5px;font-size:11px;font-weight:600;color:#555;">'+labelFor(a.id)+'</p></td>'+(b?'<td style="width:50%;padding:8px;vertical-align:top;"><img src="'+b.dataUrl+'" style="width:100%;border-radius:4px;display:block;"><p style="margin-top:5px;font-size:11px;font-weight:600;color:#555;">'+labelFor(b.id)+'</p></td>':'<td></td>')+'</tr>');
+    }
+    function ynTable(section){if(!ynSections[section])return'';return'<table class="yn-table">'+ynSections[section].map(function(q){return'<tr><td>'+q.q+'</td><td class="'+ynClass(q.id)+'">'+ynLabel(q.id)+'</td></tr>';}).join('')+'</table>';}
+    function fr(lbl,val){return'<div class="field-row"><span class="field-key">'+lbl+'</span><span class="field-val">'+(val||'—')+'</span></div>';}
+    var rAlerts=[];
+    if(yn['nl1']==='yes')rAlerts.push('Noise limiter fitted'+(fv('f_limiterDb','')?(' — '+fv('f_limiterDb')):''));
+    if(fv('f_noiseCurfew',''))rAlerts.push('Noise curfew — '+fv('f_noiseCurfew'));
+    var hc=(state.haz||[]).length;if(hc>0)rAlerts.push('Hazards flagged — '+hc+' item'+(hc>1?'s':''));
+    if(yn['p2']==='no')rAlerts.push('No 3-phase power available');
+    if(yn['tr4']==='no')rAlerts.push('No dedicated truck parking');
+    if(yn['ac1']==='yes'&&yn['ac2']==='no')rAlerts.push('Stairs on gear route — no lift available');
+    if(window._wxRainChance>=40)rAlerts.push('Rain forecast on TX day — '+window._wxRainChance+'% chance');
+    if(yn['v3']==='yes')rAlerts.push('Venue open to public during bump-in / setup');
+    var at=fv('f_venueAccess',''),dt=fv('f_dockHours','');
+    if(at&&dt&&at<dt)rAlerts.push('Venue Access Time ('+at+') is earlier than Loading Dock Opens ('+dt+') — bump-in / dock clash');
+    var alertsHtml='';
+    if(rAlerts.length){alertsHtml='<div style="background:#fff5f5;border:1px solid #e74c3c;border-radius:4px;padding:12px 16px;margin-bottom:16px;"><div style="font-size:11px;font-weight:700;color:#c0392b;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">⚠️ Critical Alerts</div>'+rAlerts.map(function(a){return'<div style="font-size:12px;color:#c0392b;padding:2px 0;">• '+a+'</div>';}).join('')+'</div>';}
+    var hazHtml=hazardList.map(function(h,i){return(state.haz&&state.haz.indexOf(i)!==-1)?'<div class="field-row"><span class="field-val" style="color:#c0392b;">&#10003; '+h+'</span></div>':'';}).join('')||'<div class="field-row"><span class="field-val" style="color:#aaa;">No hazards flagged</span></div>';
+    var css='*{box-sizing:border-box;margin:0;padding:0;}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#111;background:#fff;}.top-bar{background:#fff;padding:24px 40px 0;border-bottom:none;}.top-bar svg{width:auto;height:56px;}.blue-line{height:1.5px;background:#0099FF;margin:0;}.survey-title{text-align:center;padding:12px 40px;border-bottom:1px solid #e0e8f0;font-size:12px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#111;}.meta{background:#f5f7fa;padding:10px 40px;font-size:11px;color:#666;display:flex;gap:20px;flex-wrap:wrap;border-bottom:1px solid #e0e8f0;}.meta strong{color:#111;}.page{max-width:800px;margin:0 auto;padding:24px 40px;}h2{font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#0099FF;margin:16px 0 6px;padding-bottom:4px;border-bottom:1.5px solid #0099FF;}.field-row{display:flex;gap:6px;padding:4px 0;border-bottom:1px solid #eee;font-size:12px;}.field-row:last-child{border-bottom:none;}.field-key{color:#666;min-width:180px;flex-shrink:0;}.field-val{color:#111;font-weight:500;}.yn-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:4px;}.yn-table td{padding:4px 6px;border-bottom:1px solid #eee;}.yn-table td:last-child{width:44px;text-align:center;font-weight:700;}.yn-yes{color:#1a8048;}.yn-no{color:#c0392b;}.yn-na{color:#aaa;}table{width:100%;border-collapse:collapse;}.print-btn{background:#0099FF;color:white;border:none;padding:10px 24px;border-radius:6px;font-size:13px;cursor:pointer;margin:16px 0 0;}@media print{.print-btn{display:none;}.page{padding:20px;}}';
+    var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>REKON Survey — '+fv('f_venueName','Venue')+'</title><style>'+css+'</style></head><body>';
+    html+='<div class="top-bar"><svg viewBox="0 0 900 100" xmlns="http://www.w3.org/2000/svg"><text x="14" y="82" style="font-size:88px;font-weight:300;fill:#111;font-family:sans-serif;">R</text><text x="84" y="82" style="font-size:88px;font-weight:300;fill:#111;font-family:sans-serif;">E</text><text x="196" y="82" text-anchor="middle" style="font-size:88px;font-weight:300;fill:#0099FF;font-family:sans-serif;">K</text><text x="248" y="82" style="font-size:88px;font-weight:300;fill:#111;font-family:sans-serif;">O</text><text x="324" y="82" style="font-size:88px;font-weight:300;fill:#111;font-family:sans-serif;">N</text><line x1="420" y1="14" x2="420" y2="90" stroke="#ccc" stroke-width="1"/><text x="434" y="52" style="font-size:15px;font-weight:400;fill:#888;font-family:sans-serif;letter-spacing:0.14em;">TECHNICAL SURVEY,</text><text x="434" y="76" style="font-size:15px;font-weight:400;fill:#0099FF;font-family:sans-serif;letter-spacing:0.14em;">REDESIGNED</text></svg></div>';
+    html+='<div class="blue-line"></div>';
+    html+='<div class="survey-title">Tech Recce / Survey — Location Survey &nbsp;—&nbsp; Live TV / Outside Broadcast Recce / Survey Module </div>';
+    html+='<div class="meta"><span><strong>Production:</strong> '+fv('f_prodName')+'</span><span><strong>Venue:</strong> '+fv('f_venueName')+'</span><span><strong>TX Date:</strong> '+fv('f_txDate')+'</span><span><strong>Recce / Survey Date:</strong> '+fv('f_recceDate')+'</span><span><strong>Project Manager:</strong> '+fv('f_projectManager')+'</span><span><strong>Officer:</strong> '+fv('f_officer')+'</span></div>';
+    html+='<div class="page"><button class="print-btn" onclick="window.print()">Print / Save as PDF</button>'+alertsHtml;
+    html+='<h2>Project Details</h2>'+fr('Production',fv('f_prodName'))+fr('TX Date',fv('f_txDate'))+fr('Recce / Survey Date',fv('f_recceDate'))+fr('Project Manager',fv('f_projectManager'))+fr('Recce / Survey Officer',fv('f_officer'))+fr('Venue',fv('f_venueName'))+fr('Address',fv('f_address'))+fr('Suburb',fv('f_suburb'))+fr('State',fv('f_state'))+fr('GPS',fv('f_gps'))+fr('Booking Contact',fv('f_contact'))+fr('Booking Phone',fv('f_phone'))+fr('Tech Contact (On Day)',fv('f_techContact'))+fr('Tech Phone',fv('f_techPhone'));
+    html+='<h2>Venue &amp; Space</h2>'+fr('Ceiling Height',fv('f_ceilingH'))+fr('Room Length',fv('f_roomLength'))+fr('Room Width',fv('f_roomWidth'))+fr('Occupancy',fv('f_occupancy'))+fr('Venue Access Time',fv('f_venueAccess'))+fr('Venue Type',fv('f_venueType'))+ynTable('yn_venue')+(fv('n_venue','')?fr('Notes',fv('n_venue')):'');
+    html+='<h2>Transmission &amp; Connectivity</h2>'+fr('4G / 5G Signal',fv('f_signal'))+(fv('n_internet','')?fr('Notes',fv('n_internet')):'');
+    html+='<h2>Sound</h2>'+ynTable('yn_sound')+'<div style="margin-top:6px;font-size:10px;font-weight:700;color:#0099FF;text-transform:uppercase;letter-spacing:0.08em;">Noise Limiter</div>'+ynTable('yn_noiselimiter')+fr('Curfew Time',fv('f_noiseCurfew'))+fr('Curfew Contact',fv('f_noiseCurfewContact'))+fr('Limiter dB',fv('f_limiterDb'))+fr('Limiter Contact',fv('f_limiterContact'))+(fv('n_sound','')?fr('Notes',fv('n_sound')):'');
+    html+='<h2>Light</h2>'+ynTable('yn_light')+(fv('n_light','')?fr('Notes',fv('n_light')):'');
+    html+='<h2>House Lighting, Sound &amp; Video System</h2>'+ynTable('yn_housesystem')+'<div style="margin-top:6px;font-size:10px;font-weight:700;color:#0099FF;text-transform:uppercase;letter-spacing:0.08em;">Video System</div>'+ynTable('yn_housevideo')+fr('House LX',fv('f_houseLx'))+fr('DMX Patch',fv('f_dmxPatch'))+fr('House PA',fv('f_housePA'))+fr('Audio Patch',fv('f_audioPatch'))+fr('Screens / Monitors',fv('f_houseScreens'))+fr('Video Connections',fv('f_videoConns'))+(fv('n_housesystem','')?fr('Notes',fv('n_housesystem')):'');
+    html+='<h2>Power</h2>'+ynTable('yn_power')+fr('3-Phase Amperage',fv('f_3phaseAmps'))+fr('Fuse Box',fv('f_fuseLocation'))+fr('GPOs',fv('f_gpos'))+(fv('n_power','')?fr('Notes',fv('n_power')):'');
+    html+='<h2>Access &amp; Storage</h2>'+ynTable('yn_access')+ynTable('yn_storage')+fr('Stairs',fv('f_stairs'))+fr('Lift Dims',fv('f_liftDims'))+fr('Lift Capacity',fv('f_liftKg'))+fr('Corridor Width',fv('f_corridorW'))+(fv('n_accessstorage','')?fr('Notes',fv('n_accessstorage')):'');
+    html+='<h2>Truck &amp; Loading</h2>'+ynTable('yn_truck')+fr('Truck Distance',fv('f_truckDist'))+fr('Clearance',fv('f_truckClear'))+fr('Loading Dock Opens',fv('f_dockHours'))+fr('Dock Contact',fv('f_dockContact'))+(fv('n_truck','')?fr('Notes',fv('n_truck')):'');
+    html+='<h2>Hazards</h2>'+hazHtml+(fv('n_hazards','')?fr('Notes',fv('n_hazards')):'');
+    html+='<h2>First Aid &amp; Emergency</h2>'+ynTable('yn_firstaid')+fr('First Aid Kit',fv('f_firstAidKit'))+fr('AED',fv('f_aed'))+fr('Hospital',fv('f_hospital'))+fr('Muster Point',fv('f_muster'))+(fv('n_firstaid','')?fr('Notes',fv('n_firstaid')):'');
+    html+='<h2>Risk Assessment &amp; Duty of Care</h2>'+ynTable('yn_risk')+fr('RA Doc Ref',fv('f_riskDoc'))+fr('WHS Contact',fv('f_whsContact'))+(fv('n_risk','')?fr('Notes',fv('n_risk')):'');
+    if(flatPhotos.length)html+='<h2>Site Photos</h2><table>'+photoRows.join('')+'</table>';
+    html+='</div></body></html>';
+    var rw=window.open('','_blank');
+    if(rw){rw.document.open();rw.document.write(html);rw.document.close();}
+    else{var iframe=document.getElementById('reportFrame');if(!iframe){iframe=document.createElement('iframe');iframe.id='reportFrame';iframe.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;border:none;z-index:99999;background:white;';document.body.appendChild(iframe);}iframe.style.display='block';iframe.contentDocument.open();iframe.contentDocument.write(html);iframe.contentDocument.close();}
+  });
+}
+
+function importFile(input){if(!input.files||!input.files[0])return;var file=input.files[0];if(file.name.endsWith('.zip'))importZip(file);else importJson(file);input.value='';}
+function importZip(file){
+  JSZip.loadAsync(file).then(function(zip){
+    var jf=zip.file('survey.json');if(!jf){alert('No survey.json found in ZIP.');return;}
+    jf.async('string').then(function(text){
+      var data=JSON.parse(text);if(!data.state)throw new Error('bad');
+      if(!confirm('Load "'+(data.name||'Survey')+'"? This replaces everything on screen.'))return;
+      clearAll();restoreState(data.state);if(data.name)document.getElementById('saveName').value=data.name;
+      var loads=[];
+      getAllPhotoIds().forEach(function(pid){
+        var base=photoLabels[pid]||pid;
+        // Try numbered variants first, then single
+        var found=false;
+        for(var i=1;i<=20;i++){
+          var pf=zip.file('photos/'+base+'_'+i+'.jpg');
+          if(pf){
+            found=true;
+            (function(pidCopy,pf2){
+              loads.push(pf2.async('blob').then(function(blob){
+                var url=URL.createObjectURL(blob);
+                if(!window._photos[pidCopy])window._photos[pidCopy]=[];
+                window._photos[pidCopy].push({blob:blob,dataUrl:url});
+                updatePhotoStatus(pidCopy);
+              }));
+            })(pid,pf);
+          }
+        }
+        if(!found){
+          var pf=zip.file('photos/'+base+'.jpg');
+          if(pf){
+            (function(pidCopy,pf2){
+              loads.push(pf2.async('blob').then(function(blob){
+                var url=URL.createObjectURL(blob);
+                if(!window._photos[pidCopy])window._photos[pidCopy]=[];
+                window._photos[pidCopy].push({blob:blob,dataUrl:url});
+                updatePhotoStatus(pidCopy);
+              }));
+            })(pid,pf);
+          }
+        }
+      });
+      Promise.all(loads).then(function(){updateProgress();updateSitePhotosGrid();updateAlerts();window.scrollTo({top:0,behavior:'smooth'});});
+    });
+  }).catch(function(){alert('Could not read ZIP. Make sure it was exported from this app.');});
+}
+function importJson(file){
+  var reader=new FileReader();
+  reader.onload=function(e){try{var data=JSON.parse(e.target.result);if(!data.state)throw new Error('bad');if(!confirm('Load "'+(data.name||'Survey')+'"? This replaces everything on screen.'))return;clearAll();restoreState(data.state);if(data.name)document.getElementById('saveName').value=data.name;updateAlerts();window.scrollTo({top:0,behavior:'smooth'});}catch(err){alert('Could not read that file.');}};
+  reader.readAsText(file);
+}
+
+// SWIPE on lightbox
+var _lbTouchStartX=0;
+document.addEventListener('DOMContentLoaded',function(){
+  Object.keys(ynSections).forEach(function(id){buildYN(id,ynSections[id]);});
+  buildHazards();buildPhotos();
+  document.getElementById('f_recceDate').valueAsDate=new Date();
+  updateProgress();updateAlerts();checkJobDetailsWarning();renderSaved(null);updateSitePhotosGrid();
+
+  // Swipe on lightbox
+  var lb=document.getElementById('lightbox');
+  lb.addEventListener('touchstart',function(e){_lbTouchStartX=e.touches[0].clientX;},{passive:true});
+  lb.addEventListener('touchend',function(e){
+    var dx=e.changedTouches[0].clientX-_lbTouchStartX;
+    if(Math.abs(dx)>50)lightboxNav(dx<0?1:-1);
+  },{passive:true});
+
+  document.addEventListener('input',function(e){
+    if(e.target.tagName==='TEXTAREA'){e.target.style.height='auto';e.target.style.height=e.target.scrollHeight+'px';}
+    if(['f_venueAccess','f_dockHours','f_noiseCurfew','f_limiterDb'].indexOf(e.target.id)>-1)updateAlerts();
+    if(['f_venueName','f_address','f_txDate','f_prodName','f_recceDate','f_projectManager','f_officer'].indexOf(e.target.id)>-1)checkJobDetailsWarning();
+    triggerAutosave();
+  });
+
+  // Address fields - geocode on blur
+  ['f_address','f_suburb','f_state'].forEach(function(fid){
+    document.getElementById(fid).addEventListener('blur',function(){
+      autoGeocodeFromJobDetails();
+      checkJobDetailsWarning();
+    });
+  });
+
+  // TX date change - refetch weather
+  document.getElementById('f_txDate').addEventListener('change',function(){
+    checkJobDetailsWarning();
+    autoGeocodeFromJobDetails();
+  });
+
+});
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/j3m9k/sw.js');
+  }
+</script>
+</body>
+</html>
