@@ -1,4 +1,4 @@
-const CACHE = 'rekon-recce-v1';
+const CACHE = 'rekon-recce-v2';
 const ASSETS = [
   '/j3m9k/',
   '/j3m9k/index.html',
